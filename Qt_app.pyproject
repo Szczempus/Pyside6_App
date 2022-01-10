@@ -1,0 +1,3 @@
+{
+    "files": ["main.qml","projectMenager.py","main.py","appcore.py","opencvImageProvider.py"]
+}
