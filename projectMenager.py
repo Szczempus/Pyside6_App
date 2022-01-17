@@ -14,6 +14,8 @@ class ProjectMenager(QObject):
 
         self.path = None
 
+
+
         pass
 
     # @Property(str)

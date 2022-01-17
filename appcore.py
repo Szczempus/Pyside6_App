@@ -7,17 +7,16 @@ from opencvImageProvider import OpencvImageProvider
 
 class Appcore(QObject):
 
-    def __init__(self, project_menager: ProjectMenager, parent=None):
-        QObject.__init__(self, parent)
-
-        self.projectMenager = project_menager
-        # self._opencvImageProvider = OpencvImageProvider()
+    def __init__(self, projectMenager: ProjectMenager, opencvMenager: OpencvImageProvider):
+        super(Appcore, self).__init__()
+        self.projectMenager = projectMenager
+        self.opencvMenager = opencvMenager
 
         pass
 
-    @Signal
+    @Slot()
     def app_core_signal(self):
-        print("appCore signal")
+        print("appCore receive signal")
 
     # @Property(ProjectMenager, notify=projectMenagerChanged)
     # def project_menager(self):

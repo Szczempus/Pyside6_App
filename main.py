@@ -7,13 +7,17 @@ from PySide6.QtQml import QQmlApplicationEngine
 
 from appcore import Appcore
 from projectMenager import ProjectMenager
+from opencvImageProvider import OpencvImageProvider
 
 app = QGuiApplication(sys.argv)
 
 engine = QQmlApplicationEngine()
-appCore = Appcore(ProjectMenager)
-# pRojectMenager = ProjectMenager(projectNameInit="Papustka")
-# appCore.projectMenager.project_name
+
+opencv = OpencvImageProvider
+prMang = ProjectMenager()
+
+appCore = Appcore(projectMenager=prMang, opencvMenager=opencv)
+
 engine.rootContext().setContextProperty('appCore', appCore)
 # engine.rootContext().setContextProperty('projectMenager', pRojectMenager)
 engine.quit.connect(app.quit)
