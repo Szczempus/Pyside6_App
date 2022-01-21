@@ -1,0 +1,94 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+    </qresource>
+    <qresource prefix="/images/png">
+        <file alias="arrow">images/png_images/arrow.png</file>
+        <file alias="arrow_highlighted">images/png_images/arrow_highlighted.png</file>
+        <file alias="delete_cross">images/png_images/delete_cross.png</file>
+        <file alias="load">images/png_images/load.png</file>
+        <file alias="load_highlighted">images/png_images/load_highlighted.png</file>
+        <file alias="logo_biale">images/png_images/logo_biale.png</file>
+        <file alias="nametag">images/png_images/nametag.png</file>
+        <file alias="nametag_highlighted">images/png_images/nametag_highlighted.png</file>
+        <file alias="pin">images/png_images/pin.png</file>
+        <file alias="pin_hovered">images/png_images/pin_hovered.png</file>
+        <file alias="polygon">images/png_images/polygon.png</file>
+        <file alias="polygon_highlighted">images/png_images/polygon_highlighted.png</file>
+        <file alias="save">images/png_images/save.png</file>
+        <file alias="save_highlighted">images/png_images/save_highlighted.png</file>
+        <file alias="checked">images/png_images/checked.png</file>
+    </qresource>
+    <qresource prefix="/images/svg">
+        <file alias="logo">images/svg_images/forest.svg</file>
+        <file alias="parapapa">images/svg_images/Parpapapa oo aa.svg</file>
+        <file alias="nazwa">images/svg_images/Tu bedzie bajerankie logo z nazwa apki .svg</file>
+        <file alias="btnIcon">images/svg_images/Button TextIMG.svg</file>
+        <file alias="plus">images/svg_images/plus.svg</file>
+        <file alias="close">images/svg_images/close.svg</file>
+        <file alias="name">images/svg_images/CUD Forestry.svg</file>
+        <file alias="max">images/svg_images/maximize.svg</file>
+        <file alias="min">images/svg_images/minimize.svg</file>
+        <file alias="repo">images/svg_images/report.svg</file>
+        <file alias="tools">images/svg_images/tools.svg</file>
+        <file alias="polygon">images/svg_images/vector.svg</file>
+        <file alias="import">images/svg_images/import.svg</file>
+        <file alias="label">images/svg_images/tag.svg</file>
+        <file alias="newCls">images/svg_images/close+cross+delete+remove+icon-1320185734648163836_0.svg</file>
+        <file alias="newMax">images/svg_images/MAXIMIZE-131994911321635421_0.svg</file>
+        <file alias="newMin">images/svg_images/minimize+minus+remove+sign+icon-1320085940403912850_0.svg</file>
+        <file alias="polygonAdd">images/svg_images/vector_add.svg</file>
+        <file alias="polygonClose">images/svg_images/vector_close.svg</file>
+    </qresource>
+<!--    <qresource prefix="/qml/control">-->
+<!--        <file alias="CustomButtonText.qml">qml/control/CustomButtonText.qml</file>-->
+<!--        <file alias="CustomButtonImage.qml">qml/control/CustomButtonImage.qml</file>-->
+<!--        <file alias="CustomToolButton.qml">qml/control/CustomToolButton.qml</file>-->
+<!--        <file alias="CustomToolButtonImage.qml">qml/control/CustomToolButtonImage.qml</file>-->
+<!--        <file alias="CustomReportButton.qml">qml/control/CustomReportButton.qml</file>-->
+<!--        <file alias="CustomDropMinMaxButton.qml">qml/control/CustomDropMinMaxButton.qml</file>-->
+<!--        <file alias="KeyboardEvents.qml">qml/control/KeyboardEvents.qml</file>-->
+<!--        <file alias="LeftBarContent.qml">qml/control/LeftBarContent.qml</file>-->
+<!--        <file alias="WindowResize.qml">qml/control/WindowResize.qml</file>-->
+<!--        <file alias="CustomRadioButton.qml">qml/control/CustomRadioButton.qml</file>-->
+<!--        <file alias="CustomCheckBox.qml">qml/control/CustomCheckBox.qml</file>-->
+<!--    </qresource>-->
+<!--    <qresource prefix="/qml/pages">-->
+<!--        <file alias="LeftSideView.qml">qml/pages/LeftSideView.qml</file>-->
+<!--        <file alias="CustomComboList.qml">qml/pages/CustomComboList.qml</file>-->
+<!--        <file>qml/pages/CustomMenuBar.qml</file>-->
+<!--        <file alias="CustomAnalysisList.qml">qml/pages/CustomAnalysisList.qml</file>-->
+<!--        <file alias="RightSideView.qml">qml/pages/RightSideView.qml</file>-->
+<!--    </qresource>-->
+<!--    <qresource prefix="/qml/styles">-->
+<!--        <file alias="RectangleWithGlow.qml">qml/styles/RectangleWithGlow.qml</file>-->
+<!--    </qresource>-->
+<!--    <qresource prefix="/qml/list_models">-->
+<!--        <file>qml/list_models/FileListModel.qml</file>-->
+<!--        <file alias="AnalysisListModel.qml">qml/list_models/AnalysisListModel.qml</file>-->
+<!--        <file alias="PolygonListModel.qml">qml/list_models/PolygonListModel.qml</file>-->
+<!--    </qresource>-->
+<!--    <qresource prefix="/qml/dialogs">-->
+<!--        <file alias="NewProjectDialog.qml">qml/dialogs/NewProjectDialog.qml</file>-->
+<!--        <file alias="ChooseFile.qml">qml/dialogs/ChooseFile.qml</file>-->
+<!--        <file alias="MapLoadingScreen.qml">qml/dialogs/MapLoadingScreen.qml</file>-->
+<!--        <file alias="ChooseAnalysis.qml">qml/dialogs/ChooseAnalysis.qml</file>-->
+<!--        <file alias="AnalysisMessageMenager.qml">qml/dialogs/AnalysisMessageMenager.qml</file>-->
+<!--    </qresource>-->
+<!--    <qresource prefix="/qml/content">-->
+<!--        <file alias="ImageContent.qml">qml/content/ImageContent.qml</file>-->
+<!--    </qresource>-->
+<!--    <qresource prefix="/qml/GUI">-->
+<!--        <file>qml/GUI/ButtonMenu.qml</file>-->
+<!--        <file>qml/GUI/ButtonText.qml</file>-->
+<!--        <file>qml/GUI/ButtonTool.qml</file>-->
+<!--        <file>qml/GUI/Colors.js</file>-->
+<!--        <file>qml/GUI/MenuTop.qml</file>-->
+<!--        <file>qml/GUI/MessageManager.qml</file>-->
+<!--        <file>qml/GUI/PolygonCanvas.qml</file>-->
+<!--        <file>qml/GUI/Separator.qml</file>-->
+<!--        <file>qml/GUI/SlideListPolygon.qml</file>-->
+<!--        <file>qml/GUI/SlideMenu.qml</file>-->
+<!--        <file>qml/GUI/ToolbarPolygon.qml</file>-->
+<!--    </qresource>-->
+</RCC>

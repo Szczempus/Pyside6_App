@@ -44,7 +44,7 @@ Item {
 
     Image {
         id: imageLogo
-        source: "qrc:/images/png/logo_biale"
+        source: "./images/png_images/logo_biale.png"
         antialiasing: true
         smooth: true
         mipmap: true
@@ -71,7 +71,7 @@ Item {
         width: height
         anchors.right: projectNameText.left
         fillMode: Image.PreserveAspectFit
-        source: "qrc:/images/png/arrow"
+        source: "./images/png_images/arrow.png"
         antialiasing: true
         mipmap: true
         smooth: true
@@ -132,7 +132,7 @@ Item {
 
         }
         Text {
-            text: appCore.projectMenager.projectName
+            text: appCore.prMeg.project_name
             anchors.bottom: parent.bottom
             anchors.margins: parent.height/10
             height: parent.height*0.4

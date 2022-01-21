@@ -33,8 +33,8 @@ Item {
         spacing: 0
 
         ButtonTool {
-            icon_source: "qrc:/images/png/polygon"
-            icon_source_highlighted: "qrc:/images/png/polygon_highlighted"
+            icon_source: "./images/png_images/polygon.png"
+            icon_source_highlighted: "./images/png_images/polygon_highlighted.png"
             tool: "tool_drawPolygon"
             text: qsTr("DRAW")
             visible: visibility
@@ -63,8 +63,8 @@ Item {
             }
         }
         ButtonTool {
-            icon_source: "qrc:/images/png/nametag"
-            icon_source_highlighted: "qrc:/images/png/nametag_highlighted"
+            icon_source: "./images/png_images/nametag.png"
+            icon_source_highlighted: "./images/png_images/nametag_highlighted.png"
             tool: "tool_namePolygon"
             text: qsTr("NAME")
             visible: visibility
@@ -96,8 +96,8 @@ Item {
             separation: "row"
         }
         ButtonTool {
-            icon_source: "qrc:/images/png/load"
-            icon_source_highlighted: "qrc:/images/png/load_highlighted"
+            icon_source: "./images/png_images/load.png"
+            icon_source_highlighted: "./images/png_images/load_highlighted.png"
             tool: "action_loadPolygon"
             text: qsTr("LOAD")
             isAction: true
@@ -126,8 +126,8 @@ Item {
             }
         }
         ButtonTool {
-            icon_source: "qrc:/images/png/save"
-            icon_source_highlighted: "qrc:/images/png/save_highlighted"
+            icon_source: "./images/png_images/save.png"
+            icon_source_highlighted: "./images/png_images/save_highlighted.png"
             tool: "action_savePolygon"
             text: qsTr("SAVE")
             visible: visibility

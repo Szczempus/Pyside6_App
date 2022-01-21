@@ -220,7 +220,7 @@ Item {
                         width: height
                         anchors.verticalCenter: polyName.verticalCenter
                         fillMode: Image.PreserveAspectFit
-                        source: "qrc:/images/png/arrow_highlighted"
+                        source: "./images/png_images/arrow_highlighted.png"
                         antialiasing: true
                         mipmap: true
                         smooth: true
@@ -268,7 +268,7 @@ Item {
                         anchors.right: parent.right
                         anchors.verticalCenter: polyName.verticalCenter
                         fillMode: Image.PreserveAspectFit
-                        source: "qrc:/images/png/delete_cross"
+                        source: "./images/png_images/delete_cross.png"
                         antialiasing: true
                         mipmap: true
                         smooth: true
@@ -422,7 +422,7 @@ Item {
                                     anchors.right: parent.right
                                     anchors.verticalCenter: coordsBg.verticalCenter
                                     fillMode: Image.PreserveAspectFit
-                                    source: "qrc:/images/png/delete_cross"
+                                    source: "./images/png_images/delete_cross.png"
                                     antialiasing: true
                                     mipmap: true
                                     smooth: true

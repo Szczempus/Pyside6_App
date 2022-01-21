@@ -1,69 +1,66 @@
 # This Python file uses the following encoding: utf-8
 from PySide6.QtCore import Slot, Property, Signal, QObject
 
+import os
+
 
 class ProjectMenager(QObject):
-    # projectNameChanged = Signal()
 
-    def __init__(self, projectNameInit = "Papustka"):
+    projectNameignal = Signal()
+
+    def __init__(self):
         super().__init__()
-        self.projectName = projectNameInit
-        self._projectDescription = None
-        self._projectLocation = None
-        self._projectDate = None
-
+        self.projectName = None
+        self.projectDescription = None
+        self.projectLocation = None
+        self.projectDate = None
         self.path = None
-
-
 
         pass
 
-    # @Property(str)
-    # def project_name(self):
-    #     return self.projectName
-    #
-    # @project_name.setter
-    # def set_project_name(self, name):
-    #     self.projectName = name
-    #     self.project_name_changed
-    #     print(self.project_name)
-    #
-    # @Signal
-    # def project_menager_glos(self):
-    #     print("Daje glos")
-    #     print(self.project_name)
+    @Slot(str, str, str, str)
+    def create_new_project(self, name, desc, loc, date):
+        self.projectName = name
+        self.projectDescription = desc
+        self.projectLocation = loc
+        self.projectDate = date
+        self.path = os.getcwd()
 
-    # def _name(self):
-    #     return self._projectName
-    #
-    # @Signal
-    # def name_changed(self):
-    #     print(self._projectName)
-    #     pass
+        return 0
 
-    # @Slot(str)
-    # def set_project_name(self, string):
-    #     self.projectName = string
-    #     print(self.projectName)
+        # print("Otrzymałem dane")
 
-    # def _project_name(self):
-    #     return self.projectName
-    #
-    # @Signal
-    # def project_name_changed(self):
-    #     pass
-    #
-    # @Slot(str)
-    # def set_project_name(self, string):
-    #     self.projectName = string
-    #     self.project_name_changed.emit()
-    #
+#TODO Dokończyć tworzenie folderu nowego projektu w app dir.
+    def crete_directory(self):
+        directory = self.projectMenager.projectName
+        parent_dir = self.projectMenager.path
+
+        path = os.path.join(parent_dir, directory)
+
+    """
+    Creating getters to properties    
+    """
 
     def get_project_name(self):
         return self.projectName
 
-    def set_project_name(self, name):
-        self.projectName = name
-        print(self.projectName)
+    def get_project_des(self):
+        return self.projectDescription
 
+    def get_project_loc(self):
+        return self.projectLocation
 
+    def get_project_date(self):
+        return self.projectDate
+
+    def get_project_path(self):
+        return self.path
+
+    """
+    Properties
+    """
+    project_name = Property(str, get_project_name, notify=projectNameignal)
+    project_desc = Property(str, get_project_des)
+    project_loc = Property(str, get_project_loc)
+    project_date = Property(str, get_project_date)
+    project_path = Property(str, get_project_path)
