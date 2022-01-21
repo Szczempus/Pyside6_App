@@ -1,8 +1,6 @@
 # This Python file uses the following encoding: utf-8
 from PySide6.QtCore import Slot, Property, QObject, Signal
-from PySide6.QtQml import QmlElement, QmlSingleton
 
-import os
 from projectMenager import ProjectMenager
 from opencvImageProvider import OpencvImageProvider
 
@@ -14,20 +12,34 @@ class Appcore(QObject):
         self.projectMenager = projectMenager
         self.opencvMenager = opencvMenager
 
-        print(self.projectMenager)
-
         pass
 
+    @Slot()
+    def app_core_signal(self):
+        print("appCore receive signal")
+
+    # @Property(ProjectMenager, notify=projectMenagerChanged)
+    # def project_menager(self):
+    #     return self.projectMenager
+    #
+    # @project_menager.setter
+    # def set_project_menager(self, project_menager):
+    #     self.projectMenager = project_menager
+    #     self.projectMenagerChanged.emit()
+
+    # def _project_menager(self):
+    #     return self._projectMenager
+    #
+    # @Signal
+    # def project_menager_changed(self):
+    #     pass
+
+
+    # project_menager = Property(ProjectMenager, _project_menager, notify=project_menager_changed)
+
     # @Slot()
-    # def app_core_signal(self):
-    #     self.projectMenager.project_menager_signal()
-    #     print("appCore receive signal")
-
-    def get_project_menager(self):
-        return self.projectMenager
-
-    def get_opnecv_menager(self):
-        return self.opencvMenager
-
-    prMeg = Property(ProjectMenager, get_project_menager)
-    openCV = Property(OpencvImageProvider, get_opnecv_menager)
+    # def changeNameProject(self):
+    #
+    #     self._projectMenager.projectName = "Papustka"
+    #
+    #     print(self._projectMenager.projectName)
