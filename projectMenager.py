@@ -6,6 +6,8 @@ import os
 
 class ProjectMenager(QObject):
 
+    projectNameignal = Signal()
+
     def __init__(self):
         super().__init__()
         self.projectName = None
@@ -24,14 +26,12 @@ class ProjectMenager(QObject):
         self.projectDate = date
         self.path = os.getcwd()
 
-        # print(self.projectName,
-        #       self.projectDescription,
-        #       self.projectLocation, self.projectDate, self.path)
+        return 0
 
+        # print("Otrzymałem dane")
+
+#TODO Dokończyć tworzenie folderu nowego projektu w app dir.
     def crete_directory(self):
-
-
-
         directory = self.projectMenager.projectName
         parent_dir = self.projectMenager.path
 
@@ -59,7 +59,7 @@ class ProjectMenager(QObject):
     """
     Properties
     """
-    project_name = Property(str, get_project_name)
+    project_name = Property(str, get_project_name, notify=projectNameignal)
     project_desc = Property(str, get_project_des)
     project_loc = Property(str, get_project_loc)
     project_date = Property(str, get_project_date)

@@ -134,7 +134,7 @@ Item {
                 model: list
 
                 delegate: Image {
-                    source: parent.hovered || coordHovered ? "qrc:/images/png/pin_hovered" : "qrc:/images/png/pin"
+                    source: parent.hovered || coordHovered ? "./images/png_images/pin_hovered.png" : "./images/png_images/pin.png"
                     width: 14
                     height: 17
                     fillMode: Image.PreserveAspectFit

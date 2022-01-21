@@ -31,7 +31,9 @@ Item{
 
     function acc(){
 
-        appCore.prMeg.create_new_project(newProjectDialog.projectName, newProjectDialog.projectDescription, newProjectDialog.projectLocation, newProjectDialog.projectDate)
+        appCore.prMeg.create_new_project(newProjectDialog.projectName, newProjectDialog.projectDescription,
+                                         newProjectDialog.projectLocation, newProjectDialog.projectDate)
+        console.log(appCore.prMeg)
         console.log(appCore.prMeg.project_name, appCore.prMeg.project_path)
         control.clear()
         newProjectDialog.close()
