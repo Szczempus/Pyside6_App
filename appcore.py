@@ -9,6 +9,8 @@ from opencvImageProvider import OpencvImageProvider
 
 class Appcore(QObject):
 
+    projectMenagerSignal = Signal(ProjectMenager)
+
     def __init__(self, projectMenager: ProjectMenager, opencvMenager: OpencvImageProvider):
         super(Appcore, self).__init__()
         self.projectMenager = projectMenager
@@ -29,5 +31,5 @@ class Appcore(QObject):
     def get_opnecv_menager(self):
         return self.opencvMenager
 
-    prMeg = Property(ProjectMenager, get_project_menager)
+    prMeg = Property(ProjectMenager, get_project_menager, notify=projectMenagerSignal)
     openCV = Property(OpencvImageProvider, get_opnecv_menager)

@@ -1,3 +1,4 @@
+
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.12
@@ -10,7 +11,7 @@ import "./styles" as Styles
 import "./content" as Content
 import "./GUI" as GUI
 
-
+import Project
 
 Window {
     id: window

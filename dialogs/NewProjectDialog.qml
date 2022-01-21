@@ -5,6 +5,7 @@ import QtQuick.Dialogs
 
 import "../GUI/Colors.js" as Colors
 
+import Project
 
 Item{
 
@@ -31,8 +32,9 @@ Item{
 
     function acc(){
 
-        appCore.prMeg.create_new_project(newProjectDialog.projectName, newProjectDialog.projectDescription, newProjectDialog.projectLocation, newProjectDialog.projectDate)
-        console.log(appCore.prMeg.project_name, appCore.prMeg.project_path)
+//        appCore.prMeg.create_new_project(newProjectDialog.projectName, newProjectDialog.projectDescription, newProjectDialog.projectLocation, newProjectDialog.projectDate)
+        papustka.create_new_project(newProjectDialog.projectName, newProjectDialog.projectDescription, newProjectDialog.projectLocation, newProjectDialog.projectDate)
+        console.log(papustka.project_name,papustka.project_path)
         control.clear()
         newProjectDialog.close()
 
@@ -42,6 +44,9 @@ Item{
     width: 300
     height: 440
 
+    Pr{
+        id:papustka
+    }
 
     Dialog{
         id: newProjectDialog

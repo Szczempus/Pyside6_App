@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import "Colors.js" as Colors
 
+import Project
+
 Item {
     id: control
 
@@ -132,7 +134,7 @@ Item {
 
         }
         Text {
-            text: appCore.projectMenager.projectName
+            text: qsTr(papustka.project_name)
             anchors.bottom: parent.bottom
             anchors.margins: parent.height/10
             height: parent.height*0.4
@@ -150,7 +152,5 @@ Item {
 
         }
     }
-
-
 
 }

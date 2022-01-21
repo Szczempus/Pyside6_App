@@ -6,9 +6,11 @@ import os
 
 class ProjectMenager(QObject):
 
+    projectNameChanhed = Signal(str)
+
     def __init__(self):
         super().__init__()
-        self.projectName = None
+        self.projectName = "Test"
         self.projectDescription = None
         self.projectLocation = None
         self.projectDate = None
@@ -24,9 +26,9 @@ class ProjectMenager(QObject):
         self.projectDate = date
         self.path = os.getcwd()
 
-        # print(self.projectName,
-        #       self.projectDescription,
-        #       self.projectLocation, self.projectDate, self.path)
+        print(self.projectName,
+              self.projectDescription,
+              self.projectLocation, self.projectDate, self.path)
 
     def crete_directory(self):
 
@@ -59,7 +61,7 @@ class ProjectMenager(QObject):
     """
     Properties
     """
-    project_name = Property(str, get_project_name)
+    project_name = Property(str, get_project_name, notify=projectNameChanhed)
     project_desc = Property(str, get_project_des)
     project_loc = Property(str, get_project_loc)
     project_date = Property(str, get_project_date)
