@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
+<<<<<<< Updated upstream
 <!-- Written by QtCreator 5.0.2, 2022-01-17T08:49:21. -->
+=======
+<!-- Written by QtCreator 5.0.2, 2022-01-21T17:43:58. -->
+>>>>>>> Stashed changes
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -136,11 +140,19 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
+<<<<<<< Updated upstream
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/main.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/main.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/main.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{a118d27f-f9f7-485e-8733-72a5248a1c4a}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\main.py</value>
+=======
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/BardKrzysztof/Desktop/TensorflowAPI/Pyside6_App/opencvImageProvider.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/BardKrzysztof/Desktop/TensorflowAPI/Pyside6_App/opencvImageProvider.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/BardKrzysztof/Desktop/TensorflowAPI/Pyside6_App/opencvImageProvider.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f040d9f7-df3e-496d-b228-499cc746a53a}</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\BardKrzysztof\Desktop\TensorflowAPI\Pyside6_App\opencvImageProvider.py</value>
+>>>>>>> Stashed changes
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
@@ -172,11 +184,19 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
+<<<<<<< Updated upstream
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/projectMenager.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/projectMenager.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/projectMenager.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{1e3897df-ee3e-4d4c-902d-4b00a01d930d}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\projectMenager.py</value>
+=======
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/BardKrzysztof/Desktop/TensorflowAPI/Pyside6_App/appcore.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/BardKrzysztof/Desktop/TensorflowAPI/Pyside6_App/appcore.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/BardKrzysztof/Desktop/TensorflowAPI/Pyside6_App/appcore.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{f040d9f7-df3e-496d-b228-499cc746a53a}</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\BardKrzysztof\Desktop\TensorflowAPI\Pyside6_App\appcore.py</value>
+>>>>>>> Stashed changes
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
