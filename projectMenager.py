@@ -6,19 +6,15 @@ import os
 
 class ProjectMenager(QObject):
 
-    projectNameignal = Signal()
-
     def __init__(self):
-        super().__init__()
+        QObject.__init__(self)
         self.projectName = None
         self.projectDescription = None
         self.projectLocation = None
         self.projectDate = None
         self.path = None
 
-        pass
-
-    @Slot(str, str, str, str)
+    @Slot("QString", "QString", "QString", "QString")
     def create_new_project(self, name, desc, loc, date):
         self.projectName = name
         self.projectDescription = desc
@@ -26,11 +22,10 @@ class ProjectMenager(QObject):
         self.projectDate = date
         self.path = os.getcwd()
 
-        return 0
+        # Change project name
+        self.projectNameChanged.emit(self.projectName)
 
-        # print("Otrzymałem dane")
-
-#TODO Dokończyć tworzenie folderu nowego projektu w app dir.
+    # TODO Dokończyć tworzenie folderu nowego projektu w app dir.
     def crete_directory(self):
         directory = self.projectMenager.projectName
         parent_dir = self.projectMenager.path
@@ -57,10 +52,19 @@ class ProjectMenager(QObject):
         return self.path
 
     """
+    Signals of property change 
+    """
+    projectNameChanged = Signal(str)
+    projectDescriptionChanged = Signal(str)
+    projectLocationChanged = Signal(str)
+    projectDateChanged = Signal(str)
+    projectPathChanged = Signal(str)
+
+    """
     Properties
     """
-    project_name = Property(str, get_project_name, notify=projectNameignal)
-    project_desc = Property(str, get_project_des)
-    project_loc = Property(str, get_project_loc)
-    project_date = Property(str, get_project_date)
-    project_path = Property(str, get_project_path)
+    project_name = Property(str, get_project_name, notify=projectNameChanged)
+    project_desc = Property(str, get_project_des, notify=projectDescriptionChanged)
+    project_loc = Property(str, get_project_loc, notify=projectLocationChanged)
+    project_date = Property(str, get_project_date, notify=projectDateChanged)
+    project_path = Property(str, get_project_path, notify=projectPathChanged)

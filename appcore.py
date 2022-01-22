@@ -10,7 +10,9 @@ from paintHandler import PaintHandler
 
 class Appcore(QObject):
 
-    projectSignal = Signal()
+    projectMenagerChanged = Signal()
+    opencvImageProviderChanged = Signal()
+    paintHandlerChanged = Signal()
 
     def __init__(self, projectMenager: ProjectMenager, opencvMenager: OpencvImageProvider, paintHandler: PaintHandler):
         super(Appcore, self).__init__()
@@ -19,24 +21,6 @@ class Appcore(QObject):
         self.paintHandler = paintHandler
 
         print(self.projectMenager)
-
-        pass
-
-    @Property(ProjectMenager, notify=projectSignal)
-    def prMeg(self):
-        return self.projectMenager
-
-    @prMeg.setter
-    def prMeg(self, val):
-        self.projectMenager = val
-        # self.projectMenager.setParent(self)
-
-
-
-    # @Slot()
-    # def app_core_signal(self):
-    #     self.projectMenager.project_menager_signal()
-    #     print("appCore receive signal")
 
     """
     Property setters and getters
@@ -52,10 +36,10 @@ class Appcore(QObject):
         return self.paintHandler
 
     """
-    Properties seen by QML
+    Properties exposed to QML
     """
-    # prMeg = Property(ProjectMenager, get_project_menager, notify=projectSignal)
-    openCV = Property(OpencvImageProvider, get_opnecv_menager)
-    paintHan = Property(PaintHandler, get_paint_handler)
+    prMeg = Property(ProjectMenager, get_project_menager, notify=projectMenagerChanged)
+    openCV = Property(OpencvImageProvider, get_opnecv_menager, notify=opencvImageProviderChanged)
+    paintHan = Property(PaintHandler, get_paint_handler, notify=paintHandlerChanged)
 
 

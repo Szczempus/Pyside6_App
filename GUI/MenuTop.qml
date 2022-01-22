@@ -132,6 +132,7 @@ Item {
 
         }
         Text {
+            id: projectName
             text: appCore.prMeg.project_name
             anchors.bottom: parent.bottom
             anchors.margins: parent.height/10
@@ -147,10 +148,8 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignLeft
             elide: Text.ElideLeft
-
         }
+
     }
-
-
 
 }

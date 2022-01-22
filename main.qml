@@ -11,7 +11,6 @@ import "./content" as Content
 import "./GUI" as GUI
 
 
-
 Window {
     id: window
     width: 1280
@@ -184,6 +183,5 @@ Window {
             appCore.polygonListToJson(analysis.chosedAnalysis)
         }
     }
-
 
 }

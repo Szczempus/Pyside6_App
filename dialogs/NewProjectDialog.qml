@@ -5,7 +5,6 @@ import QtQuick.Dialogs
 
 import "../GUI/Colors.js" as Colors
 
-
 Item{
 
     id: control
@@ -30,14 +29,11 @@ Item{
     }
 
     function acc(){
-
         appCore.prMeg.create_new_project(newProjectDialog.projectName, newProjectDialog.projectDescription,
-                                         newProjectDialog.projectLocation, newProjectDialog.projectDate)
-        console.log(appCore.prMeg)
-        console.log(appCore.prMeg.project_name, appCore.prMeg.project_path)
+                                newProjectDialog.projectLocation, newProjectDialog.projectDate)
+//        console.log(projectMenager.project_name, projectMenager.project_path)
         control.clear()
         newProjectDialog.close()
-
     }
 
 
