@@ -5,6 +5,7 @@ import os
 
 
 class ProjectMenager(QObject):
+    fileExists = Signal()
 
     def __init__(self):
         QObject.__init__(self)
@@ -20,17 +21,52 @@ class ProjectMenager(QObject):
         self.projectDescription = desc
         self.projectLocation = loc
         self.projectDate = date
+
+        # Get current working directory and create project directory
         self.path = os.getcwd()
+        self.crete_directory()
 
-        # Change project name
-        self.projectNameChanged.emit(self.projectName)
-
-    # TODO Dokończyć tworzenie folderu nowego projektu w app dir.
     def crete_directory(self):
-        directory = self.projectMenager.projectName
-        parent_dir = self.projectMenager.path
+        directory = self.projectName
+        parent_dir = self.path
 
         path = os.path.join(parent_dir, directory)
+        self.path = path
+
+        # Try to make project directory
+        try:
+            os.mkdir(path)
+        except FileExistsError:
+            # If exists emit signal to override
+            self.fileExists.emit()
+        except OSError as error:
+            raise error
+        else:
+            # If not exists, current path is project path, project created
+            self.project_created()
+
+    def delete_project(self):
+        path_cpy = self.path
+        self.path = os.path.dirname(path_cpy)
+
+        try:
+            # os.close(path_cpy)
+            os.rmdir(path_cpy)
+        except FileNotFoundError:
+            raise FileNotFoundError("Nie znaleziono pliku")
+        except OSError as error:
+            raise error
+
+    @Slot()
+    def override_project(self):
+        # If override delete existing project, create new one, and confirm it
+        self.delete_project()
+        self.crete_directory()
+        self.project_created()
+
+    def project_created(self):
+        # Emit confirmation o creating project and change name in frontend
+        self.projectNameChanged.emit(self.projectName)
 
     """
     Creating getters to properties    

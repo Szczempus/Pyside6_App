@@ -138,7 +138,6 @@ Window {
         y: (window.height - height)/2
         onAccepted: {
             newProjectDialog.acc()
-            menuTop.toolbarVisible = true
         }
         onRejected: {
             newProjectDialog.clear()
@@ -172,6 +171,11 @@ Window {
         id:loading
     }
 
+    Dialogs.OverrideConfirmDialog{
+        id: override
+        onOverride: appCore.prMeg.override_project()
+    }
+
     // Choose analysis popup window
 //    Dialogs.AnalysisMessageMenager{
 //        id:analysis
@@ -182,6 +186,17 @@ Window {
         onAccepted: {
             appCore.polygonListToJson(analysis.chosedAnalysis)
         }
+    }
+
+    Connections{
+         target: appCore.prMeg
+
+         function onFileExists(){
+             override.open()
+         }
+         function onProjectNameChanged (){
+             menuTop.toolbarVisible = true
+         }
     }
 
 }
