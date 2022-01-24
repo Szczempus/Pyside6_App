@@ -39,6 +39,7 @@ class ProjectMenager(QObject):
         except FileExistsError:
             # If exists emit signal to override
             self.fileExists.emit()
+            
         except OSError as error:
             raise error
         else:
