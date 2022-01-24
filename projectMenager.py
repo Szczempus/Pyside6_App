@@ -2,7 +2,7 @@
 from PySide6.QtCore import Slot, Property, Signal, QObject
 
 import os
-
+import shutil
 
 class ProjectMenager(QObject):
     fileExists = Signal()
@@ -39,7 +39,7 @@ class ProjectMenager(QObject):
         except FileExistsError:
             # If exists emit signal to override
             self.fileExists.emit()
-            
+
         except OSError as error:
             raise error
         else:
@@ -52,7 +52,9 @@ class ProjectMenager(QObject):
 
         try:
             # os.close(path_cpy)
-            os.rmdir(path_cpy)
+            # os.rmdir(path_cpy)
+            # Removes all files in tree
+            shutil.rmtree(path_cpy)
         except FileNotFoundError:
             raise FileNotFoundError("Nie znaleziono pliku")
         except OSError as error:

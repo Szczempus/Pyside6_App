@@ -86,6 +86,7 @@ Popup{
 
         onClicked: {
             fileExistsEvent.override()
+            fileExistsEvent.close()
         }
     }
 
