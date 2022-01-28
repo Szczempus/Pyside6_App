@@ -146,6 +146,7 @@ Window {
 
     }
 
+
     // Choose image file dialog window
     Dialogs.ChooseFile{
         id: chooseImageFile
@@ -156,6 +157,7 @@ Window {
             loading.open()
         }
     }
+
 
     // Choose project file dialog
     Dialogs.ChooseFile{
@@ -187,6 +189,8 @@ Window {
             appCore.polygonListToJson(analysis.chosedAnalysis)
         }
     }
+
+
 
     Connections{
          target: appCore.prMeg

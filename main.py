@@ -1,28 +1,30 @@
 # This Python file uses the following encoding: utf-8
 
 import sys
-from PySide6 import *
+from PySide2 import *
 # from __feature__ import snake_case
 # from __feature__ import true_property
 
-from PySide6.QtGui import QGuiApplication
-from PySide6.QtQml import QQmlApplicationEngine, qmlRegisterType
+from PySide2.QtGui import QGuiApplication
+from PySide2.QtQml import QQmlApplicationEngine, qmlRegisterType
 
 from appcore import *
 
-app = QGuiApplication(sys.argv)
+if __name__ == "__main__":
+    app = QGuiApplication(sys.argv)
 
-engine = QQmlApplicationEngine()
+    engine = QQmlApplicationEngine()
 
-opencv = OpencvImageProvider()
-prMang = ProjectMenager()
-paintHan = PaintHandler()
+    opencv = OpencvImageProvider()
+    prMang = ProjectMenager()
+    paintHan = PaintHandler()
+    plgMenager = PolygonMenager()
 
-appCore = Appcore(projectMenager=prMang, opencvMenager=opencv, paintHandler=paintHan)
+    appCore = Appcore(projectMenager=prMang, opencvMenager=opencv, paintHandler=paintHan, polygonMenager=plgMenager)
+    engine.addImageProvider("opencvImage", opencv)
+    engine.rootContext().setContextProperty('appCore', appCore)
 
-engine.rootContext().setContextProperty('appCore', appCore)
+    engine.quit.connect(app.quit)
+    engine.load('main.qml')
 
-engine.quit.connect(app.quit)
-engine.load('main.qml')
-
-sys.exit(app.exec())
+    sys.exit(app.exec_())

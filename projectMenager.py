@@ -1,10 +1,11 @@
 # This Python file uses the following encoding: utf-8
-from PySide6.QtCore import Slot, Property, Signal, QObject
+from PySide2.QtCore import Slot, Property, Signal, QObject
 
 import os
 import shutil
 
 class ProjectMenager(QObject):
+
     fileExists = Signal()
 
     def __init__(self):
@@ -107,3 +108,4 @@ class ProjectMenager(QObject):
     project_loc = Property(str, get_project_loc, notify=projectLocationChanged)
     project_date = Property(str, get_project_date, notify=projectDateChanged)
     project_path = Property(str, get_project_path, notify=projectPathChanged)
+

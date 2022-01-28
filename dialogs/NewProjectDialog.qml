@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Dialogs
+import QtQuick.Dialogs 1.0
 //import QtGraphicalEffects 1.0
 
 import "../GUI/Colors.js" as Colors
@@ -32,6 +32,7 @@ Item{
         appCore.prMeg.create_new_project(newProjectDialog.projectName, newProjectDialog.projectDescription,
                                 newProjectDialog.projectLocation, newProjectDialog.projectDate)
 //        console.log(projectMenager.project_name, projectMenager.project_path)
+
         control.clear()
         newProjectDialog.close()
     }

@@ -1,16 +1,49 @@
-from PySide6.QtCore import QObject, Property, Signal
+from PySide2.QtCore import QObject, Property, Signal
+from select import select
 
 
 class PolygonCoords(QObject):
-    hoveredChanged = Signal()
 
-    def __init__(self):
+    def __init__(self, x, y):
         super(PolygonCoords, self).__init__()
-        self._x = None
-        self._y = None
+        self._x = x
+        self._y = y
+        self._hovered = False
 
-    hovered = Property(bool, notify=hoveredChanged)
-    x = Property(float,)
+    def x_get(self):
+        return self._x
+
+    def x_set(self, x_coord):
+        self._x = x_coord
+
+    @Signal
+    def x_changed(self):
+        pass
+
+    def y_get(self):
+        return self._y
+
+    def y_set(self, y_coord):
+        self._y = y_coord
+
+    @Signal
+    def y_changed(self):
+        pass
+
+    @Signal
+    def hover_changed(self):
+        pass
+
+    @Property(bool, notify=hover_changed)
+    def hovered(self):
+        return self._hovered
+
+    @hovered.setter
+    def hovered(self, val):
+        self._hovered = val
+
+    x = Property(float, x_get, x_set, notify=x_changed)
+    y = Property(float, y_get, y_set, notify=y_changed)
 
 
 class CustomPolygon(QObject):
@@ -22,8 +55,15 @@ class CustomPolygon(QObject):
 
 
 class PolygonMenager(QObject):
+    polygonListChanged = ()
 
     def __init__(self):
         super(PolygonMenager, self).__init__()
+        self._polygonList = None
 
         pass
+
+    def get_polygon_list(self):
+        return self._polygonList
+
+    polygonList = Property(list, get_polygon_list, notify=polygonListChanged)
