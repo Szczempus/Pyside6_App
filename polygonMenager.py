@@ -96,6 +96,8 @@ class PolygonMenager(QObject):
         # Create new polygon of CustomPolygon class with name
         self._last_polygon = CustomPolygon(polygon_name)
         self._polygonList.append(self._last_polygon)
+        
+        # Todo obsłużyć nowy sposób zwracania poligonów
         self.newPolygonCreated.emit(self._last_polygon)
 
     polygonList = Property(list, get_polygon_list, notify=polygonListChanged)
