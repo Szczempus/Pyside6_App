@@ -1,4 +1,4 @@
-from PySide2.QtCore import QObject, Property, Signal
+from PySide2.QtCore import QObject, Property, Signal, Slot
 from select import select
 
 minimum_distance = 0.5
@@ -50,9 +50,9 @@ class PolygonCoords(QObject):
 
 class CustomPolygon(QObject):
 
-    def __init__(self):
+    def __init__(self, name):
         super(CustomPolygon, self).__init__()
-        self._name = None
+        self._name = name
 
         pass
 
@@ -70,17 +70,32 @@ class CustomPolygon(QObject):
     pointList = Property(list, )
 
 
-
 class PolygonMenager(QObject):
-    polygonListChanged = ()
+    polygonListChanged = Signal()
+    newPolygonCreated = Signal(CustomPolygon, arguments=["polygon"])
 
     def __init__(self):
         super(PolygonMenager, self).__init__()
-        self._polygonList = None
+        self._polygonList = []
+        self._polygon_counter = 0
+        self._last_polygon = None
 
         pass
 
     def get_polygon_list(self):
         return self._polygonList
+
+    @Slot(str)
+    def startNewPolygon(self, name):
+        polygon_name = ""
+        if name == "":
+            polygon_name = "Poly " + str(self._polygon_counter + 1)
+        else:
+            polygon_name = name
+
+        # Create new polygon of CustomPolygon class with name
+        self._last_polygon = CustomPolygon(polygon_name)
+        self._polygonList.append(self._last_polygon)
+        self.newPolygonCreated.emit(self._last_polygon)
 
     polygonList = Property(list, get_polygon_list, notify=polygonListChanged)
