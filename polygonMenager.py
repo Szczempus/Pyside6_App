@@ -1,6 +1,8 @@
 from PySide2.QtCore import QObject, Property, Signal
 from select import select
 
+minimum_distance = 0.5
+
 
 class PolygonCoords(QObject):
 
@@ -50,8 +52,23 @@ class CustomPolygon(QObject):
 
     def __init__(self):
         super(CustomPolygon, self).__init__()
+        self._name = None
 
         pass
+
+    @Signal
+    def name_changed(self):
+        pass
+
+    def get_name(self):
+        return self._name
+
+    def set_name(self, value):
+        self._name = value
+
+    name = Property("QString", get_name, set_name, notify=name_changed)
+    pointList = Property(list, )
+
 
 
 class PolygonMenager(QObject):

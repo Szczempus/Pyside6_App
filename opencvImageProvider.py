@@ -20,9 +20,16 @@ class OpencvImageProvider(QQuickImageProvider):
         img = self.image
         if img is None:
             self.image_file_path = path.split("///", 1)
-            reader = QImageReader(path[1])
-            print(path[1])
-            img = cv.imread(path[1])
+            reader = QImageReader(self.image_file_path[1])
+            if reader is None:
+                raise TypeError("Reader is None")
+                return 0
+            else:
+                print(self.image_file_path[1])
+                return reader.read()
+
+
+            img = cv.imread(self.image_file_path[1])
 
             # Todo załadowac obraz tiff, zrobić checking itp
 
@@ -38,6 +45,6 @@ class OpencvImageProvider(QQuickImageProvider):
             # self.image.loadFromData(bytearr, "PNG")
 
         # return self.image
-        return reader.read()
+
 
 
