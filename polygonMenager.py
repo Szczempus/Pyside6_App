@@ -1,4 +1,9 @@
 from PySide2.QtCore import QObject, Property, Signal, Slot, QPointF
+from math import sqrt
+
+
+# Todo zmienić zakończenie rysowania polygonu w QML, reszta działa
+
 
 minimum_distance = 0.5
 
@@ -62,17 +67,44 @@ class CustomPolygon(QObject):
     finishedChanged = Signal()
     hoveredChanged = Signal()
     polygonCenterChanged = Signal()
-
+    isCheckedChanged = Signal()
+    addPointResult = Signal(bool, arguments=['res'])
 
     def __init__(self, name):
         super(CustomPolygon, self).__init__()
         self._name = name
-        self._finished = None
-        self._hovered = None
-        self._isChecked = None
+        self._finished = False
+        self._hovered = False
+        self._isChecked = False
         self._pointList = []
         self._polygonCenter = None
         pass
+
+    @Slot(float, float)
+    def addPoint(self, x, y):
+        result = True
+        distance = 0.0
+        if len(self._pointList) == 0:
+            for coords in self._pointList:
+                distance = sqrt(((coords.x_get - x) ** 2) + ((coords.y_get - y) ** 2))
+                if distance < minimum_distance:
+                    result = False
+
+        if result:
+            poly_coords = PolygonCoords(x, y)
+            self._pointList.append(poly_coords)
+            self.pointListChanged.emit()
+            self.polygonCenterChanged.emit()
+            self.addPointResult.emit(result)
+
+
+    @Slot(PolygonCoords)
+    def removePoint(self, poly_coords):
+        for cooord in self._pointList:
+            if cooord == poly_coords:
+                self._pointList.remove(cooord)
+        self.pointListChanged.emit()
+        self.polygonCenterChanged.emit()
 
     # name property section
     def get_name(self):
@@ -83,9 +115,7 @@ class CustomPolygon(QObject):
 
     # pointList property section
     def set_point(self, x, y):
-        poly_coord = PolygonCoords()
-        poly_coord.y_set(y)
-        poly_coord.x_set(x)
+        poly_coord = PolygonCoords(x, y)
         self._pointList.append(poly_coord)
 
     def get_point_list(self):
@@ -109,23 +139,31 @@ class CustomPolygon(QObject):
     def get_polygon_center(self):
         x = 0
         y = 0
-        for coords in range(0, len(self._pointList)):
-            x = x + coords.x_get
-            y = y + coords.y_get
+        for coords in self._pointList:
+            x = x + coords.x_get()
+            y = y + coords.y_get()
         if len(self._pointList) > 0:
             x = x / len(self._pointList)
             y = y / len(self._pointList)
         return QPointF(x, y)
+
+    # isChecked property section
+    def get_is_checked(self):
+        return self._isChecked
+
+    def set_is_checked(self, val):
+        self._isChecked = val
 
     name = Property("QString", get_name, set_name, notify=nameChanged)
     pointList = Property(list, get_point_list, notify=pointListChanged)
     finished = Property(bool, get_finished, set_finished, notify=finishedChanged)
     hovered = Property(bool, get_hoverd, set_hovered, notify=hoveredChanged)
     polygonCenter = Property(QPointF, get_polygon_center, notify=polygonCenterChanged)
+    isChecked = Property(bool, get_is_checked, set_is_checked, notify=isCheckedChanged)
 
 
 '''
-Polygons List Menager
+Polygons List Manager
 '''
 
 
@@ -159,7 +197,6 @@ class PolygonMenager(QObject):
         self._last_polygon = CustomPolygon(polygon_name)
         self._polygonList.append(self._last_polygon)
 
-        # Todo obsłużyć nowy sposób zwracania poligonów
         self.newPolygonCreated.emit(self._last_polygon)
 
     polygonList = Property(list, get_polygon_list, notify=polygonListChanged)

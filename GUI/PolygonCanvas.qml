@@ -9,14 +9,28 @@ Item {
 
     property bool nameToolActive: false
 
+    property bool result: false
+
     Connections{
         target: appCore.polyMeg
 
         function onNewPolygonCreated(poly){
             polygon = poly
-            console.log(polygon.name)
+//            console.log(polygon.name) //Działa
         }
+
     }
+
+    Connections{
+        target: polygon
+
+        function onAddPointResult(res){
+            result = res
+        }
+
+
+    }
+
 
     function startDrawing(polygonName) {
 //        console.log("Nowy Poligon QML") //Działa
@@ -183,9 +197,9 @@ Item {
         onClicked: {
             if(control.polygon != undefined)
             {
-                var result = control.polygon.addPoint(mouseX, mouseY)
+                control.polygon.addPoint(mouseX, mouseY)
 
-                if(result === true)
+                if(control.result === true)
                 {
                     control.polygonManager.polygonListChanged()
                     control.polygon.pointListChanged()
