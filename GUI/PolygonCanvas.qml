@@ -13,22 +13,16 @@ Item {
 
     Connections{
         target: appCore.polyMeg
-
         function onNewPolygonCreated(poly){
             polygon = poly
-//            console.log(polygon.name) //Działa
         }
-
     }
 
     Connections{
         target: polygon
-
         function onAddPointResult(res){
             result = res
         }
-
-
     }
 
 
@@ -61,6 +55,7 @@ Item {
         model: control.polygonManager.polygonList
 
         delegate: Canvas {
+            id: poliDraw
             anchors.fill: parent
             property var polygon: modelData
             property bool finished: polygon.finished
@@ -71,6 +66,13 @@ Item {
             onHoveredChanged: requestPaint()
             onListChanged: requestPaint()
             renderStrategy: Canvas.Threaded
+
+//            Connections{
+//                target: polygon
+//                function onFinishedChanged(val){
+//                    poliDraw.finished = val
+//                }
+//            }
 
             onPaint: {
                 var context = getContext("2d");
@@ -89,6 +91,7 @@ Item {
 
                 if(finished === true)
                 {
+//                    console.log("Jestem W ifdie")
                     context.lineWidth = 1
                     context.setLineDash([2000,1])
 

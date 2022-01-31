@@ -61,6 +61,9 @@ Window {
     // Menu TopBar Object
     GUI.MenuTop {
         id: menuTop
+
+        property int counter: 0
+
         projectName: "TEST_name.pro"
         //        toolbarVisible: true // polygon top toolbar
 
@@ -98,7 +101,7 @@ Window {
             if(tool == "tool_drawPolygon")
             {
                 if(active == true)
-                    messageManager.getString(true, "Polygon " + (polygonCanvas.polygonManager.polygonList.length+1))
+                    messageManager.getString(true, "Polygon " + (++counter).toString())
                 else
                     polygonCanvas.endDrawing()
             }

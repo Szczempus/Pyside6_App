@@ -10,7 +10,7 @@ class ProjectMenager(QObject):
 
     def __init__(self):
         QObject.__init__(self)
-        self.projectName = None
+        self.projectName = "First Project"
         self.projectDescription = None
         self.projectLocation = None
         self.projectDate = None

@@ -51,6 +51,7 @@ class PolygonCoords(QObject):
     @hovered.setter
     def hovered(self, val):
         self._hovered = val
+        self.hover_changed.emit()
 
     x = Property(float, x_get, x_set, notify=x_changed)
     y = Property(float, y_get, y_set, notify=y_changed)
@@ -64,7 +65,7 @@ Custom Polygon handler
 class CustomPolygon(QObject):
     nameChanged = Signal()
     pointListChanged = Signal()
-    finishedChanged = Signal()
+    finishedChanged = Signal(bool, arguments=['val'])
     hoveredChanged = Signal()
     polygonCenterChanged = Signal()
     isCheckedChanged = Signal()
@@ -127,6 +128,7 @@ class CustomPolygon(QObject):
 
     def set_finished(self, val):
         self._finished = val
+        self.finishedChanged.emit(val)
 
     # hovered property section
     def get_hoverd(self):
@@ -134,6 +136,7 @@ class CustomPolygon(QObject):
 
     def set_hovered(self, val):
         self._hovered = val
+        self.hoveredChanged.emit()
 
     # polygonCenter property section
     def get_polygon_center(self):
@@ -188,7 +191,7 @@ class PolygonMenager(QObject):
         # print("Nowy Poligon Python") #Działa
 
         polygon_name = ""
-        if name == "":
+        if name == "" or name == " ":
             polygon_name = "Poly " + str(self._polygon_counter + 1)
         else:
             polygon_name = name
@@ -196,7 +199,14 @@ class PolygonMenager(QObject):
         # Create new polygon of CustomPolygon class with name
         self._last_polygon = CustomPolygon(polygon_name)
         self._polygonList.append(self._last_polygon)
-
         self.newPolygonCreated.emit(self._last_polygon)
+        self.polygonListChanged.emit()
+
+    @Slot(CustomPolygon)
+    def deletePolygon(self, polygon):
+        for poly in self._polygonList:
+            if poly == polygon:
+                self._polygonList.remove(poly)
+                self.polygonListChanged.emit()
 
     polygonList = Property(list, get_polygon_list, notify=polygonListChanged)
