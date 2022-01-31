@@ -43,6 +43,7 @@ class Appcore(QObject):
         return self.paintHandler
 
     def get_polygon_menager(self):
+        # print("Polygon menager get") #Działa
         return self.polygonMenager
 
     """

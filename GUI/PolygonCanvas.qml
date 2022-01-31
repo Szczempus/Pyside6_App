@@ -9,8 +9,18 @@ Item {
 
     property bool nameToolActive: false
 
+    Connections{
+        target: appCore.polyMeg
+
+        function onNewPolygonCreated(poly){
+            polygon = poly
+            console.log(polygon.name)
+        }
+    }
+
     function startDrawing(polygonName) {
-        polygon = control.polygonManager.startNewPolygon(polygonName);
+//        console.log("Nowy Poligon QML") //Działa
+        control.polygonManager.startNewPolygon(polygonName);
         canvasArea.enabled = true
     }
 

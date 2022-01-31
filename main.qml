@@ -36,7 +36,7 @@ Window {
             GUI.PolygonCanvas {
                 id: polygonCanvas
                 anchors.fill: parent
-                polygonManager: appCore.polygonManager
+                polygonManager: appCore.polyMeg
                 property string nameToSet: ""
                 onPolygonSelected: {
                     if(nameToolActive)
@@ -54,7 +54,7 @@ Window {
     GUI.SlideListPolygon {
         id: polygonList
         topOffset: menuTop.height
-        polygonManager: appCore.polygonManager
+        polygonManager: appCore.polyMeg
     }
 
 
