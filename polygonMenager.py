@@ -1,10 +1,6 @@
 from PySide2.QtCore import QObject, Property, Signal, Slot, QPointF
 from math import sqrt
 
-
-# Todo zmienić zakończenie rysowania polygonu w QML, reszta działa
-
-
 minimum_distance = 0.5
 
 '''
@@ -98,7 +94,6 @@ class CustomPolygon(QObject):
             self.polygonCenterChanged.emit()
             self.addPointResult.emit(result)
 
-
     @Slot(PolygonCoords)
     def removePoint(self, poly_coords):
         for cooord in self._pointList:
@@ -156,6 +151,7 @@ class CustomPolygon(QObject):
 
     def set_is_checked(self, val):
         self._isChecked = val
+        self.isCheckedChanged.emit()
 
     name = Property("QString", get_name, set_name, notify=nameChanged)
     pointList = Property(list, get_point_list, notify=pointListChanged)
@@ -208,5 +204,31 @@ class PolygonMenager(QObject):
             if poly == polygon:
                 self._polygonList.remove(poly)
                 self.polygonListChanged.emit()
+
+    # Todo dokończyć sprawdzanie czy kursor jest w poligonie
+    @Slot(float, float)
+    def isPolygonHovered(self, x, y):
+        for polygon in self._polygonList:
+            pass
+
+    def is_point_in_polygon(self, pkt: tuple, polygon: list) -> bool:
+        inside = False
+
+        minX = polygon[0].x_get()
+        maxX = polygon[0].x_get()
+        minY = polygon[0].y_get()
+        maxY = polygon[0].y_get()
+
+        for point in polygon:
+            minX = min(point.x_get(), minX)
+            maxX = max(point.x_get(), maxX)
+            minY = min(point.y_get(), minY)
+            maxY = max(point.y_get(), maxY)
+
+        if pkt[0] < minX or pkt[0] > maxX or pkt[1] < minY or pkt[1] > maxY:
+            return inside
+
+        for point in polygon:
+            pass
 
     polygonList = Property(list, get_polygon_list, notify=polygonListChanged)

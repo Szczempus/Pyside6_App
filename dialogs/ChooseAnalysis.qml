@@ -12,7 +12,7 @@ Dialog{
 
     id: rootDialog
 
-    property var polygonManager: appCore.polygonManager
+    property var polygonManager: undefined
     property int chosedAnalysis: 1
 
     implicitHeight: parent.height * 0.6

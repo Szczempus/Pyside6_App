@@ -26,7 +26,7 @@ Item {
         id: image
         width: parent.width * 0.6
         height: parent.height * 0.6
-        source: "qrc:/images/png/checked"
+        source: "../GUI/images/png_images/checked.png"
         fillMode: Image.PreserveAspectFit
         visible: isChecked
         anchors.verticalCenter: rectangle.verticalCenter

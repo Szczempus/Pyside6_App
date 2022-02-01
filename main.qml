@@ -54,7 +54,7 @@ Window {
     GUI.SlideListPolygon {
         id: polygonList
         topOffset: menuTop.height
-        polygonManager: appCore.polyMeg
+        polygonManager: polygonCanvas.polygonManager
     }
 
 
@@ -74,17 +74,17 @@ Window {
                 newProjectDialog.open()
             }
             else if (action == "action_openProject"){
+                console.log("Work in progress...")
                 chooseFile.open()
                 // Todo: signal openProject -> load project entities to backend
             }
             else if (action == "action_saveProject"){
-                console.log("Work in progres..")
+                console.log("Work in progress...")
             }
             else if (action == "action_importImage"){
                 chooseImageFile.open()
             }
             else if (action == "action_runAnalysis"){
-                console.log("Work in progress")
                 analysis.open()
 //                analysis.getString(true, "Papustka")
 //                appCore.scriptHandler.runScript()
@@ -92,7 +92,7 @@ Window {
 
             }
             else if (action == "action_createReport"){
-
+                console.log("Work in progress...")
             }
         }
 
@@ -188,12 +188,22 @@ Window {
 
     Dialogs.ChooseAnalysis{
         id:analysis
+        polygonManager: polygonCanvas.polygonManager
         onAccepted: {
-            appCore.polygonListToJson(analysis.chosedAnalysis)
+            appCore.proces.start_analysis(analysis.chosedAnalysis)
         }
     }
 
 
+    Connections{
+        target: appCore.proces
+
+        function onIsProcessing(val){
+            if (val === true){
+                console.log("Analiza w trkacie")
+            }
+        }
+    }
 
     Connections{
          target: appCore.prMeg

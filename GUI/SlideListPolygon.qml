@@ -206,7 +206,7 @@ Item {
                         width: height
                         anchors.verticalCenter: polyName.verticalCenter
                         fillMode: Image.PreserveAspectFit
-                        source: "qrc:/images/png/arrow"
+                        source: "./images/png_images/arrow"
                         antialiasing: true
                         mipmap: true
                         smooth: true

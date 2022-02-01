@@ -3,29 +3,29 @@ from PySide2.QtCore import Slot, Property, QObject, Signal
 # from PySide2.QtQml import QmlElement, QmlSingleton
 from PySide2.QtWidgets import QFileDialog
 
-# TODO zamienić Pyside6 na PyQt5
-
 import os
 from projectMenager import ProjectMenager
 from opencvImageProvider import OpencvImageProvider
 from paintHandler import PaintHandler
 from polygonMenager import PolygonMenager
+from analysis_backend import Processing
 
 
 class Appcore(QObject):
-
     projectMenagerChanged = Signal()
     opencvImageProviderChanged = Signal()
     paintHandlerChanged = Signal()
     polygonMenagerChanged = Signal()
+    procesManagerChanged = Signal()
 
     def __init__(self, projectMenager: ProjectMenager, opencvMenager: OpencvImageProvider, paintHandler: PaintHandler,
-                 polygonMenager: PolygonMenager):
+                 polygonMenager: PolygonMenager, processing: Processing):
         super(Appcore, self).__init__()
         self.projectMenager = projectMenager
         self.opencvMenager = opencvMenager
         self.paintHandler = paintHandler
         self.polygonMenager = polygonMenager
+        self.processingManager = processing
 
         print(self.projectMenager)
 
@@ -43,8 +43,10 @@ class Appcore(QObject):
         return self.paintHandler
 
     def get_polygon_menager(self):
-        # print("Polygon menager get") #Działa
         return self.polygonMenager
+
+    def get_proces_menager(self):
+        return self.processingManager
 
     """
     Properties exposed to QML
@@ -53,4 +55,5 @@ class Appcore(QObject):
     openCV = Property(OpencvImageProvider, get_opnecv_menager, notify=opencvImageProviderChanged)
     paintHan = Property(PaintHandler, get_paint_handler, notify=paintHandlerChanged)
     polyMeg = Property(PolygonMenager, get_polygon_menager, notify=polygonMenagerChanged)
+    proces = Property(Processing, get_proces_menager, notify=procesManagerChanged)
 

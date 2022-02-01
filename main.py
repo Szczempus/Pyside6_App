@@ -19,8 +19,10 @@ if __name__ == "__main__":
     prMang = ProjectMenager()
     paintHan = PaintHandler()
     plgMenager = PolygonMenager()
+    prcs = Processing(plgMenager, opencv)
 
-    appCore = Appcore(projectMenager=prMang, opencvMenager=opencv, paintHandler=paintHan, polygonMenager=plgMenager)
+    appCore = Appcore(projectMenager=prMang, opencvMenager=opencv, paintHandler=paintHan, polygonMenager=plgMenager,
+                      processing=prcs)
     engine.addImageProvider("opencvImage", opencv)
     engine.rootContext().setContextProperty('appCore', appCore)
 
