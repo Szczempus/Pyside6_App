@@ -200,7 +200,10 @@ Window {
 
         function onIsProcessing(val){
             if (val === true){
-                console.log("Analiza w trkacie")
+
+            }
+            if (val === false){
+
             }
         }
     }
