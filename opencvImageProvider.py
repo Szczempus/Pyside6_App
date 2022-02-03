@@ -122,6 +122,7 @@ class OpencvImageProvider(QQuickImageProvider):
 
                 # Implementing color corection
                 # Todo zrobić jakiś suwak żeby zmieniać wartość korekcji koloru
+                # if rasters > 4:
                 rgb = simplest_cb(rgb, 1)
                 qimage = convert_from_cv_to_qimage(rgb)
 

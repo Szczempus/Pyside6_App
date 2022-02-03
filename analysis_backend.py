@@ -1,4 +1,4 @@
-from PySide2.QtCore import Slot, Signal, QObject, QThread
+[from PySide2.QtCore import Slot, Signal, QObject, QThread
 from matplotlib import pyplot as plt
 from deepforest import main
 import sys, time
@@ -30,17 +30,21 @@ class ThreadClass(QThread):
 
     def __init__(self):
         super(ThreadClass, self).__init__()
-        self._is_running = True
+        self._is_running = False
 
     def run(self):
         print("Strarting thread...")
-        cnt = 0
-        while True:
-            cnt += 1
-            if cnt == 99:
-                cnt = 0
-                time.sleep(0.01)
-                self.signal.emit(cnt)
+        self._is_running = False
+
+
+
+        # cnt = 0
+        # while True:
+        #     cnt += 1
+        #     if cnt == 99:
+        #         cnt = 0
+        #         time.sleep(0.01)
+        #         self.signal.emit(cnt)
 
     def stop(self):
         self._is_running = False
@@ -67,12 +71,12 @@ class Processing(QObject):
         self._working_thread.run()
         self.isProcessing.emit(True)
 
-    def print_cnt(self, cnt):
-        print("Counter", cnt)
-        self.stop_timer += 1
-
-        if self.stop_timer >= 20:
-            self._working_thread.stop()
+    # def print_cnt(self, cnt):
+    #     print("Counter", cnt)
+    #     self.stop_timer += 1
+    #
+    #     if self.stop_timer >= 20:
+    #         self._working_thread.stop()
 
 
 
