@@ -2,11 +2,9 @@
 
 import sys
 from PySide2 import *
-# from __feature__ import snake_case
-# from __feature__ import true_property
 
 from PySide2.QtGui import QGuiApplication
-from PySide2.QtQml import QQmlApplicationEngine, qmlRegisterType
+from PySide2.QtQml import QQmlApplicationEngine
 
 from appcore import *
 

@@ -1,24 +1,30 @@
 import time
 import multiprocessing
+import concurrent.futures
+from tqdm import tqdm
+
+
+def do_sth(seconds):
+    print(f"Sleeping {seconds} second(s)...")
+    time.sleep(seconds)
+    return f"Done sleeping {seconds}"
+
 
 if __name__ == "__main__":
 
     start = time.perf_counter()
 
-    def do_sth():
-        print("Sleeping 1 second...")
-        time.sleep(1)
-        print("Done sleeping")
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        secs = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+        results = executor.map(do_sth, secs)
 
-    p1 = multiprocessing.Process(target=do_sth)
-    p2 = multiprocessing.Process(target=do_sth)
+        for result in results:
+            print(result)
 
-    # p1.start()
-    # p2.start()
-
-    # p1.join()
-    # p2.join()
+        # results = [executor.submit(do_sth, sec) for sec in secs]
+        # for f in concurrent.futures.as_completed(results):
+        #     print(f.result())
 
     finish = time.perf_counter()
 
-    print(f"Finished in {round(finish-start, 2)} second(s)")
+    print(f"Finished in {round(finish - start, 2)} second(s)")

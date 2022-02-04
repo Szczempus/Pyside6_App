@@ -43,7 +43,8 @@ class OpencvImageProvider(QQuickImageProvider):
         self._band_list = []
         self._byte_band_list = []
 
-        pass
+    def get_byte_band_list(self):
+        return self._byte_band_list
 
     def requestImage(self, path: str, size: QSize, req_size: QSize) -> QImage:
         img = self._image
@@ -124,6 +125,7 @@ class OpencvImageProvider(QQuickImageProvider):
                 # Todo zrobić jakiś suwak żeby zmieniać wartość korekcji koloru
                 # if rasters > 4:
                 rgb = simplest_cb(rgb, 1)
+                self._image = rgb
                 qimage = convert_from_cv_to_qimage(rgb)
 
                 return qimage
@@ -140,3 +142,6 @@ class OpencvImageProvider(QQuickImageProvider):
         else:
             # TODO clear and Reload
             pass
+
+    def get_image(self):
+        return self._image

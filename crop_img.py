@@ -1,24 +1,25 @@
 import numpy
-from osgeo import gdal
-from matplotlib import pyplot as plt
 import numpy as np
 import cv2 as cv
+import sys
 
 
-def crop_img(band_list, coords):
-    pts = []
+def crop_img(band_list: list, coords: list):
+
     poly_band_list = []
     cropped_band_list = []
 
-    for coord in coords:
-        pts.append([int(coord["x"]), int(coord["y"])])
+    pts = [[int(coord["x"]), int(coord["y"])] for coord in coords]
 
     polygon_pts = np.array(pts)
+
 
     for band in band_list:
         copy_polygon_pts = polygon_pts
         # Cropping the bounding rect
+
         rect = cv.boundingRect(copy_polygon_pts)
+
         x, y, w, h = rect
         croped = band[y:y + h, x:x + w].copy()
         cropped_band_list.append(croped)
@@ -52,5 +53,6 @@ def crop_img(band_list, coords):
         # plt.show()
 
         poly_band_list.append(dst2)
+
 
     return poly_band_list, cropped_band_list, [x, y, w, h]

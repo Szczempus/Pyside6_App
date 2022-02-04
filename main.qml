@@ -10,6 +10,10 @@ import "./styles" as Styles
 import "./content" as Content
 import "./GUI" as GUI
 
+//TODO Zablokować możliwośc analizy dopóki nie zostanie wgrana mampa.
+//Wówczas if no polygons (analizujemy całą mapę) else (analizujemy dane poligony)
+
+//Todo obsłużyć sygnał o stanie procesu żeby wyskakiwała odpowiedna plansza/znaczek
 
 Window {
     id: window
