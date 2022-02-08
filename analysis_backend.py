@@ -3,7 +3,7 @@ import matplotlib.cm
 import numpy as np
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from matplotlib import pyplot as plt
-from matplotlib.backends.backend_qt5agg import FigureCanvasAgg
+from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.patches import Polygon
 from deepforest import main
 import sys, time
@@ -80,12 +80,23 @@ class Worker(QObject):
 
                 my_cmap = matplotlib.cm.get_cmap("Spectral")
                 color_array = my_cmap(ndvi_image)
-
-                x = np.asarray(color_array)
                 try:
-                    x = np.asarray(color_array)
-                    x = int(x * 255)
-                    polygon, _, _ = crop_img(x, coords)
+                    # x = np.asarray(color_array)
+                    # x = x * 255
+                    pts = [[int(coord["x"]), int(coord["y"])] for coord in coords]
+                    # px = 1 / plt.rcParams['figure.dpi']
+                    x_size, y_size = color_array.shape
+                    fig, ax = plt.subplots(figsize=(x_size, y_size))
+                    plt.ioff()
+                    plot_image = plt.imshow(color_array)
+                    patch = Polygon(pts, closed=True)
+                    plot_image.set_clip_path(patch)
+                    canvas = FigureCanvasAgg(fig)
+                    canvas.draw()
+                    buf = canvas.buffer_rgba()
+                    x = np.asarray(buf)
+                    x = x * 255
+                    # polygon, _, _ = crop_img(x, coords)
                 except Exception as e:
                     self.workerException.emit(e)
                 # pts = []
@@ -99,13 +110,13 @@ class Worker(QObject):
                 # copy_polygon_pts = copy_polygon_pts - copy_polygon_pts.min(axis=0)
 
                 print("Map generated sucessfull")
-                print("Zdjęcie", polygon)
-                print("Wymiary anlizy", polygon.shape)
+                print("Zdjęcie", x)
+                print("Wymiary anlizy", x.shape)
                 original_image = self._img_manager.get_image()
                 print("Kopiowanie zdjecia")
 
                 try:
-                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = polygon[:, :, :4]
+                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = x[:,:,:4]
                 except Exception as e:
                     self.workerException.emit(e)
                 print("Nadpisanie ")
