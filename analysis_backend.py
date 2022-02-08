@@ -1,7 +1,10 @@
 import cv2
+import matplotlib.cm
+import numpy as np
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasAgg
+from matplotlib.patches import Polygon
 from deepforest import main
 import sys, time
 from tqdm import tqdm
@@ -46,12 +49,16 @@ class Worker(QObject):
     workerFinished = Signal()
     workerInProgress = Signal()
     workerResult = Signal(object)
+    workerException = Signal(Exception)
 
     def __init__(self, img_provider: OpencvImageProvider, polygon_provider: PolygonMenager, analysis: int):
         super(Worker, self).__init__()
         self._img_manager = img_provider
         self._polygon_manager = polygon_provider
         self._analysis = analysis
+
+    def create_colorfull_map(self):
+        pass
 
     def run(self):
         if self._analysis == 1:
@@ -67,12 +74,46 @@ class Worker(QObject):
                 for point in polygon.get_point_list():
                     point = (point.x_get(), point.y_get())
                     coords.append({"x": point[0], "y": point[1]})
-                cropped_polygon, cropped_rect, params = crop_img(byte_band_list, coords)
+                _, cropped_rect, params = crop_img(byte_band_list, coords)
                 print(params)
-                ndvi_image = ndvi_map(cropped_polygon)
+                ndvi_image = ndvi_map(cropped_rect)
+
+                my_cmap = matplotlib.cm.get_cmap("Spectral")
+                color_array = my_cmap(ndvi_image)
+
+                x = np.asarray(color_array)
+                try:
+                    x = np.asarray(color_array)
+                    x = int(x * 255)
+                    polygon, _, _ = crop_img(x, coords)
+                except Exception as e:
+                    self.workerException.emit(e)
+                # pts = []
+                #
+                # for coord in coords:
+                #     pts.append([int(coord["x"]), int(coord["y"])])
+                #
+                # polygon_pts = np.array(pts)
+                # copy_polygon_pts = polygon_pts
+                #
+                # copy_polygon_pts = copy_polygon_pts - copy_polygon_pts.min(axis=0)
+
                 print("Map generated sucessfull")
-                self.workerResult.emit(ndvi_image)
-                print("Map emited")
+                print("Zdjęcie", polygon)
+                print("Wymiary anlizy", polygon.shape)
+                original_image = self._img_manager.get_image()
+                print("Kopiowanie zdjecia")
+
+                try:
+                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = polygon[:, :, :4]
+                except Exception as e:
+                    self.workerException.emit(e)
+                print("Nadpisanie ")
+                self._img_manager.write_image(original_image)
+
+                print("Wysłanie")
+
+            print("Koniec procesu")
             self.workerFinished.emit()
 
         if self._analysis == 2:
@@ -113,12 +154,12 @@ class Processing(QObject):
         self._worker.moveToThread(self._thread)
         # Connecting signals and slots to run and terminate Thread and Worker
         self._thread.started.connect(self._worker.run)
+        self._worker.workerFinished.connect(self.stop_analysis)
         self._worker.workerFinished.connect(self._thread.quit)
         self._worker.workerFinished.connect(self._worker.deleteLater)
         self._thread.finished.connect(self._thread.deleteLater)
-        self._thread.finished.connect(self.stop_analysis)
 
-        self._worker.workerResult.connect(self.print_restult)
+        self._worker.workerException.connect(self.print_exception)
 
         self._thread.start()
 
@@ -128,10 +169,17 @@ class Processing(QObject):
         print("Proces zakończony")
         self.isProcessing.emit(False)
 
-    def print_restult(self, imaghe):
-        print("Slot received")
+    def print_exception(self, e):
+        print(e)
+        self._thread.quit
+        self._thread.deleteLater
 
-        img = self._image_provider.get_image()
+    def print_restult(self, image):
+        pass
+        # print("Slot received")
+        # img = self._image_provider.get_image()
+        # print(type(image))
+        # print(type(img))
 
         # px = 1 / plt.rcParams['figure.dpi']
         # print("Slot received1")

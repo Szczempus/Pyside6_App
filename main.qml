@@ -204,9 +204,13 @@ Window {
 
         function onIsProcessing(val){
             if (val === true){
+                console.log("Processing true")
 
             }
             if (val === false){
+                console.log("Processing false")
+                imageItem.source = ""
+                imageItem.source = "image://opencvImage/reload"
 
             }
         }

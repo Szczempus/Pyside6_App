@@ -1,4 +1,6 @@
 # This Python file uses the following encoding: utf-8
+import cv2
+import matplotlib.pyplot
 from PySide2.QtCore import QSize, QByteArray
 from PySide2.QtGui import QImage, QImageReader
 from PySide2.QtQuick import QQuickImageProvider
@@ -42,6 +44,8 @@ class OpencvImageProvider(QQuickImageProvider):
         self._image = None
         self._band_list = []
         self._byte_band_list = []
+        self.colored_polygon = None
+        self.polygon_params = None
 
     def get_byte_band_list(self):
         return self._byte_band_list
@@ -125,13 +129,16 @@ class OpencvImageProvider(QQuickImageProvider):
                 # Todo zrobić jakiś suwak żeby zmieniać wartość korekcji koloru
                 # if rasters > 4:
                 rgb = simplest_cb(rgb, 1)
-                self._image = rgb
-                qimage = convert_from_cv_to_qimage(rgb)
+                alpha = np.array(np.ones(self._byte_band_list[1].shape) * 255)
+                rgba = np.dstack((rgb, alpha))
+                self._image = rgba
+                qimage = convert_from_cv_to_qimage(rgba)
 
                 return qimage
 
             # Standard Reading
             else:
+
                 img = cv.imread(self._image_file_path)
                 # self._image = img
                 qimage = convert_from_cv_to_qimage(image=img)
@@ -140,8 +147,16 @@ class OpencvImageProvider(QQuickImageProvider):
 
         # Reload image and clear everything
         else:
+            if path == "reload":
+                print("Image reloading")
+                qimage = convert_from_cv_to_qimage(self._image)
+                return qimage
+
             # TODO clear and Reload
-            pass
+            # pass
 
     def get_image(self):
         return self._image
+
+    def write_image(self, image):
+        self._image = image

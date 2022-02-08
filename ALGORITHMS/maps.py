@@ -22,6 +22,7 @@ def rgb_image(band_list):
     g = np.array(g / 256).astype("uint8")
     b = np.array(b / 256).astype("uint8")
 
+
     img = np.dstack((b, g, r))  # Stack band for RGB image
 
     return img

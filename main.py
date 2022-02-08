@@ -9,6 +9,7 @@ from PySide2.QtQml import QQmlApplicationEngine
 from appcore import *
 
 if __name__ == "__main__":
+    print(os.environ['PATH'])
     app = QGuiApplication(sys.argv)
 
     engine = QQmlApplicationEngine()
