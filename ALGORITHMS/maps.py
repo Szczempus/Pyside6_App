@@ -22,7 +22,6 @@ def rgb_image(band_list):
     g = np.array(g / 256).astype("uint8")
     b = np.array(b / 256).astype("uint8")
 
-
     img = np.dstack((b, g, r))  # Stack band for RGB image
 
     return img
@@ -162,6 +161,20 @@ Triangular Greenness Index
 
 def tgi_map(band_list):
     return
+
+
+'''
+Optimized Soil-Adjusted Vegetation Index
+'''
+
+
+def osavi_map(band_list):
+    nir = band_list[4]
+    red = band_list[2]
+
+    image = (nir - red) / (nir + red + 0.16)
+
+    return image
 
 
 '''

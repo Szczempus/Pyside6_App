@@ -46,17 +46,28 @@ class OpencvImageProvider(QQuickImageProvider):
         self._byte_band_list = []
         self.colored_polygon = None
         self.polygon_params = None
+        # print("Inicjalizacja OpencvImageProvider")
 
     def get_byte_band_list(self):
         return self._byte_band_list
 
     def requestImage(self, path: str, size: QSize, req_size: QSize) -> QImage:
         img = self._image
-        self._byte_band_list.clear()
-        self._band_list.clear()
-        if img is None:
+
+        # Reload image and clear everything
+        if path == "reload":
+            # print("Image reloading")
+            qimage = convert_from_cv_to_qimage(self._image)
+            return qimage
+
+        _, parsed_path = path.split("///", 1)
+        if img is None or parsed_path != self._image_file_path:
+
+            self._byte_band_list.clear()
+            self._band_list.clear()
+
             # Get file path
-            _, self._image_file_path = path.split("///", 1)
+            self._image_file_path = parsed_path
 
             # If it's tiff img
             if self._image_file_path.endswith(('.tiff', '.tif')):
@@ -145,12 +156,6 @@ class OpencvImageProvider(QQuickImageProvider):
 
                 return qimage
 
-        # Reload image and clear everything
-        else:
-            if path == "reload":
-                print("Image reloading")
-                qimage = convert_from_cv_to_qimage(self._image)
-                return qimage
 
             # TODO clear and Reload
             # pass

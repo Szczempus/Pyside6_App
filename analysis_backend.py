@@ -3,8 +3,10 @@ import matplotlib.cm
 import numpy as np
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from matplotlib import pyplot as plt
-from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.backends.backend_qtagg import FigureCanvasAgg, NavigationToolbar2QT
+# from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.patches import Polygon
+from matplotlib.figure import Figure
 from deepforest import main
 import sys, time
 from tqdm import tqdm
@@ -13,7 +15,7 @@ from numpy import ndarray
 from polygonMenager import PolygonMenager
 from opencvImageProvider import OpencvImageProvider
 from jsonparser import parse_json
-from crop_img import crop_img
+from crop_img import crop_img, poly_img
 # from save_polygon import save_polygon
 from ALGORITHMS.watershed import watershed
 from ALGORITHMS.maps import *
@@ -30,7 +32,7 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 '''
 
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
-# Todo zrobić obłsugę emita w sytuacji gdy masz proces w trakcie a gdy już go skńczysz.
+# Todo zrobić obłsugę emita w sytuacji gdy nasz proces jest w trakcie a gdy już go kończysz.
 
 """
 1. W Workerze, najpierw pobieramy listę kanałów w zapisie bajtowym i listę poligonów
@@ -61,41 +63,76 @@ class Worker(QObject):
         pass
 
     def run(self):
+        byte_band_list = []
+        poligon_list = []
+        checked_polygon_list = []
         if self._analysis == 1:
             print("Analysis 1 - NDVI")
 
-            byte_band_list = self._img_manager.get_byte_band_list()
-            poligon_list = self._polygon_manager.get_polygon_list()
-            checked_polygon_list = [polygon for polygon in poligon_list if polygon.get_is_checked()]
-            coords = []
-            i = 0
+            try:
+                byte_band_list = self._img_manager.get_byte_band_list()
+                # print("1")
+                # print(byte_band_list)
+                poligon_list = self._polygon_manager.get_polygon_list()
+                # print("2")
+                print(poligon_list)
+                checked_polygon_list = [polygon for polygon in poligon_list if polygon.get_is_checked()]
+                # print("3")
+                # print(checked_polygon_list)
+                coords = []
+                i = 0
+            except Exception as e:
+                self.workerException.emit(e)
 
             for polygon in checked_polygon_list:
+                # print("3")
                 for point in polygon.get_point_list():
+                    # print("4")
                     point = (point.x_get(), point.y_get())
+                    # print("5")
                     coords.append({"x": point[0], "y": point[1]})
-                _, cropped_rect, params = crop_img(byte_band_list, coords)
-                print(params)
+                    # print("6")
+                # print(coords)
+                try:
+                    _, cropped_rect, params = crop_img(byte_band_list, coords)
+                except Exception as e:
+                    self.workerException.emit(e)
+                # print("7")
+                # print(params)
                 ndvi_image = ndvi_map(cropped_rect)
 
                 my_cmap = matplotlib.cm.get_cmap("Spectral")
                 color_array = my_cmap(ndvi_image)
                 try:
-                    # x = np.asarray(color_array)
-                    # x = x * 255
-                    pts = [[int(coord["x"]), int(coord["y"])] for coord in coords]
+                    image = np.asarray(color_array)
+                    image = image * 255
+                    # pts = [[int(coord["x"]), int(coord["y"])] for coord in coords]
                     # px = 1 / plt.rcParams['figure.dpi']
-                    x_size, y_size = color_array.shape
-                    fig, ax = plt.subplots(figsize=(x_size, y_size))
-                    plt.ioff()
-                    plot_image = plt.imshow(color_array)
-                    patch = Polygon(pts, closed=True)
-                    plot_image.set_clip_path(patch)
-                    canvas = FigureCanvasAgg(fig)
-                    canvas.draw()
-                    buf = canvas.buffer_rgba()
-                    x = np.asarray(buf)
-                    x = x * 255
+                    # print("Kształt analizy: ", ndvi_image.shape)
+                    # x_size, y_size = ndvi_image.shape
+                    # print()
+                    # print("1")
+                    # canva = FigureCanvasAgg(Figure(figsize=(y_size*px, x_size*px)))
+                    # print("2")
+                    #
+                    # ax = canva.figure.subplots()
+                    # print("3")
+                    # # fig, ax = plt.subplots(figsize=(x_size, y_size))
+                    # # plt.ioff()
+                    # # plot_image = plt.imshow(ndvi_image, cmap=plt.get_cmap("Spectral"), vmin=0, vmax=1, resample=True)
+                    # patch = Polygon(pts, closed=True, transform=ax.transData)
+                    #
+                    # print("4")
+                    # # plot_image.set_clip_path(patch)
+                    # canva.figure.set_clip_path(patch)
+                    # print("5")
+                    # ax.axis('off')
+                    # # canvas = FigureCanvasAgg(fig)
+                    # canva.draw()
+                    # buf = canva.buffer_rgba()
+                    # x = np.asarray(buf)
+                    # print("Przed unint8", x)
+                    # x = x * 255
                     # polygon, _, _ = crop_img(x, coords)
                 except Exception as e:
                     self.workerException.emit(e)
@@ -109,26 +146,123 @@ class Worker(QObject):
                 #
                 # copy_polygon_pts = copy_polygon_pts - copy_polygon_pts.min(axis=0)
 
-                print("Map generated sucessfull")
-                print("Zdjęcie", x)
-                print("Wymiary anlizy", x.shape)
+                # print("Map generated sucessfull")
+                # print("Zdjęcie", image)
+                # print("Wymiary anlizy", image.shape)
                 original_image = self._img_manager.get_image()
-                print("Kopiowanie zdjecia")
+                # print("Kopiowanie zdjecia")
 
                 try:
-                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = x[:,:,:4]
+                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = image[:, :, :4]
                 except Exception as e:
                     self.workerException.emit(e)
-                print("Nadpisanie ")
+                # print("Nadpisanie ")
                 self._img_manager.write_image(original_image)
 
-                print("Wysłanie")
+                # print("Wysłanie")
 
             print("Koniec procesu")
             self.workerFinished.emit()
 
         if self._analysis == 2:
             print("Analysis 2 - LCI")
+
+            try:
+                byte_band_list = self._img_manager.get_byte_band_list()
+                # print("1")
+                # print(byte_band_list)
+                poligon_list = self._polygon_manager.get_polygon_list()
+                # print("2")
+                print(poligon_list)
+                checked_polygon_list = [polygon for polygon in poligon_list if polygon.get_is_checked()]
+                # print("3")
+                # print(checked_polygon_list)
+                coords = []
+                i = 0
+            except Exception as e:
+                self.workerException.emit(e)
+
+            for polygon in checked_polygon_list:
+                # print("3")
+                for point in polygon.get_point_list():
+                    # print("4")
+                    point = (point.x_get(), point.y_get())
+                    # print("5")
+                    coords.append({"x": point[0], "y": point[1]})
+                    # print("6")
+                # print(coords)
+                try:
+                    _, cropped_rect, params = crop_img(byte_band_list, coords)
+                except Exception as e:
+                    self.workerException.emit(e)
+                # print("7")
+                # print(params)
+                osavi_image = osavi_map(cropped_rect)
+
+                my_cmap = matplotlib.cm.get_cmap("hot")
+                color_array = my_cmap(osavi_image)
+                try:
+                    image = np.asarray(color_array)
+                    image = image * 255
+                    # polygon = cv.cvtColor(polygon, cv.COLOR_BGR2BGRA)
+                    # pts = [[int(coord["x"]), int(coord["y"])] for coord in coords]
+                    # px = 1 / plt.rcParams['figure.dpi']
+                    # print("Kształt analizy: ", ndvi_image.shape)
+                    # x_size, y_size = ndvi_image.shape
+                    # print()
+                    # print("1")
+                    # canva = FigureCanvasAgg(Figure(figsize=(y_size*px, x_size*px)))
+                    # print("2")
+                    #
+                    # ax = canva.figure.subplots()
+                    # print("3")
+                    # # fig, ax = plt.subplots(figsize=(x_size, y_size))
+                    # # plt.ioff()
+                    # # plot_image = plt.imshow(ndvi_image, cmap=plt.get_cmap("Spectral"), vmin=0, vmax=1, resample=True)
+                    # patch = Polygon(pts, closed=True, transform=ax.transData)
+                    #
+                    # print("4")
+                    # # plot_image.set_clip_path(patch)
+                    # canva.figure.set_clip_path(patch)
+                    # print("5")
+                    # ax.axis('off')
+                    # # canvas = FigureCanvasAgg(fig)
+                    # canva.draw()
+                    # buf = canva.buffer_rgba()
+                    # x = np.asarray(buf)
+                    # print("Przed unint8", x)
+                    # x = x * 255
+                    # polygon, _, _ = crop_img(x, coords)
+                except Exception as e:
+                    print("Polygon error")
+                    self.workerException.emit(e)
+                # pts = []
+                #
+                # for coord in coords:
+                #     pts.append([int(coord["x"]), int(coord["y"])])
+                #
+                # polygon_pts = np.array(pts)
+                # copy_polygon_pts = polygon_pts
+                #
+                # copy_polygon_pts = copy_polygon_pts - copy_polygon_pts.min(axis=0)
+
+                # print("Map generated sucessfull")
+                # print("Zdjęcie", image)
+                # print("Wymiary anlizy", image.shape)
+                original_image = self._img_manager.get_image()
+                # print("Kopiowanie zdjecia")
+
+                try:
+                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = image[:, :, :4]
+                except Exception as e:
+                    print("Merging error")
+                    self.workerException.emit(e)
+                # print("Nadpisanie ")
+                self._img_manager.write_image(original_image)
+
+                # print("Wysłanie")
+
+            print("Koniec procesu")
 
             self.workerFinished.emit()
 
@@ -160,6 +294,7 @@ class Processing(QObject):
         self._analysis = analysis
         # Creating Worker and new Thread
         self._thread = QThread()
+        # print("Image Provider", self._image_provider)
         self._worker = Worker(self._image_provider, self._polygon_manager, self._analysis)
         # Moving Worker to Thread
         self._worker.moveToThread(self._thread)
@@ -182,37 +317,9 @@ class Processing(QObject):
 
     def print_exception(self, e):
         print(e)
-        self._thread.quit
-        self._thread.deleteLater
+        self._thread.quit()
+        self._thread.deleteLater()
 
     def print_restult(self, image):
         pass
-        # print("Slot received")
-        # img = self._image_provider.get_image()
-        # print(type(image))
-        # print(type(img))
 
-        # px = 1 / plt.rcParams['figure.dpi']
-        # print("Slot received1")
-        # if imaghe.shape == 3:
-        #     x_size, y_size, _ = imaghe.shape
-        # else:
-        #     x_size, y_size = imaghe.shape
-        # print("Slot received2")
-        # plt.ioff()
-        # print("Slot received3")
-        # fig, ax = plt.subplots(figsize=(x_size * px, y_size * px))
-        # print("Slot received4")
-        # plot_image = plt.imshow(imaghe, cmap=plt.get_cmap("Spectral"), vmin=0, vmax=1, resample=True)
-        # print("Slot received5")
-        # ax.axis('off')
-        # canvas = FigureCanvasAgg(fig)
-        # print("Slot received6")
-        # canvas.draw()
-        # print("Slot received7")
-        # buf = canvas.buffer_rgba()
-        # print("Slot received8")
-        # x = np.asarray(buf)
-        # print("Slot received9")
-        # plt.imsave("TO_TO_ZDJECIE.png", x)
-        # print("Slot received10")
