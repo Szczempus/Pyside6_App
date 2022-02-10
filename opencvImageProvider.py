@@ -140,8 +140,9 @@ class OpencvImageProvider(QQuickImageProvider):
                 # Todo zrobić jakiś suwak żeby zmieniać wartość korekcji koloru
                 # if rasters > 4:
                 rgb = simplest_cb(rgb, 1)
-                alpha = np.array(np.ones(self._byte_band_list[1].shape) * 255)
-                rgba = np.dstack((rgb, alpha))
+                # alpha = np.array(np.ones(self._byte_band_list[1].shape) * 255)
+                # rgba = np.dstack((rgb, alpha))
+                rgba = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
                 self._image = rgba
                 qimage = convert_from_cv_to_qimage(rgba)
 

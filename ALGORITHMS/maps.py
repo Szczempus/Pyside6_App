@@ -218,7 +218,10 @@ Filtration for mistletoe index
 
 
 def mis_filtration(mis, ndvi, mis_thresh=[1.5, 2.5], ndvi_thresh=[0.75, 0.85]):
-    statement_1 = np.logical_and(mis_thresh[0] <= mis, mis_thresh[1] >= mis)
-    statement_2 = np.logical_and(ndvi_thresh[0] <= ndvi, ndvi_thresh[1] >= ndvi)
+    statement_1 = np.logical_and(mis >= mis_thresh[0], mis <= mis_thresh[1])
+    print("statement_1 passed")
+    statement_2 = np.logical_and(ndvi >= ndvi_thresh[0], ndvi <= ndvi_thresh[1])
+    print("statement_2 passed")
     image = np.bitwise_and(statement_1, statement_2)
+    print("image passed")
     return image

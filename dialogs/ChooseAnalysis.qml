@@ -109,6 +109,30 @@ Dialog{
                             rootDialog.chosedAnalysis = 4
                         }
                     }
+
+                    Control.CustomRadioButton{
+                        text: "Mistletoe MAP"
+                        ButtonGroup.group: firstGroup
+                        onClicked: {
+                            rootDialog.chosedAnalysis = 5
+                        }
+                    }
+
+                    Control.CustomRadioButton{
+                        text: "Free Slot"
+                        ButtonGroup.group: firstGroup
+                        onClicked: {
+                            rootDialog.chosedAnalysis = 6
+                        }
+                    }
+
+                    Control.CustomRadioButton{
+                        text: "Free Slot"
+                        ButtonGroup.group: firstGroup
+                        onClicked: {
+                            rootDialog.chosedAnalysis = 7
+                        }
+                    }
                 }
             }
 
