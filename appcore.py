@@ -8,7 +8,7 @@ from projectMenager import ProjectMenager
 from opencvImageProvider import OpencvImageProvider
 from paintHandler import PaintHandler
 from polygonMenager import PolygonMenager
-from analysis_backend import Processing
+from analysisBackend import Processing
 
 
 class Appcore(QObject):
