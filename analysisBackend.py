@@ -55,8 +55,6 @@ class Worker(QObject):
         if self._analysis == 1:
             print("Analysis 1 - NDVI")
 
-            time.sleep(10.0)
-
             byte_band_list = []
             poligon_list = []
             checked_polygon_list = []
@@ -87,7 +85,7 @@ class Worker(QObject):
                 my_cmap = matplotlib.cm.get_cmap("Spectral")
                 color_array = my_cmap(ndvi_image)
                 try:
-                    image = np.asarray(color_array, dtype=np.uint8)
+                    image = np.asarray(color_array)
                     image = image * 255
                 except Exception as e:
                     self.workerException.emit(e)
@@ -96,12 +94,12 @@ class Worker(QObject):
                     print("Type", type(image))
                     print("Shape", image.shape)
 
-                    image = cv.cvtColor(image[:, :, :3], cv.COLOR_BGR2RGB)
-
-                    polygon, _, _ = poly_img(image, coords, params[0], params[1],
-                                             original_image[params[1]: params[1] + params[3],
-                                             params[0]:params[0] + params[2]])
-                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = polygon
+                    # image = cv.cvtColor(image[:, :, :3], cv.COLOR_BGR2RGB)
+                    #
+                    # polygon, _, _ = poly_img(image, coords, params[0], params[1],
+                    #                          original_image[params[1]: params[1] + params[3],
+                    #                          params[0]:params[0] + params[2]])
+                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = image
                 except Exception as e:
                     self.workerException.emit(e)
 
