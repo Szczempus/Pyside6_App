@@ -158,9 +158,6 @@ class OpencvImageProvider(QQuickImageProvider):
                 return qimage
 
 
-            # TODO clear and Reload
-            # pass
-
     def get_image(self):
         return self._image
 
