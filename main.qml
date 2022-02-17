@@ -1,3 +1,4 @@
+
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.12
@@ -12,7 +13,7 @@ import "./GUI" as GUI
 
 //TODO Zablokować możliwośc analizy dopóki nie zostanie wgrana mampa.
 //Wówczas if no polygons (analizujemy całą mapę) else (analizujemy dane poligony)
-//TODO obsłużyć sygnał o stanie procesu żeby wyskakiwała odpowiedna plansza/znaczek
+
 
 Window {
     id: window
@@ -87,12 +88,11 @@ Window {
             else if (action == "action_importImage"){
                 chooseImageFile.open()
             }
+            else if (action == "action_saveImage"){
+                saveImage.open()
+            }
             else if (action == "action_runAnalysis"){
                 analysis.open()
-//                analysis.getString(true, "Papustka")
-//                appCore.scriptHandler.runScript()
-                // Todo: running python script
-
             }
             else if (action == "action_createReport"){
                 console.log("Work in progress...")
@@ -167,7 +167,15 @@ Window {
 
     // Choose project file dialog
     Dialogs.ChooseFile{
-        id: chooseProject
+        id: chooseProjectFile
+        onAccepted: {
+            console.log("Wybrałeś: " + chooseProjectFile.fileUrl)
+            path = chooseProjectFile.fileUrl.toString()
+        }
+    }
+
+    Dialogs.ChooseFile{
+        id: saveImage
         onAccepted: {
             console.log("Wybrałeś: " + chooseFile.fileUrl)
             path = chooseFile.fileUrl.toString()
@@ -184,10 +192,10 @@ Window {
         onOverride: appCore.prMeg.override_project()
     }
 
-    // Choose analysis popup window
-//    Dialogs.AnalysisMessageMenager{
-//        id:analysis
-//    }
+    Dialogs.ProcessingScreen{
+        id: processing
+    }
+
 
     Dialogs.ChooseAnalysis{
         id:analysis
@@ -204,13 +212,14 @@ Window {
         function onIsProcessing(val){
             if (val === true){
                 console.log("Processing true")
+                processing.open()
 
             }
             if (val === false){
                 console.log("Processing false")
                 imageItem.source = ""
                 imageItem.source = "image://opencvImage/reload"
-
+                processing.close()
             }
         }
     }
