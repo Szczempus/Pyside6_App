@@ -1,0 +1,163 @@
+Folder PATH listing
+Volume serial number is 3406-CD65
+C:.
+|   .gitattributes
+|   .gitignore
+|   analysisBackend.py
+|   appcore.py
+|   cos.py
+|   crop_img.py
+|   jsonparser.py
+|   main.py
+|   main.qml
+|   main.qml.autosave
+|   opencvImageProvider.py
+|   paintHandler.py
+|   plotting in new thread.py
+|   polygonMenager.py
+|   projectMenager.py
+|   qml.qrc
+|   Qt_app.pyproject
+|   Qt_app.pyproject.user
+|   Qt_app.pyproject.user.65b6022
+|   Qt_app.pyproject.user.a43613d
+|   save_polygon.py
+|   tree.txt
+|   
++---.idea
+|   |   .gitignore
+|   |   markdown.xml
+|   |   misc.xml
+|   |   modules.xml
+|   |   Pyside6_App.iml
+|   |   vcs.xml
+|   |   workspace.xml
+|   |   
+|   +---dictionaries
+|   |       BardKrzysztof.xml
+|   |       
+|   \---inspectionProfiles
+|           profiles_settings.xml
+|           Project_Default.xml
+|           
++---ALGORITHMS
+|   |   ALGORITHMS.txt
+|   |   color_corection.py
+|   |   deepforest_test_script.py
+|   |   maps.py
+|   |   opencvPainEvent.py
+|   |   watershed.py
+|   |   
+|   \---__pycache__
+|           color_corection.cpython-38.pyc
+|           maps.cpython-38.pyc
+|           watershed.cpython-38.pyc
+|           
++---automation
+|       croppingExample.py
+|       multiprocessingExample.py
+|       
++---content
+|       ImageContent.qml
+|       
++---control
+|       CustomButtonImage.qml
+|       CustomButtonText.qml
+|       CustomCheckBox.qml
+|       CustomDropMinMaxButton.qml
+|       CustomRadioButton.qml
+|       CustomReportButton.qml
+|       CustomToolButton.qml
+|       CustomToolButtonImage.qml
+|       KeyboardEvents.qml
+|       LeftBarContent.qml
+|       WindowResize.qml
+|       
++---dialogs
+|       AnalysisMessageMenager.qml
+|       ChooseAnalysis.qml
+|       ChooseFile.qml
+|       MapLoadingScreen.qml
+|       NewProjectDialog.qml
+|       OverrideConfirmDialog.qml
+|       
++---GUI
+|   |   ButtonMenu.qml
+|   |   ButtonText.qml
+|   |   ButtonTool.qml
+|   |   Colors.js
+|   |   MenuTop.qml
+|   |   MessageManager.qml
+|   |   PolygonCanvas.qml
+|   |   Separator.qml
+|   |   SlideListPolygon.qml
+|   |   SlideMenu.qml
+|   |   ToolbarPolygon.qml
+|   |   
+|   \---images
+|       +---png_images
+|       |       arrow.png
+|       |       arrow_highlighted.png
+|       |       checked.png
+|       |       delete_cross.png
+|       |       load.png
+|       |       load_highlighted.png
+|       |       logo_biale.png
+|       |       nametag.png
+|       |       nametag_highlighted.png
+|       |       pin.png
+|       |       pin_hovered.png
+|       |       polygon.png
+|       |       polygon_highlighted.png
+|       |       save.png
+|       |       save_highlighted.png
+|       |       
+|       \---svg_images
+|               Button TextIMG.svg
+|               close+cross+delete+remove+icon-1320185734648163836_0.svg
+|               close.svg
+|               CUD Forestry.svg
+|               forest.svg
+|               import.svg
+|               MAXIMIZE-131994911321635421_0.svg
+|               maximize.svg
+|               minimize+minus+remove+sign+icon-1320085940403912850_0.svg
+|               minimize.svg
+|               Parpapapa oo aa.svg
+|               plus.svg
+|               report.svg
+|               tag.svg
+|               tools.svg
+|               Tu bedzie bajerankie logo z nazwa apki .svg
+|               vector.svg
+|               vector_add.svg
+|               vector_close.svg
+|               
++---list_models
+|       AnalysisListModel.qml
+|       FileListModel.qml
+|       PolygonListModel.qml
+|       
++---pages
+|       CustomAnalysisList.qml
+|       CustomComboList.qml
+|       CustomMenuBar.qml
+|       LeftSideView.qml
+|       RightSideView.qml
+|       
++---styles
+|       RectangleWithGlow.qml
+|       
++---Tuszyma
+\---__pycache__
+        analysisBackend.cpython-38.pyc
+        appcore.cpython-38.pyc
+        crop_img.cpython-38.pyc
+        jsonparser.cpython-38.pyc
+        main.cpython-38.pyc
+        opencvImageProvider.cpython-38.pyc
+        paintHandler.cpython-38.pyc
+        polygonMenager.cpython-38.pyc
+        projectMenager.cpython-38.pyc
+        save_polygon.cpython-38.pyc
+        

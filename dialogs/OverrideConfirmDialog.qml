@@ -19,7 +19,7 @@ Popup{
     y: parent.height / 2 - height / 2
 //    width: 300
 //    height: 50
-    implicitHeight: 90
+    implicitHeight: 80
     implicitWidth: 300
     closePolicy: popupPolicy
 

@@ -1,14 +1,15 @@
+import os
+import time
+import cv2
 import matplotlib.cm
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
 
-
 from polygonMenager import PolygonMenager
 from opencvImageProvider import OpencvImageProvider
-from crop_img import *
+from crop_img import crop_band_list, poly_img
 from ALGORITHMS.maps import *
-from ALGORITHMS.detectron_prediction import *
-
+from ALGORITHMS.color_corection import simplest_cb
 
 '''
 IMPORTANT INFO 
@@ -23,6 +24,7 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 
 
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
+# Todo zrobić obłsugę emita w sytuacji gdy nasz proces jest w trakcie a gdy już go kończysz.
 
 """
 1. W Workerze, najpierw pobieramy listę kanałów w zapisie bajtowym i listę poligonów
@@ -35,8 +37,6 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 8. W requstImage jeżeli przyjdzie pusty string onzacza to że to jest odswieżenie obrazu i wysyłamy
     nadpisany obraz do QML'a  
 """
-
-
 
 
 class Worker(QObject):
@@ -52,102 +52,273 @@ class Worker(QObject):
         self._analysis = analysis
 
     def run(self):
-        byte_band_list = []
-        poligon_list = []
-        checked_polygon_list = []
 
-        original_image = self._img_manager.get_image()
+        if self._analysis == 1:
+            print("Analysis 1 - NDVI")
 
-        byte_band_list = self._img_manager.get_byte_band_list()
-        poligon_list = self._polygon_manager.get_polygon_list()
-        checked_polygon_list = [polygon for polygon in poligon_list if polygon.get_is_checked()]
+            byte_band_list = []
+            poligon_list = []
+            checked_polygon_list = []
 
-        for polygon in checked_polygon_list:
-            coords = []
-            for point in polygon.get_point_list():
-                point = (point.x_get(), point.y_get())
-                coords.append({"x": point[0], "y": point[1]})
+            original_image = self._img_manager.get_image()
 
-            cropped_rect, params = crop_band_list(byte_band_list, coords)
+            try:
+                byte_band_list = self._img_manager.get_byte_band_list()
+                poligon_list = self._polygon_manager.get_polygon_list()
+                checked_polygon_list = [polygon for polygon in poligon_list if polygon.get_is_checked()]
 
-            if self._analysis == 1:
-                print("Analysis 1 - NDVI")
-                index_image = ndvi_map(cropped_rect)
-                my_cmap = matplotlib.cm.get_cmap("Spectral")
-                color_array = my_cmap(index_image)
-                image = np.asarray(color_array)
-                image = image * 255
+            except Exception as e:
+                self.workerException.emit(e)
 
-            elif self._analysis == 2:
-                print("Analysis 2 - LCI")
-                index_image = lci_map(cropped_rect)
-                my_cmap = matplotlib.cm.get_cmap("plasma")
-                color_array = my_cmap(index_image)
-                image = np.asarray(color_array)
-                image = image * 255
+            for polygon in checked_polygon_list:
+                coords = []
+                for point in polygon.get_point_list():
+                    point = (point.x_get(), point.y_get())
+                    coords.append({"x": point[0], "y": point[1]})
 
-            elif self._analysis == 3:
-                print("Analysis 3 - Segmentation")
                 try:
-                    index_image = osavi_map(byte_band_list)
-                    my_cmap = matplotlib.cm.get_cmap("Spectral")
-                    color_array = my_cmap(index_image)
+                    cropped_rect, params = crop_band_list(byte_band_list, coords)
+                except Exception as e:
+                    self.workerException.emit(e)
+
+                ndvi_image = ndvi_map(cropped_rect)
+
+                my_cmap = matplotlib.cm.get_cmap("Spectral")
+                color_array = my_cmap(ndvi_image)
+                try:
                     image = np.asarray(color_array)
                     image = image * 255
-                    print("Wielkośc obrazu", image.shape)
                 except Exception as e:
-                    print("Index map error")
                     self.workerException.emit(e)
 
                 try:
-                    rgb, _ = crop_rgb(image[:, :, :3], coords)
-                    print("Wielkość rgb ", rgb.shape)
-                except Exception as e:
-                    print("Kurwa to tu")
-                    self.workerException.emit(e)
-                try:
-                    cfg = config_init("", 4000, 8, 1)
-                    image = prediction(cfg, rgb[:, :, ::-1],
-                                       model_path="C:/Users/quadro5000/PycharmProjects/detectron2_training/detectron2/output/model_final.pth")
-                except Exception as e:
-                    print("Kurwa to jednak tu")
-                    self.workerException.emit(e)
+                    print("Type", type(image))
+                    print("Shape", image.shape)
 
-            elif self._analysis == 4:
-                print("Analysis 4 - Counting")
-                rgb, _ = crop_rgb(original_image[:, :, :3], coords)
-                model = main.deepforest()
-                model.use_amp = True
-                model.use_release()
-                try:
-                    img = model.predict_tile(image=rgb, return_plot=True, patch_size=800, patch_overlap=0.1,
-                                             iou_threshold=0.4, thresh=0.8)
-                    img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
-                    image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
+                    # image = cv.cvtColor(image[:, :, :3], cv.COLOR_BGR2RGB)
+                    #
+                    # polygon, _, _ = poly_img(image, coords, params[0], params[1],
+                    #                          original_image[params[1]: params[1] + params[3],
+                    #                          params[0]:params[0] + params[2]])
+                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = image
                 except Exception as e:
                     self.workerException.emit(e)
-
-            if self._analysis == 5:
-                print("Analysis 5 - Mistolete")
-                mis_image = mis_map(cropped_rect)
-                ndvi_image = ndvi_map(cropped_rect)
-                mis_filtered = mis_filtration(mis_image, ndvi_image)
-                int_mis = mis_filtered.astype(int) * 255
-                image, _ = crop_rgb(original_image[:, :, :3], coords)
-
-                for i in range(image.shape[0]):
-                    for j in range(image.shape[1]):
-                        if int_mis[i, j] == 255:
-                            image[i, j] = (0, 255, 255)
-
-            polygon, _, _ = poly_img(image, coords, params[0], params[1],
-                                     original_image[params[1]: params[1] + params[3],
-                                     params[0]:params[0] + params[2]])
-            original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = polygon
 
             self._img_manager.write_image(original_image)
 
             print("Koniec procesu")
+            self.workerFinished.emit()
+
+        if self._analysis == 2:
+            print("Analysis 2 - LCI")
+
+            byte_band_list = []
+            poligon_list = []
+            checked_polygon_list = []
+
+            try:
+                byte_band_list = self._img_manager.get_byte_band_list()
+                # print("1")
+                # print(byte_band_list)
+                poligon_list = self._polygon_manager.get_polygon_list()
+                # print("2")
+                print(poligon_list)
+                checked_polygon_list = [polygon for polygon in poligon_list if polygon.get_is_checked()]
+                # print("3")
+                # print(checked_polygon_list)
+                coords = []
+                i = 0
+            except Exception as e:
+                self.workerException.emit(e)
+
+            for polygon in checked_polygon_list:
+                # print("3")
+                for point in polygon.get_point_list():
+                    # print("4")
+                    point = (point.x_get(), point.y_get())
+                    # print("5")
+                    coords.append({"x": point[0], "y": point[1]})
+                    # print("6")
+                # print(coords)
+                try:
+                    cropped_rect, params = crop_band_list(byte_band_list, coords)
+                except Exception as e:
+                    self.workerException.emit(e)
+                # print("7")
+                # print(params)
+                lci_image = lci_map(cropped_rect)
+
+                my_cmap = matplotlib.cm.get_cmap("plasma")
+                color_array = my_cmap(lci_image)
+                try:
+                    image = np.asarray(color_array)
+                    image = image * 255
+                except Exception as e:
+                    print("Polygon error")
+                    self.workerException.emit(e)
+
+                original_image = self._img_manager.get_image()
+
+                try:
+                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = image
+                except Exception as e:
+                    print("Merging error")
+                    self.workerException.emit(e)
+                # print("Nadpisanie ")
+                self._img_manager.write_image(original_image)
+
+                # print("Wysłanie")
+
+            print("Koniec procesu")
+
+            self.workerFinished.emit()
+
+        if self._analysis == 3:
+            print("Analysis 3 - Segmentation")
+
+            self.workerFinished.emit()
+
+        if self._analysis == 4:
+            print("Analysis 4 - Counting")
+
+            byte_band_list = []
+            poligon_list = []
+            checked_polygon_list = []
+
+            try:
+                byte_band_list = self._img_manager.get_byte_band_list()
+                # print("1")
+                # print(byte_band_list)
+                poligon_list = self._polygon_manager.get_polygon_list()
+                # print("2")
+                print(poligon_list)
+                checked_polygon_list = [polygon for polygon in poligon_list if polygon.get_is_checked()]
+                # print("3")
+                # print(checked_polygon_list)
+                coords = []
+                i = 0
+            except Exception as e:
+                self.workerException.emit(e)
+
+            for polygon in checked_polygon_list:
+                # print("3")
+                for point in polygon.get_point_list():
+                    # print("4")
+                    point = (point.x_get(), point.y_get())
+                    # print("5")
+                    coords.append({"x": point[0], "y": point[1]})
+                    # print("6")
+                # print(coords)
+                try:
+                    cropped_rect, params = crop_band_list(byte_band_list, coords)
+                except Exception as e:
+                    self.workerException.emit(e)
+
+            try:
+                rgb = rgb_image(cropped_rect)
+                rgb = simplest_cb(rgb, 1)
+                model = main.deepforest()
+                model.use_amp = True
+                model.use_release()
+            except Exception as e:
+                print("Model prepaing problem")
+                self.workerException.emit(e)
+
+            try:
+                img = model.predict_tile(image=rgb, return_plot=True, patch_size=800, patch_overlap=0.1,
+                                         iou_threshold=0.4, thresh=0.8)
+            except Exception as e:
+                print("Model prediction problem")
+                self.workerException.emit(e)
+
+            original_image = self._img_manager.get_image()
+            img = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
+
+            try:
+                polygon, _, _ = poly_img(img, coords, params[0], params[1],
+                                         original_image[params[1]: params[1] + params[3],
+                                         params[0]:params[0] + params[2]])
+                original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = polygon
+            except Exception as e:
+                self.workerException.emit(e)
+
+            self.workerFinished.emit()
+
+        if self._analysis == 5:
+            print("Analysis 5 - Mistolete")
+
+            byte_band_list = []
+            poligon_list = []
+            checked_polygon_list = []
+
+            original_image = self._img_manager.get_image()
+
+            try:
+                byte_band_list = self._img_manager.get_byte_band_list()
+                poligon_list = self._polygon_manager.get_polygon_list()
+                checked_polygon_list = [polygon for polygon in poligon_list if polygon.get_is_checked()]
+
+            except Exception as e:
+                self.workerException.emit(e)
+
+            for polygon in checked_polygon_list:
+                coords = []
+                for point in polygon.get_point_list():
+                    point = (point.x_get(), point.y_get())
+                    coords.append({"x": point[0], "y": point[1]})
+
+                try:
+                    cropped_rect, params = crop_band_list(byte_band_list, coords)
+                except Exception as e:
+                    self.workerException.emit(e)
+
+                try:
+                    mis_image = mis_map(cropped_rect)
+                    print("Mis map", mis_image)
+                    ndvi_image = ndvi_map(cropped_rect)
+                    print("ndvi map", ndvi_image)
+                except Exception as e:
+                    print("Index Map creating error")
+                    self.workerException.emit(e)
+                    return
+
+                try:
+                    mis_filtered = mis_filtration(mis_image, ndvi_image)
+                    print("mis_filtred", mis_filtered)
+                except Exception as e:
+                    print("Mist filter error")
+                    self.workerException.emit(e)
+                    return
+
+                int_mis = mis_filtered.astype(int) * 255
+
+                rgb = rgb_image(cropped_rect)
+                rgb = simplest_cb(rgb, 1)
+
+                try:
+                    for i in range(rgb.shape[0]):
+                        for j in range(rgb.shape[1]):
+                            if int_mis[i, j] == 255:
+                                rgb[i, j] = (0, 255, 255)
+
+                except Exception as e:
+                    self.workerException.emit(e)
+
+                try:
+                    polygon, _, _ = poly_img(rgb, coords, params[0], params[1],
+                                             original_image[params[1]: params[1] + params[3],
+                                             params[0]:params[0] + params[2]])
+
+                    original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = polygon
+                except Exception as e:
+                    self.workerException.emit(e)
+
+            self._img_manager.write_image(original_image)
+
+            print("Koniec procesu")
+            self.workerFinished.emit()
+
+        else:
             self.workerFinished.emit()
 
 
@@ -193,7 +364,6 @@ class Processing(QObject):
 
     def print_exception(self, e):
         raise Exception(e)
-        self.isProcessing.emit(False)
         self._thread.quit()
         self._thread.deleteLater()
 

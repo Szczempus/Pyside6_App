@@ -3,11 +3,9 @@ import math
 import numpy as np
 import sys
 
-
 def apply_mask(matrix, mask, fill_value):
     masked = np.ma.array(matrix, mask=mask, fill_value=fill_value)
     return masked.filled()
-
 
 def apply_threshold(matrix, low_value, high_value):
     low_mask = matrix < low_value
@@ -17,7 +15,6 @@ def apply_threshold(matrix, low_value, high_value):
     matrix = apply_mask(matrix, high_mask, high_value)
 
     return matrix
-
 
 def simplest_cb(img, percent):
     assert img.shape[2] == 3
@@ -41,8 +38,8 @@ def simplest_cb(img, percent):
 
         n_cols = flat.shape[0]
 
-        low_val = flat[math.floor(n_cols * half_percent)]
-        high_val = flat[math.ceil(n_cols * (1.0 - half_percent))]
+        low_val  = flat[math.floor(n_cols * half_percent)]
+        high_val = flat[math.ceil( n_cols * (1.0 - half_percent))]
 
         # saturate below the low percentile and above the high percentile
         thresholded = apply_threshold(channel, low_val, high_val)
@@ -51,7 +48,6 @@ def simplest_cb(img, percent):
         out_channels.append(normalized)
 
     return cv2.merge(out_channels)
-
 
 if __name__ == '__main__':
     img = cv2.imread(sys.argv[1])

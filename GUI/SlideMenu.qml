@@ -118,12 +118,6 @@ Item {
             action: "action_importImage"
             onClicked: control.actionTriggered(action)
         }
-        ButtonText {
-            text: qsTr("SAVE IMAGE")
-            action: "action_saveImage"
-            onClicked: control.actionTriggered(action)
-        }
-
         Separator {
             separation: "column"
         }
