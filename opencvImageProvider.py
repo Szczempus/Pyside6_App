@@ -69,9 +69,6 @@ class OpencvImageProvider(QQuickImageProvider):
             # Get file path
             self._image_file_path = parsed_path
 
-            # reader = QImageReader(self._image_file_path)
-            # return reader.read()
-
             # If it's tiff img
             if self._image_file_path.endswith(('.tiff', '.tif')):
 
@@ -160,6 +157,9 @@ class OpencvImageProvider(QQuickImageProvider):
 
                 return qimage
 
+
+            # TODO clear and Reload
+            # pass
 
     def get_image(self):
         return self._image
