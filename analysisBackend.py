@@ -21,6 +21,7 @@ channel 5 - NIR
 channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwinów na st. celcujsza  
 '''
 
+
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
 
 """
