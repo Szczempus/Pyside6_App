@@ -5,6 +5,7 @@ import sys
 from PIL import Image
 
 
+
 def crop_band_list(band_list: list, coords: list):
     """
     This function crops the original sized bands to maximum sized rectangle
@@ -56,7 +57,7 @@ def crop_band_list(band_list: list, coords: list):
     # poly_band_list.append(dst2)
 
 
-def crop_rgb(rgb, coords: list):
+def crop_rgb(rgb, coords: list, x_new = None, y_new = None):
     """
     This function crops the original sized bands to maximum sized rectangle
     to overfill polygon. With that to analyzis comes only selected area, not
@@ -68,7 +69,11 @@ def crop_rgb(rgb, coords: list):
     """
 
     band = rgb
-    pts = [[int(coord["x"]), int(coord["y"])] for coord in coords]
+    print("1 badn", band.shape)
+    if x_new or y_new is None:
+        pts = [[int(coord["x"]), int(coord["y"])] for coord in coords]
+    else:
+        pts = [[int(coord["x"]) - x_new, int(coord["y"]) - y_new] for coord in coords]
     polygon_pts = np.array(pts)
 
     copy_polygon_pts = polygon_pts
@@ -78,6 +83,7 @@ def crop_rgb(rgb, coords: list):
 
     x, y, w, h = rect
     cropped = band[y:y + h, x:x + w].copy()
+    print("2 Cropped ", cropped.shape)
 
     return cropped, [x, y, w, h]
 

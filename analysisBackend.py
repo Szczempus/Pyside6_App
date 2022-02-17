@@ -1,14 +1,14 @@
 import matplotlib.cm
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
-from detectron2 import config, engine, data, model_zoo
-from detectron2.utils.visualizer import Visualizer
+
 
 from polygonMenager import PolygonMenager
 from opencvImageProvider import OpencvImageProvider
 from crop_img import *
 from ALGORITHMS.maps import *
-from ALGORITHMS.color_corection import simplest_cb
+from ALGORITHMS.detectron_prediction import *
+
 
 '''
 IMPORTANT INFO 
@@ -36,6 +36,8 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 """
 
 
+
+
 class Worker(QObject):
     workerFinished = Signal()
     workerInProgress = Signal()
@@ -47,33 +49,6 @@ class Worker(QObject):
         self._img_manager = img_provider
         self._polygon_manager = polygon_provider
         self._analysis = analysis
-
-    def config_init(self, train_dataset: str, iterations: int, im_batch_size: int, num_of_classes: int,
-                    test_dataset=None,
-                    model_weights_path=None):
-        cfg = config.get_cfg()
-        cfg.merge_from_file(model_zoo.get_config_file("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml"))
-        cfg.DATASETS.TRAIN = train_dataset
-        if test_dataset is not None:
-            cfg.DATASETS.TEST = test_dataset
-        else:
-            cfg.DATASETS.TEST = []
-
-        # 8 have the best time results
-        cfg.DATALOADER.NUM_WORKERS = 8
-        if model_weights_path is not None:
-            cfg.MODEL.WEIGHTS = model_weights_path
-        else:
-            cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
-        cfg.SOLVER.IMS_PER_BATCH = im_batch_size
-        cfg.SOLVER.BASE_LR = 0.00001
-        cfg.SOLVER.MAX_ITER = iterations
-        cfg.SOLVER.STEPS = []
-        cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512
-        cfg.MODEL.ROI_HEADS.NUM_CLASSES = num_of_classes
-        cfg.TEST.DETECTIONS_PER_IMAGE = 2000
-        cfg.SOLVER.AMP.ENABLED = True
-        return cfg
 
     def run(self):
         byte_band_list = []
@@ -113,17 +88,29 @@ class Worker(QObject):
             elif self._analysis == 3:
                 print("Analysis 3 - Segmentation")
                 try:
-                    rgb, _ = crop_rgb(original_image[:, :, :3], coords)
-                    cfg = self.config_init("", 4000, 8, 1,
-                                           r"C:\Users\quadro5000\PycharmProjects\detectron2_training\detectron2\output\salata_15_07_005.pth")
-                    predictor = engine.DefaultPredictor(cfg)
-                    outputs = predictor(rgb)
-                    # TODO Dokończyć
-                    v = Visualizer()
-
+                    index_image = osavi_map(byte_band_list)
+                    my_cmap = matplotlib.cm.get_cmap("Spectral")
+                    color_array = my_cmap(index_image)
+                    image = np.asarray(color_array)
+                    image = image * 255
+                    print("Wielkośc obrazu", image.shape)
                 except Exception as e:
+                    print("Index map error")
                     self.workerException.emit(e)
 
+                try:
+                    rgb, _ = crop_rgb(image[:, :, :3], coords)
+                    print("Wielkość rgb ", rgb.shape)
+                except Exception as e:
+                    print("Kurwa to tu")
+                    self.workerException.emit(e)
+                try:
+                    cfg = config_init("", 4000, 8, 1)
+                    image = prediction(cfg, rgb[:, :, ::-1],
+                                       model_path="C:/Users/quadro5000/PycharmProjects/detectron2_training/detectron2/output/model_final.pth")
+                except Exception as e:
+                    print("Kurwa to jednak tu")
+                    self.workerException.emit(e)
 
             elif self._analysis == 4:
                 print("Analysis 4 - Counting")
@@ -205,6 +192,7 @@ class Processing(QObject):
 
     def print_exception(self, e):
         raise Exception(e)
+        self.isProcessing.emit(False)
         self._thread.quit()
         self._thread.deleteLater()
 

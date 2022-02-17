@@ -88,6 +88,9 @@ Window {
             else if (action == "action_importImage"){
                 chooseImageFile.open()
             }
+            else if (action == "action_saveImage"){
+                saveImage.open()
+            }
             else if (action == "action_runAnalysis"){
                 analysis.open()
             }
@@ -164,7 +167,15 @@ Window {
 
     // Choose project file dialog
     Dialogs.ChooseFile{
-        id: chooseProject
+        id: chooseProjectFile
+        onAccepted: {
+            console.log("Wybrałeś: " + chooseProjectFile.fileUrl)
+            path = chooseProjectFile.fileUrl.toString()
+        }
+    }
+
+    Dialogs.ChooseFile{
+        id: saveImage
         onAccepted: {
             console.log("Wybrałeś: " + chooseFile.fileUrl)
             path = chooseFile.fileUrl.toString()
