@@ -9,6 +9,7 @@ from PIL import ImageQt
 
 
 def run(image):
+
     image = numpy.asarray(image)
 
     plt.imshow(image)

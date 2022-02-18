@@ -4,8 +4,9 @@ import cv2 as cv
 import sys
 from PIL import Image
 
-def crop_band_list(band_list: list, coords: list):
 
+
+def crop_band_list(band_list: list, coords: list):
     """
     This function crops the original sized bands to maximum sized rectangle
     to overfill polygon. With that to analyzis comes only selected area, not
@@ -34,26 +35,57 @@ def crop_band_list(band_list: list, coords: list):
 
     return cropped_band_list, [x, y, w, h]
 
-        # //// UNUSED
+    # //// UNUSED
 
-        # Make mask
-        # copy_polygon_pts = copy_polygon_pts - copy_polygon_pts.min(axis=0)
-        #
-        # mask = np.zeros(croped.shape[:2], dtype=numpy.uint8)
-        # cv.drawContours(mask, [copy_polygon_pts], -1, (255, 255, 255), -1, cv.LINE_AA)
+    # Make mask
+    # copy_polygon_pts = copy_polygon_pts - copy_polygon_pts.min(axis=0)
+    #
+    # mask = np.zeros(croped.shape[:2], dtype=numpy.uint8)
+    # cv.drawContours(mask, [copy_polygon_pts], -1, (255, 255, 255), -1, cv.LINE_AA)
 
-        # plt.imshow(mask)
-        # plt.title("Mask")
-        # plt.show()
+    # plt.imshow(mask)
+    # plt.title("Mask")
+    # plt.show()
 
-        # Bit-op
-        # dst = cv.bitwise_and(croped, croped, mask=mask)
-        #
-        # bg = np.ones_like(croped, np.uint8) * 65535
-        # cv.bitwise_not(bg, bg, mask=mask)
-        # dst2 = bg + dst
-        #
-        # poly_band_list.append(dst2)
+    # Bit-op
+    # dst = cv.bitwise_and(croped, croped, mask=mask)
+    #
+    # bg = np.ones_like(croped, np.uint8) * 65535
+    # cv.bitwise_not(bg, bg, mask=mask)
+    # dst2 = bg + dst
+    #
+    # poly_band_list.append(dst2)
+
+
+def crop_rgb(rgb, coords: list, x_new = None, y_new = None):
+    """
+    This function crops the original sized bands to maximum sized rectangle
+    to overfill polygon. With that to analyzis comes only selected area, not
+    entire image.
+
+    :param rgb:
+    :param coords:
+    :return:
+    """
+
+    band = rgb
+    print("1 badn", band.shape)
+    if x_new or y_new is None:
+        pts = [[int(coord["x"]), int(coord["y"])] for coord in coords]
+    else:
+        pts = [[int(coord["x"]) - x_new, int(coord["y"]) - y_new] for coord in coords]
+    polygon_pts = np.array(pts)
+
+    copy_polygon_pts = polygon_pts
+    # Cropping the bounding rect
+
+    rect = cv.boundingRect(copy_polygon_pts)
+
+    x, y, w, h = rect
+    cropped = band[y:y + h, x:x + w].copy()
+    print("2 Cropped ", cropped.shape)
+
+    return cropped, [x, y, w, h]
 
 
 def poly_img(fgimage: np.ndarray, coords: list, x_new, y_new, bgimage: np.ndarray):
@@ -82,16 +114,19 @@ def poly_img(fgimage: np.ndarray, coords: list, x_new, y_new, bgimage: np.ndarra
 
     x, y, w, h = rect
     croped = band[y:y + h, x:x + w]
+    _,_,channels = croped.shape
 
     print("2")
     print(type(croped))
     print(croped.shape)
 
-    croped = Image.fromarray(croped)
+    croped = Image.fromarray(croped.astype(np.uint8))
+
 
     print("2.1")
 
-    croped = croped.convert("RGBA")
+    if channels < 4:
+        croped = croped.convert("RGBA")
 
     print("2.2")
 

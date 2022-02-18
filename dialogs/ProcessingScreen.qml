@@ -14,7 +14,7 @@ Popup{
     property int popupPolicy: Popup.NoAutoClose
 
 
-    x: parent.width / 2 - implicitWidth / 2
+    x: parent.width / 2 - width / 2
 //    y: parent.height / 2 - height / 2
     implicitWidth: 300
     implicitHeight: 200
@@ -43,7 +43,7 @@ Popup{
 
     Text{
         id: loadingText
-        text: "LOADING MAP..."
+        text: "PROCESSING..."
         wrapMode: Text.Wrap
 
         anchors.bottom: parent.bottom
@@ -97,31 +97,5 @@ Popup{
     }
 }
 
-
-
-
-
-
-
-
-
-//    Text {
-//        id: mapLoadingScreen
-//        text: "Mapa ci się ładuje. I co się dziwisz? Duży plik to i chwilę to schodzi"
-//        anchors.fill: parent
-//        wrapMode: Text.Wrap
-//    }
-
-//    Text {
-//        id: spin
-//        text: "You spin me right round, baby"
-//        anchors.centerIn: parent
-
-//        NumberAnimation on rotation{
-//            from: 0; to: 360; running: spin.visible == true;
-//            loops: Animation.Infinite; duration: 700;
-//        }
-
-//    }
 
 
