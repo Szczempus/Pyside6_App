@@ -1,6 +1,9 @@
 # This Python file uses the following encoding: utf-8
 from PySide2.QtCore import Slot, Property, QObject, Signal
+# from PySide2.QtQml import QmlElement, QmlSingleton
+from PySide2.QtWidgets import QFileDialog
 
+import os
 from projectMenager import ProjectMenager
 from opencvImageProvider import OpencvImageProvider
 from paintHandler import PaintHandler
