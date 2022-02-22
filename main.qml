@@ -52,9 +52,9 @@ Window {
                 }
 
 
-                GUI.ParameterSliders{
-                    id: slidersWindow
-                }
+//                GUI.ParameterSliders{
+//                    id: slidersWindow
+//                }
             }
         }                // Image loading through image provider in choose file dialog
     }
