@@ -2,6 +2,7 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import "Colors.js" as Colors
 
+
 Item {
     id: control
 
@@ -31,6 +32,38 @@ Item {
         height: parent.height
         width: parent.width
         spacing: 0
+
+
+        ButtonTool {
+            icon_source: "./images/png_images/slider.png"
+//            icon_source_highlighted: "./images/png_images/polygon_highlighted.png"
+            tool: "slider"
+            text: qsTr("PARAMETERS")
+            visible: visibility
+            onClicked: {
+                if(isAction)
+                {
+                    control.actionTriggered(tool)
+                }
+                else
+                {
+                    if(active)
+                    {
+                        if(lastActiveTool != undefined)
+                        {
+                            lastActiveTool.active = false
+                            control.toolSelected(lastActiveTool.tool, false)
+                        }
+                        lastActiveTool = this
+                    }
+                    else
+                    {
+                        lastActiveTool = undefined
+                    }
+                    control.toolSelected(tool, active)
+                }
+            }
+        }
 
         ButtonTool {
             icon_source: "./images/png_images/polygon.png"

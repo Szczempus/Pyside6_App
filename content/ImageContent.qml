@@ -1,5 +1,6 @@
 import QtQuick 2.15
 //import "../control/" as Control
+import "../GUI" as GUI
 
 Image{
 
@@ -46,10 +47,10 @@ Image{
         property real m_y1: 0
         property real m_y2: 0
         property real m_x2: 0
-        property real m_zoom1: 0.5
-        property real m_zoom2: 0.5
-        property real m_max: 3
-        property real m_min: 0.1
+        property real m_zoom1: 0.1
+        property real m_zoom2: 0.1
+        property real m_max: 4
+        property real m_min: 0.01
 
         onPinchStarted: {
             m_x1 = imageScaler.origin.x
@@ -69,6 +70,13 @@ Image{
                 m_zoom2 = newZoom
             }
         }
+
+
+//        GUI.ParameterSliders{
+//            id: slidersWindow
+//        }
+
+
 
         // Placing mouse area on the top of the image
         MouseArea{
@@ -103,14 +111,14 @@ Image{
 
                 var newZoom
                 if (wheel.angleDelta.y > 0){
-                    newZoom = pinchArea.m_zoom1 + 0.1
+                    newZoom = pinchArea.m_zoom1 + 0.01
                     if (newZoom <= pinchArea.m_max){
                         pinchArea.m_zoom2 = newZoom
                     }else{
                         pinchArea.m_zoom2 = pinchArea.m_max
                     }
                 }else{
-                    newZoom = pinchArea.m_zoom1 - 0.1
+                    newZoom = pinchArea.m_zoom1 - 0.01
                     if(newZoom >= pinchArea.m_min){
                         pinchArea.m_zoom2 = newZoom
                     }else{

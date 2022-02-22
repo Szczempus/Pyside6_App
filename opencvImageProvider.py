@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import cv2
 import matplotlib.pyplot
-from PySide2.QtCore import QSize, QByteArray
+from PySide2.QtCore import QSize, QByteArray, Slot, QObject
 from PySide2.QtGui import QImage, QImageReader
 from PySide2.QtQuick import QQuickImageProvider
 import cv2 as cv
@@ -35,9 +35,8 @@ def convert_from_cv_to_qimage(image: np.ndarray) -> QImage:
     return qimage
 
 
-class OpencvImageProvider(QQuickImageProvider):
+class OpencvImageProvider(QQuickImageProvider, QObject):
     def __init__(self):
-        # QThread.__init__(self)
         super(OpencvImageProvider, self).__init__(QQuickImageProvider.Image,
                                                   QQuickImageProvider.ForceAsynchronousImageLoading)
         self._image_file_path = None
@@ -50,6 +49,7 @@ class OpencvImageProvider(QQuickImageProvider):
 
     def get_byte_band_list(self):
         return self._byte_band_list
+
 
     def requestImage(self, path: str, size: QSize, req_size: QSize) -> QImage:
         img = self._image

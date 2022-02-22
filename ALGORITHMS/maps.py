@@ -18,6 +18,13 @@ def rgb_image(band_list):
     g = band_list[1]
     b = band_list[0]
 
+    # TODO make a double slider for min and max threshold value
+    max_val = 3000
+
+    r = (r < max_val) * r
+    g = (g < max_val) * g
+    b = (b < max_val) * b
+
     r = np.array(r / 256).astype("uint8")
     g = np.array(g / 256).astype("uint8")
     b = np.array(b / 256).astype("uint8")

@@ -1,4 +1,5 @@
 # This Python file uses the following encoding: utf-8
+import cv2
 from PySide2.QtCore import Slot, Property, QObject, Signal
 # from PySide2.QtQml import QmlElement, QmlSingleton
 from PySide2.QtWidgets import QFileDialog
@@ -29,6 +30,25 @@ class Appcore(QObject):
 
         print(self.projectMenager)
 
+    @Slot("QString")
+    def save_image(self, path_to_save_image: str):
+        print("Otrzymana ścieżka", path_to_save_image)
+        # Split file and desired path
+        _, path = path_to_save_image.split("///")
+        # TODO Check if path has correct format
+
+        img = self.opencvMenager.get_image()
+        # TODO Check if image is not none
+
+        # TODO Write in correct file format
+        cv2.imwrite(path, img)
+
+    def save_project(self):
+        pass
+
+    def create_report(self):
+        pass
+
     """
     Property setters and getters
     """
@@ -56,4 +76,3 @@ class Appcore(QObject):
     paintHan = Property(PaintHandler, get_paint_handler, notify=paintHandlerChanged)
     polyMeg = Property(PolygonMenager, get_polygon_menager, notify=polygonMenagerChanged)
     proces = Property(Processing, get_proces_menager, notify=procesManagerChanged)
-

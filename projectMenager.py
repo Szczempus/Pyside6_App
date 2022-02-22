@@ -3,9 +3,10 @@ from PySide2.QtCore import Slot, Property, Signal, QObject
 
 import os
 import shutil
+import pathlib
+
 
 class ProjectMenager(QObject):
-
     fileExists = Signal()
 
     def __init__(self):
@@ -14,7 +15,8 @@ class ProjectMenager(QObject):
         self.projectDescription = None
         self.projectLocation = None
         self.projectDate = None
-        self.path = None
+        self.unixpath = None
+        self.winpath = None
 
     @Slot("QString", "QString", "QString", "QString")
     def create_new_project(self, name, desc, loc, date):
@@ -24,16 +26,20 @@ class ProjectMenager(QObject):
         self.projectDate = date
 
         # Get current working directory and create project directory
-        self.path = os.getcwd()
+        self.winpath = os.getcwd()
         self.crete_directory()
 
     def crete_directory(self):
         directory = self.projectName
-        parent_dir = self.path
+        parent_dir = self.winpath
 
         path = os.path.join(parent_dir, directory)
-        self.path = path
-
+        winpath = path
+        unixpath = path.replace("\\", "/")
+        self.unixpath = unixpath
+        self.winpath = winpath
+        # print("WinPath: ", self.winpath)
+        # print("UnixPath: ", self.unixpath)
         # Try to make project directory
         try:
             os.mkdir(path)
@@ -48,8 +54,8 @@ class ProjectMenager(QObject):
             self.project_created()
 
     def delete_project(self):
-        path_cpy = self.path
-        self.path = os.path.dirname(path_cpy)
+        path_cpy = self.winpath
+        self.winpath = os.path.dirname(path_cpy)
 
         try:
             # os.close(path_cpy)
@@ -88,8 +94,8 @@ class ProjectMenager(QObject):
     def get_project_date(self):
         return self.projectDate
 
-    def get_project_path(self):
-        return self.path
+    def get_project_unixpath(self):
+        return self.unixpath
 
     """
     Signals of property change 
@@ -107,5 +113,4 @@ class ProjectMenager(QObject):
     project_desc = Property(str, get_project_des, notify=projectDescriptionChanged)
     project_loc = Property(str, get_project_loc, notify=projectLocationChanged)
     project_date = Property(str, get_project_date, notify=projectDateChanged)
-    project_path = Property(str, get_project_path, notify=projectPathChanged)
-
+    project_path = Property(str, get_project_unixpath, notify=projectPathChanged)

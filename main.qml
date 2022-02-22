@@ -50,6 +50,11 @@ Window {
                         polygon.hovered = false
                     }
                 }
+
+
+                GUI.ParameterSliders{
+                    id: slidersWindow
+                }
             }
         }                // Image loading through image provider in choose file dialog
     }
@@ -89,7 +94,9 @@ Window {
                 chooseImageFile.open()
             }
             else if (action == "action_saveImage"){
+                saveImage.folder = "file:///"+appCore.prMeg.project_path
                 saveImage.open()
+                console.log("Folder otwarcia",saveImage.folder)
             }
             else if (action == "action_runAnalysis"){
                 analysis.open()
@@ -113,6 +120,11 @@ Window {
                 polygonCanvas.nameToolActive = active
                 if(active)
                     messageManager.getString(true, qsTr("New name"))
+            }
+            else if(tool == "slider"){
+                console.log("Przyszedł click")
+
+                slidersWindow.slidersVisible = true
             }
         }
     }
@@ -174,11 +186,12 @@ Window {
         }
     }
 
-    Dialogs.ChooseFile{
+    Dialogs.SaveImage{
         id: saveImage
+        title: "Save image"
         onAccepted: {
-            console.log("Wybrałeś: " + chooseFile.fileUrl)
-            path = chooseFile.fileUrl.toString()
+            console.log("Wybrałeś: " + saveImage.file)
+            appCore.save_image(saveImage.file)
         }
     }
 
@@ -209,7 +222,7 @@ Window {
     Connections{
         target: appCore.proces
 
-        function onIsProcessing(val){
+        function onIsProcessing(val, status){
             if (val === true){
                 console.log("Processing true")
                 processing.open()
@@ -217,8 +230,10 @@ Window {
             }
             if (val === false){
                 console.log("Processing false")
-                imageItem.source = ""
-                imageItem.source = "image://opencvImage/reload"
+                if (status === "Success"){
+                    imageItem.source = ""
+                    imageItem.source = "image://opencvImage/reload"
+                }
                 processing.close()
             }
         }

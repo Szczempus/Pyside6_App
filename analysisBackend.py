@@ -1,14 +1,13 @@
+import cv2
 import matplotlib.cm
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
-
 
 from polygonMenager import PolygonMenager
 from opencvImageProvider import OpencvImageProvider
 from crop_img import *
 from ALGORITHMS.maps import *
 from ALGORITHMS.detectron_prediction import *
-
 
 '''
 IMPORTANT INFO 
@@ -20,7 +19,6 @@ channel 3 - Red
 channel 5 - NIR
 channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwinów na st. celcujsza  
 '''
-
 
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
 
@@ -37,10 +35,8 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 """
 
 
-
-
 class Worker(QObject):
-    workerFinished = Signal()
+    workerFinished = Signal(str)
     workerInProgress = Signal()
     workerResult = Signal(object)
     workerException = Signal(Exception)
@@ -61,6 +57,11 @@ class Worker(QObject):
         byte_band_list = self._img_manager.get_byte_band_list()
         poligon_list = self._polygon_manager.get_polygon_list()
         checked_polygon_list = [polygon for polygon in poligon_list if polygon.get_is_checked()]
+
+        if checked_polygon_list is None or len(checked_polygon_list) == 0:
+            print("None polygon")
+            self.workerFinished.emit("Fail")
+            return
 
         for polygon in checked_polygon_list:
             coords = []
@@ -103,14 +104,12 @@ class Worker(QObject):
                     rgb, _ = crop_rgb(image[:, :, :3], coords)
                     print("Wielkość rgb ", rgb.shape)
                 except Exception as e:
-                    print("Kurwa to tu")
                     self.workerException.emit(e)
                 try:
                     cfg = config_init("", 4000, 8, 1)
                     image = prediction(cfg, rgb[:, :, ::-1],
                                        model_path="C:/Users/quadro5000/PycharmProjects/detectron2_training/detectron2/output/model_final.pth")
                 except Exception as e:
-                    print("Kurwa to jednak tu")
                     self.workerException.emit(e)
 
             elif self._analysis == 4:
@@ -120,6 +119,18 @@ class Worker(QObject):
                 model.use_amp = True
                 model.use_release()
                 try:
+                    # boxes = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
+                    #                            iou_threshold=0.4, thresh=0.8)
+                    # print(type(boxes))
+                    # print(boxes)
+                    # boxes = boxes.to_numpy()
+                    # print(boxes)
+                    # # Pandas data frame boxes
+                    # for box in boxes:
+                    #     rgb = cv2.circle(rgb, (int((box[2] - box[0]) / 2), int((box[3] - box[1]) / 2)), radius=2,
+                    #                      color=(0, 0, 255), thickness=2)
+                    # image = rgb
+
                     img = model.predict_tile(image=rgb, return_plot=True, patch_size=800, patch_overlap=0.1,
                                              iou_threshold=0.4, thresh=0.8)
                     img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
@@ -127,7 +138,7 @@ class Worker(QObject):
                 except Exception as e:
                     self.workerException.emit(e)
 
-            if self._analysis == 5:
+            elif self._analysis == 5:
                 print("Analysis 5 - Mistolete")
                 mis_image = mis_map(cropped_rect)
                 ndvi_image = ndvi_map(cropped_rect)
@@ -148,11 +159,12 @@ class Worker(QObject):
             self._img_manager.write_image(original_image)
 
             print("Koniec procesu")
-            self.workerFinished.emit()
+            self.workerFinished.emit("Success")
+            return
 
 
 class Processing(QObject):
-    isProcessing = Signal(bool, arguments=['val'])
+    isProcessing = Signal(bool, str, arguments=['val', "status"])
 
     def __init__(self, polygon_manager: PolygonMenager, opencv: OpencvImageProvider):
         super(Processing, self).__init__()
@@ -185,17 +197,14 @@ class Processing(QObject):
 
         self._thread.start()
 
-        self.isProcessing.emit(True)
+        self.isProcessing.emit(True, "")
 
-    def stop_analysis(self):
+    def stop_analysis(self, status):
         print("Proces zakończony")
-        self.isProcessing.emit(False)
+        self.isProcessing.emit(False, status)
 
     def print_exception(self, e):
         raise Exception(e)
-        self.isProcessing.emit(False)
+        self.isProcessing.emit(False, staus)
         self._thread.quit()
         self._thread.deleteLater()
-
-    def print_restult(self, image):
-        pass
