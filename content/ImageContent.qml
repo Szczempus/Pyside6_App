@@ -9,6 +9,8 @@ Image{
     property bool drawPolygon: false
     property real polygonCounter: 0
 
+    signal imageItemLoaded()
+
     function singleClick(){
         // On clicked event handle the mouse X and Y position on the image
         //        console.log("Mouse X:", mouse_area.mouseX, " Mouse Y:", mouse_area.mouseY)
@@ -22,6 +24,7 @@ Image{
     asynchronous: true
     onStatusChanged: if(imageItem.status == Image.Ready | Image.Error) {
                          loading.close()
+                         processing.close()
                      }
 
     // Scaling image by pinch area variables
@@ -142,5 +145,5 @@ Image{
                 }
             }
         }
-    }
+    }   
 }                // Image loading through image provider in choose file dialog

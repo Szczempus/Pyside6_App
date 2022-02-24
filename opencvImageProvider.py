@@ -45,11 +45,21 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
         self._byte_band_list = []
         self.colored_polygon = None
         self.polygon_params = None
+        self._image_params = []
         # print("Inicjalizacja OpencvImageProvider")
 
     def get_byte_band_list(self):
         return self._byte_band_list
 
+    def get_image(self):
+        return self._image
+
+    def write_image(self, image):
+        self._image = image
+
+    def set_image_params(self, params: list):
+        # In BGR order
+        self._image_params = params
 
     def requestImage(self, path: str, size: QSize, req_size: QSize) -> QImage:
         img = self._image
@@ -57,6 +67,14 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
         # Reload image and clear everything
         if path == "reload":
             # print("Image reloading")
+            qimage = convert_from_cv_to_qimage(self._image)
+            return qimage
+
+        if path == "reload_with_params":
+            rgb = rgb_image(self._byte_band_list, min_val=self._image_params[0], max_val=self._image_params[1])
+            rgb = simplest_cb(rgb, int(self._image_params[2]))
+            rgba = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
+            self._image = rgba
             qimage = convert_from_cv_to_qimage(self._image)
             return qimage
 
@@ -140,8 +158,6 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                 rgb = rgb_image(self._byte_band_list)
 
                 # Implementing color corection
-                # Todo zrobić jakiś suwak żeby zmieniać wartość korekcji koloru
-                # if rasters > 4:
                 rgb = simplest_cb(rgb, 1)
                 # alpha = np.array(np.ones(self._byte_band_list[1].shape) * 255)
                 # rgba = np.dstack((rgb, alpha))
@@ -159,10 +175,3 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                 qimage = convert_from_cv_to_qimage(image=img)
 
                 return qimage
-
-
-    def get_image(self):
-        return self._image
-
-    def write_image(self, image):
-        self._image = image

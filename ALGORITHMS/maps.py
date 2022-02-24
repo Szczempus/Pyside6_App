@@ -13,17 +13,23 @@ channel 5 - NIR
 '''
 
 
-def rgb_image(band_list):
+def rgb_image(band_list, max_val:list = None, min_val:list = None):
     r = band_list[2]
     g = band_list[1]
     b = band_list[0]
 
-    # TODO make a double slider for min and max threshold value
-    max_val = 3000
+    if max_val and min_val is not None:
 
-    r = (r < max_val) * r
-    g = (g < max_val) * g
-    b = (b < max_val) * b
+        print("Typy danych: ", type(max_val[1]))
+        print("Zawarte dane: ", max_val)
+
+        r = (r < int(max_val[2])) * r
+        g = (g < int(max_val[1])) * g
+        b = (b < int(max_val[0])) * b
+
+        r = (r > int(min_val[2])) * r
+        g = (g > int(min_val[1])) * g
+        b = (b > int(min_val[0])) * b
 
     r = np.array(r / 256).astype("uint8")
     g = np.array(g / 256).astype("uint8")

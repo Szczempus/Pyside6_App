@@ -50,11 +50,6 @@ Window {
                         polygon.hovered = false
                     }
                 }
-
-
-//                GUI.ParameterSliders{
-//                    id: slidersWindow
-//                }
             }
         }                // Image loading through image provider in choose file dialog
     }
@@ -64,6 +59,22 @@ Window {
         id: polygonList
         topOffset: menuTop.height
         polygonManager: polygonCanvas.polygonManager
+    }
+
+
+    GUI.ParameterSliders{
+        id: slidersWindow
+        onApplyParams: {
+            slidersWindow.slidersVisible = false
+            appCore.set_image_params(slidersWindow.paramList)
+
+            imageItem.source = ""
+            imageItem.source = "image://opencvImage/reload_with_params"
+            processing.open()
+        }
+        onCancelParams: {
+            slidersWindow.slidersVisible = false
+        }
     }
 
 
@@ -124,7 +135,7 @@ Window {
             else if(tool == "slider"){
                 console.log("Przyszedł click")
 
-                slidersWindow.slidersVisible = true
+                slidersWindow.slidersVisible = !slidersWindow.slidersVisible
             }
         }
     }
@@ -234,7 +245,9 @@ Window {
                     imageItem.source = ""
                     imageItem.source = "image://opencvImage/reload"
                 }
-                processing.close()
+                else{
+                    processing.close()
+                }
             }
         }
     }
@@ -249,5 +262,4 @@ Window {
              menuTop.toolbarVisible = true
          }
     }
-
 }

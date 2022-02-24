@@ -44,93 +44,157 @@ Dialog{
         Row{
             anchors.fill: parent
 
-            // Left column with analysis radio buttons
-            Column{
-                id: leftColumn
-                width: parent.width/2
 
-                // Header
-                Rectangle{
-                    id:topTextAnalysis
-                    width: parent.width
-                    height: 20
-                    color: Colors.main
 
-                    Text{
-                        anchors.fill: parent
-                        text: "Analysis"
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        color: Colors.text
-                        font{
-                            family: "Ubuntu"
-                            pixelSize: 14
-                            bold: true
-                        }
+                // Left column with analysis radio buttons
+                Column{
+                    id: leftColumn
+                    width: parent.width/2
 
-                    }
-                }
+                    // Header
+                    Rectangle{
+                        id:topTextAnalysis
+                        width: parent.width
+                        height: 20
+                        color: Colors.main
 
-                // Content
-                ButtonGroup{id: firstGroup}
+                        Text{
+                            anchors.fill: parent
+                            text: "Analysis"
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            color: Colors.text
+                            font{
+                                family: "Ubuntu"
+                                pixelSize: 14
+                                bold: true
+                            }
 
-                ColumnLayout{
-                    spacing: 2
-
-                    Control.CustomRadioButton{
-                        checked: true
-                        text: "NDVI MAP"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 1
                         }
                     }
 
-                    Control.CustomRadioButton{
-                        text: "LCI MAP"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 2
-                        }
-                    }
+                    Flickable{
 
-                    Control.CustomRadioButton{
-                        text: "Segmentation"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 3
-                        }
-                    }
+                        width: background.width/2
+                        height: background.height
+                        clip: true
 
-                    Control.CustomRadioButton{
-                        text: "Counting"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 4
+                        flickableDirection: Flickable.AutoFlickIfNeeded
+                        ScrollBar.vertical: ScrollBar {
+                            policy: "AsNeeded"
                         }
-                    }
 
-                    Control.CustomRadioButton{
-                        text: "Mistletoe MAP"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 5
+                        contentHeight: leftColumn.height
+
+                    // Content
+                    ButtonGroup{id: firstGroup}
+
+                    ColumnLayout{
+                        spacing: 2
+
+                        Control.CustomRadioButton{
+                            checked: true
+                            text: "NDVI MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 1
+                            }
                         }
-                    }
 
-                    Control.CustomRadioButton{
-                        text: "Free Slot"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 6
+                        Control.CustomRadioButton{
+                            text: "BNDVI MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 2
+                            }
                         }
-                    }
 
-                    Control.CustomRadioButton{
-                        text: "Free Slot"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 7
+                        Control.CustomRadioButton{
+                            text: "GNDVI MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 3
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "LCI MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 4
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "MCAR MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 5
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "NDRE MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 6
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "SIPI2 MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 7
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "OSAVI MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 8
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "VARI MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 9
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "MISTLETONE MAP"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 10
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "SEGMENTATION"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 11
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "TREE CROWN DETECTOR"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 12
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "MISTLETON DETECTOR"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 13
+                            }
                         }
                     }
                 }

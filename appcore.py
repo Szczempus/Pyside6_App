@@ -49,6 +49,11 @@ class Appcore(QObject):
     def create_report(self):
         pass
 
+    @Slot(list)
+    def set_image_params(self, params: list):
+        print("Jestem w slocie")
+        self.opencvMenager.set_image_params(params)
+
     """
     Property setters and getters
     """
