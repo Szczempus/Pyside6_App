@@ -209,10 +209,17 @@ class PolygonMenager(QObject):
     @Slot(float, float)
     def isPolygonHovered(self, x, y):
         for polygon in self._polygonList:
-            pass
+            if self.is_point_in_polygon((x, y), polygon.get_point_list()):
+                # emit pologon
+                return polygon
 
     def is_point_in_polygon(self, pkt: tuple, polygon: list) -> bool:
-        inside = False
+        """
+        :param pkt: Captured x, y coordinates to compare as tuple (x,y)
+        :param polygon: polygon points as list of tuples [(x1:y1),(x2:y2),(x3:y3),...]
+        :return: bool True or False
+        """
+        inside = 0
 
         minX = polygon[0].x_get()
         maxX = polygon[0].x_get()
@@ -228,7 +235,17 @@ class PolygonMenager(QObject):
         if pkt[0] < minX or pkt[0] > maxX or pkt[1] < minY or pkt[1] > maxY:
             return inside
 
-        for point in polygon:
-            pass
+        polygon = list(polygon[:]) + (polygon[0])
+        for i in range(len(polygon) - 1):
+            if ((polygon[i].y_get() <= pkt[1] and polygon[i + 1].y_get() > pkt[1]) or (
+                    polygon[i].y_get() > pkt[1] and polygon[i + 1].y_get() <= pkt[1])):
+
+               # Vertex test
+                vt = (pkt[1] - polygon[i].y_get()) / float(polygon[i+1].y_get() - polygon[i].y_get())
+                if pkt[0] < polygon[i].x_get() + vt * (polygon[i+1].x_get() - polygon[i].x_get()):
+                    inside += 1
+
+        print("Czy jest w środku? ", inside % 2)
+        return inside % 2
 
     polygonList = Property(list, get_polygon_list, notify=polygonListChanged)
