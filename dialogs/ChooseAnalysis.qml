@@ -25,16 +25,75 @@ Dialog{
 
     modal: true
 
+    background: Rectangle{
+            id: background
+            anchors.fill: parent
+            color:Colors.main
+            radius: 7
+        }
+
+
+
+
+
     standardButtons: Dialog.Ok | Dialog.Cancel
+//    footer: Item{
+//        id: footerControl
+////        anchors.fill: parent
+
+//        height: 20
+
+//        Rectangle{
+//            id: footerBackground
+//            anchors.fill: parent
+//            color:"#ffffaa"
+
+//        }
+
+
+//    }
+
+    header: Item{
+        id: headerControl
+
+        Row{
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: rootDialog.contentItem.top
+        }
+
+
+
+//        Rectangle{
+//            id:topTextAnalysis
+//            width: parent.width
+//            height: 20
+//            color: Colors.main
+//            radius: 7
+
+//            Text{
+//                anchors.fill: parent
+//                text: "Analysis"
+//                horizontalAlignment: Text.AlignHCenter
+//                verticalAlignment: Text.AlignVCenter
+//                color: Colors.text
+//                font{
+//                    family: "Ubuntu"
+//                    pixelSize: 14
+//                    bold: true
+//                }
+//            }
+//        }
+
+    }
+
 
     contentItem: Item {
-
         id: control
 
-        anchors.fill: parent
-
         Rectangle{
-            id: background
+            id: contentBackground
             anchors.fill: parent
             color:Colors.main
             radius: 7
@@ -44,7 +103,18 @@ Dialog{
         Row{
             anchors.fill: parent
 
+            Flickable{
 
+                width: contentBackground.width/2
+                height: contentBackground.height
+                clip: true
+
+                flickableDirection: Flickable.AutoFlickIfNeeded
+                ScrollBar.vertical: ScrollBar {
+                    policy: "AsNeeded"
+                }
+
+                contentHeight: leftColumn.height
 
                 // Left column with analysis radio buttons
                 Column{
@@ -52,39 +122,26 @@ Dialog{
                     width: parent.width/2
 
                     // Header
-                    Rectangle{
-                        id:topTextAnalysis
-                        width: parent.width
-                        height: 20
-                        color: Colors.main
+//                    Rectangle{
+//                        id:topTextAnalysis
+//                        width: parent.width
+//                        height: 20
+//                        color: Colors.main
+//                        radius: 7
 
-                        Text{
-                            anchors.fill: parent
-                            text: "Analysis"
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            color: Colors.text
-                            font{
-                                family: "Ubuntu"
-                                pixelSize: 14
-                                bold: true
-                            }
-
-                        }
-                    }
-
-                    Flickable{
-
-                        width: background.width/2
-                        height: background.height
-                        clip: true
-
-                        flickableDirection: Flickable.AutoFlickIfNeeded
-                        ScrollBar.vertical: ScrollBar {
-                            policy: "AsNeeded"
-                        }
-
-                        contentHeight: leftColumn.height
+//                        Text{
+//                            anchors.fill: parent
+//                            text: "Analysis"
+//                            horizontalAlignment: Text.AlignHCenter
+//                            verticalAlignment: Text.AlignVCenter
+//                            color: Colors.text
+//                            font{
+//                                family: "Ubuntu"
+//                                pixelSize: 14
+//                                bold: true
+//                            }
+//                        }
+//                    }
 
                     // Content
                     ButtonGroup{id: firstGroup}
@@ -207,8 +264,8 @@ Dialog{
 
             // Right column with polygon list and combo boxes
             Flickable {
-                width: background.width/2
-                height: background.height
+                width: contentBackground.width/2
+                height: contentBackground.height
                 clip: true
 
                 flickableDirection: Flickable.AutoFlickIfNeeded

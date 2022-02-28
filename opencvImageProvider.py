@@ -12,6 +12,8 @@ from tifffile import TiffFile
 from ALGORITHMS.maps import *
 from ALGORITHMS.color_corection import simplest_cb
 
+import time
+
 '''
 IMPORTANT INFO 
 GDAL paginate rasters number from 1 to n, NOT FROM 0 !
@@ -46,6 +48,7 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
         self.colored_polygon = None
         self.polygon_params = None
         self._image_params = []
+        self._dataset = None
         # print("Inicjalizacja OpencvImageProvider")
 
     def get_byte_band_list(self):
@@ -62,6 +65,7 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
         self._image_params = params
 
     def requestImage(self, path: str, size: QSize, req_size: QSize) -> QImage:
+        start = time.time()
         img = self._image
 
         # Reload image and clear everything
@@ -93,15 +97,24 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
             # If it's tiff img
             if self._image_file_path.endswith(('.tiff', '.tif')):
 
+                if gdal.GetConfigOption("GDAL_NUM_THREADS") is None:
+                    gdal.SetConfigOption('GDAL_NUM_THREADS', 'ALL_CPUS')
+                    print("Wszystkie rdzenie na pełną moc")
+                checkpoint_1 = time.time()
+
                 # Read dataset
-                dataset = gdal.Open(self._image_file_path, gdal.GA_ReadOnly)
+                self._dataset = gdal.Open(self._image_file_path, gdal.GA_ReadOnly)
+
+
+                # TODO Pomyśleć nad optymalizacją
+                checkpoint_2 = time.time()
 
                 # Check if dataset is valid
-                if dataset is None:
+                if self._dataset is None:
                     raise TypeError("Image is None type. Check image source file")
 
                 # Get rasters count
-                rasters = dataset.RasterCount
+                rasters = self._dataset.RasterCount
                 if debug:
                     print(rasters)
 
@@ -111,7 +124,7 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
 
                 # Loop over every band
                 for i in range(1, rasters + 1):
-                    band = dataset.GetRasterBand(i)
+                    band = self._dataset.GetRasterBand(i)
                     minimum = band.GetMinimum()
                     maximum = band.GetMaximum()
                     if not minimum or not maximum:
@@ -125,20 +138,22 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                     self._band_list.append(band)
                     self._byte_band_list.append(band.ReadAsArray())
 
+                checkpoint_3 = time.time()
+
                 # For debug purposes
                 if debug:
-                    print("Driver: {}/{}".format(dataset.GetDriver().ShortName,
-                                                 dataset.GetDriver().LongName))
-                    print("Size is {} x {} x {}".format(dataset.RasterXSize,
-                                                        dataset.RasterYSize,
-                                                        dataset.RasterCount))
-                    print("Projection is {}".format(dataset.GetProjection()))
-                    geotransform = dataset.GetGeoTransform()
+                    print("Driver: {}/{}".format(self._dataset.GetDriver().ShortName,
+                                                 self._dataset.GetDriver().LongName))
+                    print("Size is {} x {} x {}".format(self._dataset.RasterXSize,
+                                                        self._dataset.RasterYSize,
+                                                        self._dataset.RasterCount))
+                    print("Projection is {}".format(self._dataset.GetProjection()))
+                    geotransform = self._dataset.GetGeoTransform()
                     if geotransform:
                         print("Origin = ({}, {})".format(geotransform[0], geotransform[3]))
                         print("Pixel Size = ({}, {})".format(geotransform[1], geotransform[5]))
 
-                    band = dataset.GetRasterBand(1)
+                    band = self._dataset.GetRasterBand(1)
                     print("Band Type={}".format(gdal.GetDataTypeName(band.DataType)))
 
                     print("Min={:.3f}, Max={:.3f}".format(mini[1], maxi[1]))
@@ -154,16 +169,37 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                         for tag in page.tags.values():
                             print(tag.name, tag.code, tag.dtype, tag.count, tag.value)
 
+
                 # Convert to rgb image
                 rgb = rgb_image(self._byte_band_list)
 
+                checkpoint_4 = time.time()
+
                 # Implementing color corection
                 rgb = simplest_cb(rgb, 1)
+
+                checkpoint_5 = time.time()
+
                 # alpha = np.array(np.ones(self._byte_band_list[1].shape) * 255)
                 # rgba = np.dstack((rgb, alpha))
                 rgba = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
+
+                checkpoint_6 = time.time()
+
                 self._image = rgba
                 qimage = convert_from_cv_to_qimage(rgba)
+
+                checkpoint_7 = time.time()
+
+                print("Czas działania: \n"
+                      f"Ustawienie skryptu: {start - checkpoint_1} \n"
+                      f"Wczytanie datasetu: {checkpoint_2 - checkpoint_1} \n"
+                      f"Pobranie metadanych: {checkpoint_3 - checkpoint_2} \n"
+                      f"Konwersja warstw na RGB: {checkpoint_4 - checkpoint_3} \n"
+                      f"Kolorkorekcja: {checkpoint_5 - checkpoint_4} \n"
+                      f"Konwersja na RGBA: {checkpoint_6 - checkpoint_5} \n"
+                      f"Konwersja na QImage: {checkpoint_7 - checkpoint_6} \n "
+                      f"Całość trwania skrypytu: {checkpoint_7 - start}")
 
                 return qimage
 

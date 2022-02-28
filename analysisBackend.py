@@ -21,6 +21,7 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 '''
 
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
+# Todo z importem nowego zdjęcia usunąć poligony z listy
 
 """
 1. W Workerze, najpierw pobieramy listę kanałów w zapisie bajtowym i listę poligonów
@@ -33,6 +34,167 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 8. W requstImage jeżeli przyjdzie pusty string onzacza to że to jest odswieżenie obrazu i wysyłamy
     nadpisany obraz do QML'a  
 """
+
+
+def tree_crown_detector(original_image, coords):
+    print("Analysis 12 - Tree crown detector")
+    rgb, _ = crop_rgb(original_image[:, :, :3], coords)
+    model = main.deepforest()
+    model.use_amp = True
+    model.use_release()
+
+    # boxes = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
+    #                            iou_threshold=0.4, thresh=0.8)
+    # print(type(boxes))
+    # print(boxes)
+    # boxes = boxes.to_numpy()
+    # print(boxes)
+    # # Pandas data frame boxes
+    # for box in boxes:
+    #     rgb = cv2.circle(rgb, (int((box[2] - box[0]) / 2), int((box[3] - box[1]) / 2)), radius=2,
+    #                      color=(0, 0, 255), thickness=2)
+    # image = rgb
+
+    img = model.predict_tile(image=rgb, return_plot=True, patch_size=800, patch_overlap=0.1,
+                             iou_threshold=0.4, thresh=0.8)
+    img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
+    image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
+
+    return image
+
+
+def segmentaion_analysis(byte_band_list, coords):
+    print("Analysis 11 - Segmentation")
+
+    index_image = osavi_map(byte_band_list)
+    my_cmap = matplotlib.cm.get_cmap("Spectral")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+    print("Wielkośc obrazu", image.shape)
+    rgb, _ = crop_rgb(image[:, :, :3], coords)
+    print("Wielkość rgb ", rgb.shape)
+
+    cfg = config_init("", 4000, 8, 1)
+    image = prediction(cfg, rgb[:, :, ::-1],
+                       model_path="C:/Users/quadro5000/PycharmProjects/detectron2_training/detectron2/output/model_final.pth")
+
+    return image
+
+
+def mistletone_analysis(cropped_rect, original_image, coords):
+    print("Analysis 10 - Mistolete")
+    mis_image = mis_map(cropped_rect)
+    ndvi_image = ndvi_map(cropped_rect)
+    mis_filtered = mis_filtration(mis_image, ndvi_image)
+    int_mis = mis_filtered.astype(int) * 255
+    image, _ = crop_rgb(original_image[:, :, :3], coords)
+
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            if int_mis[i, j] == 255:
+                image[i, j] = (0, 255, 255)
+
+    return image
+
+
+def vari_analysis(cropped_rect):
+    print("Analysis 9 - seismic")
+    index_image = vari_map(cropped_rect)
+    my_cmap = matplotlib.cm.get_cmap("BrBG")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+
+    return image
+
+
+def osavi_analysis(cropped_rect):
+    print("Analysis 8 - OSAVI")
+    index_image = osavi_map(cropped_rect)
+    my_cmap = matplotlib.cm.get_cmap("BrBG")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+
+    return image
+
+
+def sipi2_analysis(cropped_rect):
+    print("Analysis 7 - SIPI2")
+    index_image = sipi2_map(cropped_rect)
+    my_cmap = matplotlib.cm.get_cmap("coolwarm")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+
+    return image
+
+
+def ndre_analysis(cropped_rect):
+    print("Analysis 6 - NDRE")
+    index_image = ndre_map(cropped_rect)
+    my_cmap = matplotlib.cm.get_cmap("RdBu")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+
+    return image
+
+
+def mcar_analysis(cropped_rect):
+    print("Analysis 5 - MCAR")
+    index_image = mcar_map(cropped_rect)
+    my_cmap = matplotlib.cm.get_cmap("BrBG")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+
+    return image
+
+
+def lci_analysis(cropped_rect):
+    print("Analysis 4 - LCI")
+    index_image = lci_map(cropped_rect)
+    my_cmap = matplotlib.cm.get_cmap("PiYG")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+
+    return image
+
+
+def gndvi_analysis(cropped_rect):
+    print("Analysis 3 - GNDVI")
+    index_image = gndvi_map(cropped_rect)
+    my_cmap = matplotlib.cm.get_cmap("RdYlGn")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+
+    return image
+
+
+def bndvi_analysis(cropped_rect):
+    print("Analysis 2 - BNDVI")
+    index_image = bndvi_map(cropped_rect)
+    my_cmap = matplotlib.cm.get_cmap("RdYlBu")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+
+    return image
+
+
+def ndvi_analysis(cropped_rect):
+    print("Analysis 1 - NDVI")
+    index_image = ndvi_map(cropped_rect)
+    my_cmap = matplotlib.cm.get_cmap("Spectral")
+    color_array = my_cmap(index_image)
+    image = np.asarray(color_array)
+    image = image * 255
+
+    return image
 
 
 class Worker(QObject):
@@ -72,84 +234,40 @@ class Worker(QObject):
             cropped_rect, params = crop_band_list(byte_band_list, coords)
 
             if self._analysis == 1:
-                print("Analysis 1 - NDVI")
-                index_image = ndvi_map(cropped_rect)
-                my_cmap = matplotlib.cm.get_cmap("Spectral")
-                color_array = my_cmap(index_image)
-                image = np.asarray(color_array)
-                image = image * 255
+                image = ndvi_analysis(cropped_rect)
 
             elif self._analysis == 2:
-                print("Analysis 2 - LCI")
-                index_image = lci_map(cropped_rect)
-                my_cmap = matplotlib.cm.get_cmap("plasma")
-                color_array = my_cmap(index_image)
-                image = np.asarray(color_array)
-                image = image * 255
+                image = bndvi_analysis(cropped_rect)
 
             elif self._analysis == 3:
-                print("Analysis 3 - Segmentation")
-                try:
-                    index_image = osavi_map(byte_band_list)
-                    my_cmap = matplotlib.cm.get_cmap("Spectral")
-                    color_array = my_cmap(index_image)
-                    image = np.asarray(color_array)
-                    image = image * 255
-                    print("Wielkośc obrazu", image.shape)
-                except Exception as e:
-                    print("Index map error")
-                    self.workerException.emit(e)
-
-                try:
-                    rgb, _ = crop_rgb(image[:, :, :3], coords)
-                    print("Wielkość rgb ", rgb.shape)
-                except Exception as e:
-                    self.workerException.emit(e)
-                try:
-                    cfg = config_init("", 4000, 8, 1)
-                    image = prediction(cfg, rgb[:, :, ::-1],
-                                       model_path="C:/Users/quadro5000/PycharmProjects/detectron2_training/detectron2/output/model_final.pth")
-                except Exception as e:
-                    self.workerException.emit(e)
+                image = gndvi_analysis(cropped_rect)
 
             elif self._analysis == 4:
-                print("Analysis 4 - Counting")
-                rgb, _ = crop_rgb(original_image[:, :, :3], coords)
-                model = main.deepforest()
-                model.use_amp = True
-                model.use_release()
-                try:
-                    # boxes = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
-                    #                            iou_threshold=0.4, thresh=0.8)
-                    # print(type(boxes))
-                    # print(boxes)
-                    # boxes = boxes.to_numpy()
-                    # print(boxes)
-                    # # Pandas data frame boxes
-                    # for box in boxes:
-                    #     rgb = cv2.circle(rgb, (int((box[2] - box[0]) / 2), int((box[3] - box[1]) / 2)), radius=2,
-                    #                      color=(0, 0, 255), thickness=2)
-                    # image = rgb
-
-                    img = model.predict_tile(image=rgb, return_plot=True, patch_size=800, patch_overlap=0.1,
-                                             iou_threshold=0.4, thresh=0.8)
-                    img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
-                    image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
-                except Exception as e:
-                    self.workerException.emit(e)
+                image = lci_analysis(cropped_rect)
 
             elif self._analysis == 5:
-                print("Analysis 5 - Mistolete")
-                mis_image = mis_map(cropped_rect)
-                ndvi_image = ndvi_map(cropped_rect)
-                mis_filtered = mis_filtration(mis_image, ndvi_image)
-                int_mis = mis_filtered.astype(int) * 255
-                image, _ = crop_rgb(original_image[:, :, :3], coords)
+                image = mcar_analysis(cropped_rect)
 
-                for i in range(image.shape[0]):
-                    for j in range(image.shape[1]):
-                        if int_mis[i, j] == 255:
-                            image[i, j] = (0, 255, 255)
+            elif self._analysis == 6:
+                image = ndre_analysis(cropped_rect)
+
+            elif self._analysis == 7:
+                image = sipi2_analysis(cropped_rect)
+
+            elif self._analysis == 8:
+                image = osavi_analysis(cropped_rect)
+
+            elif self._analysis == 9:
+                image = vari_analysis(cropped_rect)
+
+            elif self._analysis == 10:
+                image = mistletone_analysis(cropped_rect)
+
+            elif self._analysis == 11:
+                image = segmentaion_analysis(byte_band_list, coords)
+
+            elif self._analysis == 12:
+                image = tree_crown_detector(original_image, coords)
 
             polygon, _, _ = poly_img(image, coords, params[0], params[1],
                                      original_image[params[1]: params[1] + params[3],
@@ -160,7 +278,7 @@ class Worker(QObject):
 
             print("Koniec procesu")
             self.workerFinished.emit("Success")
-            return
+        return
 
 
 class Processing(QObject):
