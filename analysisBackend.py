@@ -1,5 +1,7 @@
 import cv2
 import matplotlib.cm
+import pandas
+import geopandas
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
 
@@ -35,9 +37,26 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
     nadpisany obraz do QML'a  
 """
 
-def mistleton_detector( ):
-    pass
 
+def proportion_is_ok(width, height, proportion):
+    if width / height > proportion or width / height < 1 / proportion:
+        return True
+    else:
+        return False
+
+
+def mistleton_detector(original_image, coords):
+    rgb, _ = crop_rgb(original_image[:, :, :3], coords)
+    model = main.deepforest()
+    model.use_amp = True
+    model.use_release()
+
+    predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
+                                     iou_threshold=0.4, thresh=0.8)
+
+
+
+    pass
 
 
 def tree_crown_detector(original_image, coords):
