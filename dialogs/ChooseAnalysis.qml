@@ -390,7 +390,7 @@ Dialog{
                                 width: height
                                 anchors.verticalCenter: polyName.verticalCenter
                                 fillMode: Image.PreserveAspectFit
-                                source: "qrc:/images/png/arrow_highlighted"
+                                source: "../GUI/images/png_images/arrow_highlighted.png"
                                 antialiasing: true
                                 mipmap: true
                                 smooth: true

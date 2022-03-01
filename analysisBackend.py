@@ -35,6 +35,10 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
     nadpisany obraz do QML'a  
 """
 
+def mistleton_detector( ):
+    pass
+
+
 
 def tree_crown_detector(original_image, coords):
     print("Analysis 12 - Tree crown detector")
@@ -261,7 +265,7 @@ class Worker(QObject):
                 image = vari_analysis(cropped_rect)
 
             elif self._analysis == 10:
-                image = mistletone_analysis(cropped_rect)
+                image = mistletone_analysis(cropped_rect, original_image=original_image, coords=coords)
 
             elif self._analysis == 11:
                 image = segmentaion_analysis(byte_band_list, coords)

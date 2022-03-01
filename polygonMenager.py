@@ -184,8 +184,6 @@ class PolygonMenager(QObject):
     @Slot(str)
     def startNewPolygon(self, name):
 
-        # print("Nowy Poligon Python") #Działa
-
         polygon_name = ""
         if name == "" or name == " ":
             polygon_name = "Poly " + str(self._polygon_counter + 1)
@@ -205,12 +203,11 @@ class PolygonMenager(QObject):
                 self._polygonList.remove(poly)
                 self.polygonListChanged.emit()
 
-    # Todo dokończyć sprawdzanie czy kursor jest w poligonie
-    @Slot(float, float)
+
+    @Slot(float, float, result=CustomPolygon)
     def isPolygonHovered(self, x, y):
         for polygon in self._polygonList:
             if self.is_point_in_polygon((x, y), polygon.get_point_list()):
-                # emit pologon
                 return polygon
 
     def is_point_in_polygon(self, pkt: tuple, polygon: list) -> bool:
@@ -219,7 +216,7 @@ class PolygonMenager(QObject):
         :param polygon: polygon points as list of tuples [(x1:y1),(x2:y2),(x3:y3),...]
         :return: bool True or False
         """
-        inside = 0
+        inside = False
 
         minX = polygon[0].x_get()
         maxX = polygon[0].x_get()
@@ -235,17 +232,16 @@ class PolygonMenager(QObject):
         if pkt[0] < minX or pkt[0] > maxX or pkt[1] < minY or pkt[1] > maxY:
             return inside
 
-        polygon = list(polygon[:]) + (polygon[0])
-        for i in range(len(polygon) - 1):
-            if ((polygon[i].y_get() <= pkt[1] and polygon[i + 1].y_get() > pkt[1]) or (
-                    polygon[i].y_get() > pkt[1] and polygon[i + 1].y_get() <= pkt[1])):
+        j = len(polygon) - 1
+        for i in range(len(polygon)):
 
-               # Vertex test
-                vt = (pkt[1] - polygon[i].y_get()) / float(polygon[i+1].y_get() - polygon[i].y_get())
-                if pkt[0] < polygon[i].x_get() + vt * (polygon[i+1].x_get() - polygon[i].x_get()):
-                    inside += 1
+            if ((polygon[i].y_get() > pkt[1]) != (polygon[j].y_get() > pkt[1]) and (
+                    pkt[0] < (polygon[j].x_get() - polygon[i].x_get()) * (pkt[1] - polygon[i].y_get()) / (
+                    polygon[j].y_get() - polygon[i].y_get()) + polygon[i].x_get()
+            )):
+                inside = not inside
 
-        print("Czy jest w środku? ", inside % 2)
-        return inside % 2
+            j = i
+        return inside
 
     polygonList = Property(list, get_polygon_list, notify=polygonListChanged)

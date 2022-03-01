@@ -218,6 +218,7 @@ Window {
 
     Dialogs.ProcessingScreen{
         id: processing
+        modal: True
     }
 
 
