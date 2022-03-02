@@ -38,25 +38,60 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 """
 
 
-def proportion_is_ok(width, height, proportion):
-    if width / height > proportion or width / height < 1 / proportion:
+def is_correct(pt1: tuple, pt2: tuple, tan_thresh_val):
+    width = pt2[0] - pt1[0]
+    height = pt2[1] - pt1[1]
+
+    long = 0
+    short = 0
+
+    if width > height:
+        long = width
+        short = height
+    elif height > width:
+        long = height
+        short = width
+    elif height == width:
         return True
-    else:
+
+    tan = short / long
+
+    if tan < tan_thresh_val:
         return False
+    else:
+        return True
 
 
-def mistleton_detector(original_image, coords):
-    rgb, _ = crop_rgb(original_image[:, :, :3], coords)
-    model = main.deepforest()
-    model.use_amp = True
-    model.use_release()
-
-    predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
-                                     iou_threshold=0.4, thresh=0.8)
-
-
-
-    pass
+# def mistleton_detector(original_image, coords):
+#     print("Analysis 13 - Mistletone detector")
+#     rgb, _ = crop_rgb(original_image[:, :, :3], coords)
+#     model = main.deepforest()
+#     model.use_amp = True
+#     model.use_release()
+#
+#     predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
+#                                      iou_threshold=0.4, thresh=0.8)
+#
+#     print("Prediction successful")
+#
+#     numpy_pred = predictions.to_numpy()
+#
+#     print("Pred. conv", numpy_pred)
+#
+#     for predict in numpy_pred:
+#         pt1 = (predict[0], predict[1])
+#         pt2 = (predict[2], predict[3])
+#         if predict[5] > 0.5 and is_correct(pt1, pt2, 0.5):
+#             print("Drawing rec")
+#             rgb = cv2.rectangle(img=rgb, pt1=pt1, pt2=pt2, color=(125, 125, 125), thickness=5)
+#             print("Drawed")
+#
+#     print("Draw edned")
+#
+#     img = cv.cvtColor(rgb, cv.COLOR_RGB2BGR)
+#     image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
+#
+#     return image
 
 
 def tree_crown_detector(original_image, coords):
@@ -232,6 +267,42 @@ class Worker(QObject):
         self._polygon_manager = polygon_provider
         self._analysis = analysis
 
+    # def mistleton_detector(self, original_image, coords):
+    #     print("Analysis 13 - Mistletone detector")
+    #     rgb, _ = crop_rgb(original_image[:, :, :3], coords)
+    #     model = main.deepforest()
+    #     model.use_amp = True
+    #     model.use_release()
+    #
+    #     predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
+    #                                      iou_threshold=0.4, thresh=0.8)
+    #
+    #     print("Prediction successful")
+    #
+    #     numpy_pred = predictions.to_numpy()
+    #
+    #     print("Pred. conv", numpy_pred)
+    #
+    #     for predict in numpy_pred:
+    #         pt1 = (predict[0], predict[1])
+    #         pt2 = (predict[2], predict[3])
+    #         if predict[5] > 0.5 and is_correct(pt1, pt2, 0.5):
+    #             print("Drawing rec")
+    #             try:
+    #                 rgb = cv2.rectangle(img=rgb, pt1=pt1, pt2=pt2, color=(125, 125, 125), thickness=5)
+    #             except Exception as e:
+    #                 self.workerException(e)
+    #                 return
+    #
+    #             print("Drawed")
+    #
+    #     print("Draw edned")
+    #
+    #     img = cv.cvtColor(rgb, cv.COLOR_RGB2BGR)
+    #     image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
+    #
+    #     return image
+
     def run(self):
         byte_band_list = []
         poligon_list = []
@@ -291,6 +362,48 @@ class Worker(QObject):
 
             elif self._analysis == 12:
                 image = tree_crown_detector(original_image, coords)
+
+            elif self._analysis == 13:
+                print("Analysis 13 - Mistletone detector")
+                rgb, _ = crop_rgb(original_image[:, :, :3], coords)
+                model = main.deepforest()
+                model.use_amp = True
+                model.use_release()
+
+                predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
+                                                 iou_threshold=0.4, thresh=0.8)
+
+                print("Prediction successful")
+
+                numpy_pred = predictions.to_numpy()
+
+                print("Pred. conv", numpy_pred)
+
+                for predict in numpy_pred:
+                    pt1 = (int(predict[0]), int(predict[1]))
+                    pt2 = (int(predict[2]), int(predict[3]))
+                    if predict[5] > 0.3 and is_correct(pt1, pt2, 0.5):
+                        print("Drawing rec")
+                        print(f"Pt1: {pt1}, pt2: {pt2}")
+                        try:
+                            rgb = cv.rectangle(rgb, pt1, pt2, (255, 125, 125), thickness=1)
+                            rgb = cv.circle(rgb, center=((pt2[0] - pt1[0]) / 2, (pt2[1] - pt1[1]) / 2),
+                                            color=(225, 0, 225), radius=1)
+                            pt3 = (pt1[0], pt2[1]+10)
+
+                            # todo dokończyc dodawanie textu predykcji
+                            rgb = cv.putText(rgb, f"{predict[5]:.2f}", pt3)
+
+                        except Exception as e:
+                            self.workerException(e)
+                            return
+
+                        print("Drawed")
+
+                print("Draw edned")
+
+                img = cv.cvtColor(rgb, cv.COLOR_RGB2BGR)
+                image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
 
             polygon, _, _ = poly_img(image, coords, params[0], params[1],
                                      original_image[params[1]: params[1] + params[3],
