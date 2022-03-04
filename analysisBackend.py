@@ -2,6 +2,7 @@ import cv2
 import matplotlib.cm
 import pandas
 import geopandas
+import torch
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
 
@@ -368,10 +369,10 @@ class Worker(QObject):
                 rgb, _ = crop_rgb(original_image[:, :, :3], coords)
                 model = main.deepforest()
                 model.use_amp = True
-                model.use_release()
+                model.load_state_dict(torch.load("ALGORITHMS/tuszyma.pth"))
 
                 predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
-                                                 iou_threshold=0.4, thresh=0.8)
+                                                 iou_threshold=0.6, thresh=0.8)
 
                 print("Prediction successful")
 
@@ -382,17 +383,17 @@ class Worker(QObject):
                 for predict in numpy_pred:
                     pt1 = (int(predict[0]), int(predict[1]))
                     pt2 = (int(predict[2]), int(predict[3]))
-                    if predict[5] > 0.3 and is_correct(pt1, pt2, 0.5):
+                    if predict[5] > 0.2 and is_correct(pt1, pt2, 0.5):
                         print("Drawing rec")
                         print(f"Pt1: {pt1}, pt2: {pt2}")
                         try:
                             rgb = cv.rectangle(rgb, pt1, pt2, (255, 125, 125), thickness=1)
-                            rgb = cv.circle(rgb, center=((pt2[0] - pt1[0]) / 2, (pt2[1] - pt1[1]) / 2),
-                                            color=(225, 0, 225), radius=1)
-                            pt3 = (pt1[0], pt2[1]+10)
+                            # rgb = cv.circle(rgb, center=(int((pt2[0] - pt1[0]) / 2), int((pt2[1] - pt1[1]) / 2)),
+                            #                 color=(225, 0, 225), radius=2, thickness=-1)
+                            pt3 = (pt1[0], pt2[1] + 10)
 
-                            # todo dokończyc dodawanie textu predykcji
-                            rgb = cv.putText(rgb, f"{predict[5]:.2f}", pt3)
+                            rgb = cv.putText(rgb, f"{predict[5]:.2f}", pt3, cv.FONT_HERSHEY_SIMPLEX, 0.3, (255, 125, 255),
+                                             1, cv.LINE_AA)
 
                         except Exception as e:
                             self.workerException(e)

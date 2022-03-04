@@ -1,13 +1,15 @@
+import pandas as pd
 import os
-import time
-import numpy as np
-from sahi.slicing import slice_image
-import cv2 as cv
+# from sahi.slicing import slice_image
+import torch
+from deepforest import main
+from deepforest import get_data
+from deepforest import dataset
+from deepforest import utilities
+from deepforest import preprocess
+from pytorch_lightning.callbacks import ModelCheckpoint
+import tempfile
 
-# from deepforest import main
-# from deepforest import get_data
-# from deepforest import utilities
-# from deepforest import preprocess
 
 """
 Skrypt ponownie trenuje sieć RetinaNet na modelu deepforest.
@@ -18,18 +20,69 @@ Adnotacje pisane są w pliku .csv w formacie:
 """
 
 
-
-
-if __name__ == "__main__":
-
+def slice():
     cwd = "C:/Users/quadro5000/Desktop/LAs18_sliced/"
     image = "Las18_oryginal_Rgb.png"
 
     path = cwd + image
 
-
-    slice_image_result, num_total_invalid_segme = slice_image(image=path, output_dir=cwd + "sliced/", output_file_name="Las18_sliced", slice_width=400, slice_height=400)
+    slice_image_result, num_total_invalid_segme = slice_image(image=path, output_dir=cwd + "sliced/",
+                                                              output_file_name="Las18_sliced", slice_width=400,
+                                                              slice_height=400)
 
     print(slice_image_result)
     print(num_total_invalid_segme)
+
+
+def read_csv(path):
+    df = pd.read_csv(path)
+
+    df: pd.DataFrame = df.drop(["imageId", "width", "height", "imageUrl"], axis=1)
+
+    df: pd.DataFrame = df.rename(columns={"imageName": "image_path", "class": "label"})
+
+    filenames = df["image_path"].to_numpy()
+
+    for i in range(len(filenames)):
+        filenames[i] = filenames[i] + ".jpg"
+
+    df["image_path"]: pd.DataFrame = filenames
+
+    df: pd.DataFrame = df.reindex(columns=["image_path", "xmin", "ymin", "xmax", "ymax", "label"])
+
+    df.to_csv("sliced/tuszyma_transfer_learning.csv", index=False)
+
+    print(df)
+
+
+def trainig():
+    model = main.deepforest()
+    model.use_release()
+    annotations = get_data(
+        r"C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\ALGORITHMS\sliced\tuszyma_transfer_learning.csv")
+
+    model.config['train']['epochs'] = 100
+
+    model.config['train']['csv_file'] = annotations
+    model.config['train']['root_dir'] = os.path.dirname(annotations)
+    model.config['train']['fast_dev_run'] = False
+
+    model.create_trainer()
+    #
+    #
+    model.trainer.fit(model)
+    #
+    tmpdir = tempfile.TemporaryDirectory().name
+    # print(tmpdir)
+    #
+    model.trainer.save_checkpoint(r"{}\tuszyma.pl".format(tmpdir))
+    #
+    model_path = os.path.dirname(annotations)
+    #
+    torch.save(model.state_dict(), "tuszyma.pth")
+
+
+if __name__ == "__main__":
+    # read_csv(r"C:\Users\quadro5000\Downloads\tuszyma-2022-03-04T033748.csv")
+    trainig()
     pass
