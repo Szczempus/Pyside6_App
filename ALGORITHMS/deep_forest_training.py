@@ -4,12 +4,7 @@ import os
 import torch
 from deepforest import main
 from deepforest import get_data
-from deepforest import dataset
-from deepforest import utilities
-from deepforest import preprocess
-from pytorch_lightning.callbacks import ModelCheckpoint
 import tempfile
-
 
 """
 Skrypt ponownie trenuje sieć RetinaNet na modelu deepforest.
@@ -58,17 +53,26 @@ def read_csv(path):
 def trainig():
     model = main.deepforest()
     model.use_release()
-    annotations = get_data(
-        r"C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\ALGORITHMS\sliced\tuszyma_transfer_learning.csv")
+    CWD = os.getcwd()
+
+    annotations = get_data(CWD + "\\sliced\\tuszyma_transfer_learning.csv")
+
+    model.config['gpus'] = 1
+    model.config['workers'] = 4
+    model.config['batch_size'] = 2
 
     model.config['train']['epochs'] = 100
-
     model.config['train']['csv_file'] = annotations
     model.config['train']['root_dir'] = os.path.dirname(annotations)
     model.config['train']['fast_dev_run'] = False
 
-    model.create_trainer()
-    #
+    loader = model.train_dataloader()
+
+    print(loader)
+    print(model)
+
+    # model.create_trainer()
+    model.create_trainer(amp_backend="apex", enable_progress_bar=True)
     #
     model.trainer.fit(model)
     #

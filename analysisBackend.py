@@ -100,10 +100,8 @@ def tree_crown_detector(original_image, coords):
     rgb, _ = crop_rgb(original_image[:, :, :3], coords)
     model = main.deepforest()
     model.use_amp = True
-    model.use_release()
-
-    # boxes = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
-    #                            iou_threshold=0.4, thresh=0.8)
+    model.use_re= model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
+                               iou_threshold=0.4, thresh=0.8)
     # print(type(boxes))
     # print(boxes)
     # boxes = boxes.to_numpy()
