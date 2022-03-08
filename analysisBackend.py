@@ -100,20 +100,16 @@ def tree_crown_detector(original_image, coords):
     rgb, _ = crop_rgb(original_image[:, :, :3], coords)
     model = main.deepforest()
     model.use_amp = True
-    model.use_re= model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
-                               iou_threshold=0.4, thresh=0.8)
-    # print(type(boxes))
-    # print(boxes)
-    # boxes = boxes.to_numpy()
-    # print(boxes)
+    model.use_release()
+
     # # Pandas data frame boxes
     # for box in boxes:
     #     rgb = cv2.circle(rgb, (int((box[2] - box[0]) / 2), int((box[3] - box[1]) / 2)), radius=2,
     #                      color=(0, 0, 255), thickness=2)
     # image = rgb
 
-    img = model.predict_tile(image=rgb, return_plot=True, patch_size=800, patch_overlap=0.1,
-                             iou_threshold=0.4, thresh=0.8)
+    img = model.predict_tile(image=rgb, return_plot=True, patch_size=1000, patch_overlap=0.1,
+                             iou_threshold=0.4, thresh=0.2)
     img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
     image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
 
@@ -367,10 +363,11 @@ class Worker(QObject):
                 rgb, _ = crop_rgb(original_image[:, :, :3], coords)
                 model = main.deepforest()
                 model.use_amp = True
+                # model.use_release()
                 model.load_state_dict(torch.load("ALGORITHMS/tuszyma.pth"))
 
-                predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
-                                                 iou_threshold=0.6, thresh=0.8)
+                predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=1000, patch_overlap=0.1,
+                                                 iou_threshold=0.4, thresh=0.2)
 
                 print("Prediction successful")
 
@@ -385,7 +382,7 @@ class Worker(QObject):
                         print("Drawing rec")
                         print(f"Pt1: {pt1}, pt2: {pt2}")
                         try:
-                            rgb = cv.rectangle(rgb, pt1, pt2, (255, 125, 125), thickness=1)
+                            rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
                             # rgb = cv.circle(rgb, center=(int((pt2[0] - pt1[0]) / 2), int((pt2[1] - pt1[1]) / 2)),
                             #                 color=(225, 0, 225), radius=2, thickness=-1)
                             pt3 = (pt1[0], pt2[1] + 10)
@@ -401,8 +398,8 @@ class Worker(QObject):
 
                 print("Draw edned")
 
-                img = cv.cvtColor(rgb, cv.COLOR_RGB2BGR)
-                image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
+                image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
+                # image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
 
             polygon, _, _ = poly_img(image, coords, params[0], params[1],
                                      original_image[params[1]: params[1] + params[3],

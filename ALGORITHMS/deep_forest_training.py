@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-# from sahi.slicing import slice_image
+from sahi.slicing import slice_image
 import torch
 from deepforest import main
 from deepforest import get_data
@@ -16,17 +16,17 @@ Adnotacje pisane są w pliku .csv w formacie:
 
 
 def slice():
-    cwd = "C:/Users/quadro5000/Desktop/LAs18_sliced/"
-    image = "Las18_oryginal_Rgb.png"
+    CWD = os.getcwd()
 
-    path = cwd + image
+    image = "\\Las19.jpg"
 
-    slice_image_result, num_total_invalid_segme = slice_image(image=path, output_dir=cwd + "sliced/",
-                                                              output_file_name="Las18_sliced", slice_width=400,
-                                                              slice_height=400)
+    path = CWD + image
+
+    slice_image_result = slice_image(image=path, output_dir=CWD + "\\sliced19\\",
+                                     output_file_name="Las19_sliced", slice_width=2000,
+                                     slice_height=2000)
 
     print(slice_image_result)
-    print(num_total_invalid_segme)
 
 
 def read_csv(path):
@@ -58,17 +58,17 @@ def trainig():
     annotations = get_data(CWD + "\\sliced\\tuszyma_transfer_learning.csv")
 
     model.config['gpus'] = 1
-    model.config['workers'] = 4
-    model.config['batch_size'] = 2
+    model.config['workers'] = 10
+    model.config['batch_size'] = 5
 
     model.config['train']['epochs'] = 100
     model.config['train']['csv_file'] = annotations
     model.config['train']['root_dir'] = os.path.dirname(annotations)
     model.config['train']['fast_dev_run'] = False
 
-    loader = model.train_dataloader()
+    # loader = model.train_dataloader()
 
-    print(loader)
+    # print(loader)
     print(model)
 
     # model.create_trainer()
@@ -87,6 +87,7 @@ def trainig():
 
 
 if __name__ == "__main__":
+    # slice()
     # read_csv(r"C:\Users\quadro5000\Downloads\tuszyma-2022-03-04T033748.csv")
     trainig()
     pass
