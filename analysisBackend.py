@@ -1,7 +1,29 @@
-import cv2
+'''
+Module to run analysis
+
+IMPORTANT INFO
+GDAL paginate rasters number from 1 to n, NOT FROM 0 !
+Agisoft exports channels with this order:
+channel 1 - Blue
+channel 2 - Green
+channel 3 - Red
+channel 5 - NIR
+channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwinów na st. celcujsza
+
+1. W Workerze, najpierw pobieramy listę kanałów w zapisie bajtowym i listę poligonów
+2. Sprawdzamy które poligony mają wartość "isChecked" == True i te bierzemy do analizy
+3. Z tych poligonów robimy listę
+4. Cropujemy bandy do kwadratu wymiaru poligonu, analizujemy je i docinamy do poligonu
+5. Nakładamy kolorek na powstałą mapę
+6. W zadanych współrzędnych mergujemy mapę orgynalną z tą z analizy
+7. Wysyłamy sygnał do QML'a o reset parametru source z image providerem
+8. W requstImage jeżeli przyjdzie pusty string onzacza to że to jest odswieżenie obrazu i wysyłamy
+    nadpisany obraz do QML'a
+
+
+'''
+
 import matplotlib.cm
-import pandas
-import geopandas
 import torch
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
@@ -12,34 +34,20 @@ from crop_img import *
 from ALGORITHMS.maps import *
 from ALGORITHMS.detectron_prediction import *
 
-'''
-IMPORTANT INFO 
-GDAL paginate rasters number from 1 to n, NOT FROM 0 !
-Agisoft exports channels with this order: 
-channel 1 - Blue
-channel 2 - Green
-channel 3 - Red 
-channel 5 - NIR
-channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwinów na st. celcujsza  
-'''
 
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
 # Todo z importem nowego zdjęcia usunąć poligony z listy
 
-"""
-1. W Workerze, najpierw pobieramy listę kanałów w zapisie bajtowym i listę poligonów
-2. Sprawdzamy które poligony mają wartość "isChecked" == True i te bierzemy do analizy
-3. Z tych poligonów robimy listę
-4. Cropujemy bandy do kwadratu wymiaru poligonu, analizujemy je i docinamy do poligonu
-5. Nakładamy kolorek na powstałą mapę 
-6. W zadanych współrzędnych mergujemy mapę orgynalną z tą z analizy 
-7. Wysyłamy sygnał do QML'a o reset parametru source z image providerem
-8. W requstImage jeżeli przyjdzie pusty string onzacza to że to jest odswieżenie obrazu i wysyłamy
-    nadpisany obraz do QML'a  
-"""
-
 
 def is_correct(pt1: tuple, pt2: tuple, tan_thresh_val):
+    '''
+
+    :param pt1:
+    :param pt2:
+    :param tan_thresh_val:
+    :return:
+    '''
+
     width = pt2[0] - pt1[0]
     height = pt2[1] - pt1[1]
 
@@ -96,6 +104,13 @@ def is_correct(pt1: tuple, pt2: tuple, tan_thresh_val):
 
 
 def tree_crown_detector(original_image, coords):
+    '''
+
+    :param original_image:
+    :param coords:
+    :return:
+    '''
+
     print("Analysis 12 - Tree crown detector")
     rgb, _ = crop_rgb(original_image[:, :, :3], coords)
     model = main.deepforest()
@@ -117,6 +132,13 @@ def tree_crown_detector(original_image, coords):
 
 
 def segmentaion_analysis(byte_band_list, coords):
+    '''
+
+    :param byte_band_list:
+    :param coords:
+    :return:
+    '''
+
     print("Analysis 11 - Segmentation")
 
     index_image = osavi_map(byte_band_list)
@@ -136,6 +158,14 @@ def segmentaion_analysis(byte_band_list, coords):
 
 
 def mistletone_analysis(cropped_rect, original_image, coords):
+    '''
+
+    :param cropped_rect:
+    :param original_image:
+    :param coords:
+    :return:
+    '''
+
     print("Analysis 10 - Mistolete")
     mis_image = mis_map(cropped_rect)
     ndvi_image = ndvi_map(cropped_rect)
@@ -152,6 +182,12 @@ def mistletone_analysis(cropped_rect, original_image, coords):
 
 
 def vari_analysis(cropped_rect):
+    '''
+
+    :param cropped_rect:
+    :return:
+    '''
+
     print("Analysis 9 - seismic")
     index_image = vari_map(cropped_rect)
     my_cmap = matplotlib.cm.get_cmap("BrBG")
@@ -163,6 +199,12 @@ def vari_analysis(cropped_rect):
 
 
 def osavi_analysis(cropped_rect):
+    '''
+
+    :param cropped_rect:
+    :return:
+    '''
+
     print("Analysis 8 - OSAVI")
     index_image = osavi_map(cropped_rect)
     my_cmap = matplotlib.cm.get_cmap("BrBG")
@@ -174,6 +216,12 @@ def osavi_analysis(cropped_rect):
 
 
 def sipi2_analysis(cropped_rect):
+    '''
+
+    :param cropped_rect:
+    :return:
+    '''
+
     print("Analysis 7 - SIPI2")
     index_image = sipi2_map(cropped_rect)
     my_cmap = matplotlib.cm.get_cmap("coolwarm")
@@ -185,6 +233,12 @@ def sipi2_analysis(cropped_rect):
 
 
 def ndre_analysis(cropped_rect):
+    '''
+
+    :param cropped_rect:
+    :return:
+    '''
+
     print("Analysis 6 - NDRE")
     index_image = ndre_map(cropped_rect)
     my_cmap = matplotlib.cm.get_cmap("RdBu")
@@ -196,6 +250,12 @@ def ndre_analysis(cropped_rect):
 
 
 def mcar_analysis(cropped_rect):
+    '''
+
+    :param cropped_rect:
+    :return:
+    '''
+
     print("Analysis 5 - MCAR")
     index_image = mcar_map(cropped_rect)
     my_cmap = matplotlib.cm.get_cmap("BrBG")
@@ -207,6 +267,12 @@ def mcar_analysis(cropped_rect):
 
 
 def lci_analysis(cropped_rect):
+    '''
+
+    :param cropped_rect:
+    :return:
+    '''
+
     print("Analysis 4 - LCI")
     index_image = lci_map(cropped_rect)
     my_cmap = matplotlib.cm.get_cmap("PiYG")
@@ -218,6 +284,12 @@ def lci_analysis(cropped_rect):
 
 
 def gndvi_analysis(cropped_rect):
+    '''
+
+    :param cropped_rect:
+    :return:
+    '''
+
     print("Analysis 3 - GNDVI")
     index_image = gndvi_map(cropped_rect)
     my_cmap = matplotlib.cm.get_cmap("RdYlGn")
@@ -229,6 +301,12 @@ def gndvi_analysis(cropped_rect):
 
 
 def bndvi_analysis(cropped_rect):
+    '''
+
+    :param cropped_rect:
+    :return:
+    '''
+
     print("Analysis 2 - BNDVI")
     index_image = bndvi_map(cropped_rect)
     my_cmap = matplotlib.cm.get_cmap("RdYlBu")
@@ -240,6 +318,12 @@ def bndvi_analysis(cropped_rect):
 
 
 def ndvi_analysis(cropped_rect):
+    '''
+
+    :param cropped_rect:
+    :return:
+    '''
+
     print("Analysis 1 - NDVI")
     index_image = ndvi_map(cropped_rect)
     my_cmap = matplotlib.cm.get_cmap("Spectral")
@@ -256,47 +340,14 @@ class Worker(QObject):
     workerResult = Signal(object)
     workerException = Signal(Exception)
 
-    def __init__(self, img_provider: OpencvImageProvider, polygon_provider: PolygonMenager, analysis: int):
+    def __init__(self,
+                 img_provider: OpencvImageProvider,
+                 polygon_provider: PolygonMenager,
+                 analysis: int):
         super(Worker, self).__init__()
         self._img_manager = img_provider
         self._polygon_manager = polygon_provider
         self._analysis = analysis
-
-    # def mistleton_detector(self, original_image, coords):
-    #     print("Analysis 13 - Mistletone detector")
-    #     rgb, _ = crop_rgb(original_image[:, :, :3], coords)
-    #     model = main.deepforest()
-    #     model.use_amp = True
-    #     model.use_release()
-    #
-    #     predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
-    #                                      iou_threshold=0.4, thresh=0.8)
-    #
-    #     print("Prediction successful")
-    #
-    #     numpy_pred = predictions.to_numpy()
-    #
-    #     print("Pred. conv", numpy_pred)
-    #
-    #     for predict in numpy_pred:
-    #         pt1 = (predict[0], predict[1])
-    #         pt2 = (predict[2], predict[3])
-    #         if predict[5] > 0.5 and is_correct(pt1, pt2, 0.5):
-    #             print("Drawing rec")
-    #             try:
-    #                 rgb = cv2.rectangle(img=rgb, pt1=pt1, pt2=pt2, color=(125, 125, 125), thickness=5)
-    #             except Exception as e:
-    #                 self.workerException(e)
-    #                 return
-    #
-    #             print("Drawed")
-    #
-    #     print("Draw edned")
-    #
-    #     img = cv.cvtColor(rgb, cv.COLOR_RGB2BGR)
-    #     image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
-    #
-    #     return image
 
     def run(self):
         byte_band_list = []
@@ -363,11 +414,10 @@ class Worker(QObject):
                 rgb, _ = crop_rgb(original_image[:, :, :3], coords)
                 model = main.deepforest()
                 model.use_amp = True
-                # model.use_release()
-                model.load_state_dict(torch.load("ALGORITHMS/tuszyma.pth"))
+                model.load_state_dict(torch.load("ALGORITHMS/tuszyma19.pth"))
 
                 predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=1000, patch_overlap=0.1,
-                                                 iou_threshold=0.4, thresh=0.2)
+                                                 iou_threshold=0.5, thresh=0.5)
 
                 print("Prediction successful")
 
@@ -378,7 +428,7 @@ class Worker(QObject):
                 for predict in numpy_pred:
                     pt1 = (int(predict[0]), int(predict[1]))
                     pt2 = (int(predict[2]), int(predict[3]))
-                    if predict[5] > 0.2 and is_correct(pt1, pt2, 0.5):
+                    if predict[5] > 0.5 and is_correct(pt1, pt2, 0.5):
                         print("Drawing rec")
                         print(f"Pt1: {pt1}, pt2: {pt2}")
                         try:
@@ -387,7 +437,8 @@ class Worker(QObject):
                             #                 color=(225, 0, 225), radius=2, thickness=-1)
                             pt3 = (pt1[0], pt2[1] + 10)
 
-                            rgb = cv.putText(rgb, f"{predict[5]:.2f}", pt3, cv.FONT_HERSHEY_SIMPLEX, 0.3, (255, 125, 255),
+                            rgb = cv.putText(rgb, f"{predict[5]:.2f}", pt3, cv.FONT_HERSHEY_SIMPLEX, 0.3,
+                                             (255, 125, 255),
                                              1, cv.LINE_AA)
 
                         except Exception as e:
@@ -399,7 +450,6 @@ class Worker(QObject):
                 print("Draw edned")
 
                 image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
-                # image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
 
             polygon, _, _ = poly_img(image, coords, params[0], params[1],
                                      original_image[params[1]: params[1] + params[3],

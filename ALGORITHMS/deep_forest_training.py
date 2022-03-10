@@ -3,9 +3,15 @@ import pandas as pd
 import os
 from sahi.slicing import slice_image
 import torch
-from deepforest import main
-from deepforest import get_data
+from deepforest import main, get_data, preprocess
 import tempfile
+from labelbox.schema.ontology import Ontology
+from labelbox.schema.dataset import Dataset
+from labelbox import Client, MALPredictionImport, Project
+from labelbox.data.annotation_types import (
+    Label, ImageData, ObjectAnnotation, Rectangle, Point, LabelList)
+from labelbox.data.serialization import NDJsonConverter
+import rasterio
 
 """
 Skrypt ponownie trenuje sieć RetinaNet na modelu deepforest.
@@ -90,54 +96,53 @@ def trainig():
     model = main.deepforest()
     model.use_release()
     CWD = os.getcwd()
+    tmpdir = tempfile.TemporaryDirectory().name
 
-    annotations = get_data(CWD + "\\sliced\\tuszyma_transfer_learning.csv")
+    annotations = get_data(CWD + "\\sliced19\\tuszyma_transfer_learning.csv")
 
-    model.config['gpus'] = 1
+    csv = pd.read_csv(annotations)
+    sample_image_path = csv['image_path'][0]
+    raster_path = CWD + "\\sliced19\\" + sample_image_path
+    sample_image = rasterio.open(raster_path)
+
+
+    # if sample_image.read().shape[1] or sample_image.read().shape[2] > 400:
+    #     annotations_file = preprocess.split_raster(path_to_raster=raster_path,
+    #                                                annotations_file=annotations,
+    #                                                base_dir=tmpdir,
+    #                                                patch_size=500,
+    #                                                patch_overlap=0.25)
+    #     print(annotations_file)
+    #
+    #     assert annotations_file.shape[1] == 6
+
+    model.config['gpus'] = -1
     model.config['workers'] = 10
-    model.config['batch_size'] = 5
+    model.config['batch_size'] = 10
 
-    model.config['train']['epochs'] = 100
+    model.config['train']['epochs'] = 5
     model.config['train']['csv_file'] = annotations
     model.config['train']['root_dir'] = os.path.dirname(annotations)
     model.config['train']['fast_dev_run'] = False
 
     # loader = model.train_dataloader()
 
-    # print(loader)
-    print(model)
+    print(model.config['train']['root_dir'])
+    print(model.config['train']['csv_file'])
 
     # model.create_trainer()
     model.create_trainer(amp_backend="apex", enable_progress_bar=True)
     #
     model.trainer.fit(model)
     #
-    tmpdir = tempfile.TemporaryDirectory().name
-    # print(tmpdir)
-    #
-    model.trainer.save_checkpoint(r"{}\tuszyma.pl".format(tmpdir))
+    model.trainer.save_checkpoint(r"{}\tuszyma19.pl".format(tmpdir))
     #
     model_path = os.path.dirname(annotations)
     #
-    torch.save(model.state_dict(), "tuszyma.pth")
+    torch.save(model.state_dict(), "tuszyma19.pth")
 
 
 def annotation_import(path: str, api_key):
-    from labelbox.schema.ontology import OntologyBuilder, Tool, Classification, Option, Relationship, Ontology
-    from labelbox.schema.dataset import Dataset
-    from labelbox.schema.data_row import DataRow
-    from labelbox import Client, LabelImport, LabelingFrontend, MALPredictionImport, Project
-    from labelbox.data.annotation_types import (
-        Label, ImageData, ObjectAnnotation, MaskData,
-        Rectangle, Point, Line, Mask, Polygon,
-        Radio, Checklist, Text,
-        ClassificationAnnotation, ClassificationAnswer
-    )
-    from labelbox.data.serialization import NDJsonConverter
-    import uuid
-    import json
-    import numpy as np
-
     '''
     Preparing Labelbox API
     '''
@@ -204,7 +209,6 @@ def annotation_import(path: str, api_key):
 
     # client.get_data_row()
 
-
     def signing_function(obj_bytes: bytes) -> str:
         url = client.upload_data(content=obj_bytes, sign=True)
         return url
@@ -220,7 +224,8 @@ def annotation_import(path: str, api_key):
             if annotation[0] == key:
                 rectangle = Rectangle(start=Point(x=annotation[1], y=annotation[2]),
                                       end=Point(x=annotation[3], y=annotation[4]))
-                rectangle_annotation = ObjectAnnotation(value=rectangle, name="Tree", feature_schema_id="cl0i0lmf43u2w10ca1ojfasfs")
+                rectangle_annotation = ObjectAnnotation(value=rectangle, name="Tree",
+                                                        feature_schema_id="cl0i0lmf43u2w10ca1ojfasfs")
                 annotations_labels.append(rectangle_annotation)
             else:
                 continue
@@ -241,14 +246,39 @@ def annotation_import(path: str, api_key):
         print(upload_job.errors)
 
 
+def export_labels(path, api_key):
+    CWD = os.getcwd()
+    client = Client(api_key=api_key)
+    project: Project = client.get_project('cl0i05w3f9zby0zbz9pwu4ccu')
 
+    labels = project.label_generator()
+    labels: LabelList = labels.as_list()
+
+    data_frame = pd.DataFrame(columns=["image_path", "xmin", "ymin", "xmax", "ymax", "label"])
+
+    for label in labels:
+        image_path = label.data.external_id
+        for annotation in label.annotations:
+            class_name = annotation.name
+            x_min = annotation.value.start.x
+            y_min = annotation.value.start.y
+            x_max = annotation.value.end.x
+            y_max = annotation.value.end.y
+
+            d = {"image_path": image_path, "xmin": x_min, "ymin": y_min, "xmax": x_max, "ymax": y_max,
+                 "label": class_name}
+
+            data_frame = data_frame.append(d, ignore_index=True)
+
+    data_frame.to_csv(CWD + path, index=False)
 
 
 if __name__ == "__main__":
     API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbDA5bmprd2s1b2M3MHo3bzRidnM5ZzZoIiwib3JnYW5pemF0aW9uSWQiOiJjbDA5bmprdng1b2M2MHo3bzFnNXIyNmdiIiwiYXBpS2V5SWQiOiJjbDBpM3g4YzlnYjN2MHpiazlwZzg3eWgzIiwic2VjcmV0IjoiNmM2YjNiYzllNGZlNGJkNzk4YTUwMjM1NDVlNjFiNTkiLCJpYXQiOjE2NDY3NDI0MjYsImV4cCI6MjI3Nzg5NDQyNn0.PI7YFV_m5idr_v8Z3hpWCQel_kK1pt0vG6i6JK3gWBM"
     # fast_prediction("\\sliced19")
-    annotation_import("\\sliced19\\sliced19.csv", API_KEY)
+    # annotation_import("\\sliced19\\sliced19.csv", API_KEY)
+    # export_labels("\\sliced19\\tuszyma_transfer_learning.csv", API_KEY)
     # slice()
     # read_csv(r"C:\Users\quadro5000\Downloads\tuszyma-2022-03-04T033748.csv")
-    # trainig()
+    trainig()
     pass
