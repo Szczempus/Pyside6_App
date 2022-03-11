@@ -1,9 +1,9 @@
-import numpy
+"""
+crop image
+"""
 import numpy as np
 import cv2 as cv
-import sys
 from PIL import Image
-
 
 
 def crop_band_list(band_list: list, coords: list):
@@ -57,7 +57,7 @@ def crop_band_list(band_list: list, coords: list):
     # poly_band_list.append(dst2)
 
 
-def crop_rgb(rgb, coords: list, x_new = None, y_new = None):
+def crop_rgb(rgb, coords: list, x_new=None, y_new=None):
     """
     This function crops the original sized bands to maximum sized rectangle
     to overfill polygon. With that to analyzis comes only selected area, not
@@ -114,14 +114,13 @@ def poly_img(fgimage: np.ndarray, coords: list, x_new, y_new, bgimage: np.ndarra
 
     x, y, w, h = rect
     croped = band[y:y + h, x:x + w]
-    _,_,channels = croped.shape
+    _, _, channels = croped.shape
 
     print("2")
     print(type(croped))
     print(croped.shape)
 
     croped = Image.fromarray(croped.astype(np.uint8))
-
 
     print("2.1")
 
@@ -137,7 +136,7 @@ def poly_img(fgimage: np.ndarray, coords: list, x_new, y_new, bgimage: np.ndarra
     # Make mask
     copy_polygon_pts = polygon_pts - polygon_pts.min(axis=0)
 
-    mask = np.zeros(croped.shape[:2], dtype=numpy.uint8)
+    mask = np.zeros(croped.shape[:2], dtype=np.uint8)
     cv.drawContours(mask, [copy_polygon_pts], -1, (255, 255, 255), -1, cv.LINE_AA)
 
     # Bit-op

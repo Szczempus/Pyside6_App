@@ -1,5 +1,8 @@
-from PySide2.QtCore import QObject, Property, Signal, Slot, QPointF
+"""
+Polygon Menager
+"""
 from math import sqrt
+from PySide2.QtCore import QObject, Property, Signal, Slot, QPointF
 
 minimum_distance = 0.5
 
@@ -202,7 +205,6 @@ class PolygonMenager(QObject):
             if poly == polygon:
                 self._polygonList.remove(poly)
                 self.polygonListChanged.emit()
-
 
     @Slot(float, float, result=CustomPolygon)
     def isPolygonHovered(self, x, y):

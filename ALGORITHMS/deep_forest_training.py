@@ -1,31 +1,49 @@
-import numpy as np
-import pandas as pd
-import os
-from sahi.slicing import slice_image
-import torch
-from deepforest import main, get_data, preprocess
-import tempfile
-from labelbox.schema.ontology import Ontology
-from labelbox.schema.dataset import Dataset
-from labelbox import Client, MALPredictionImport, Project
-from labelbox.data.annotation_types import (
-    Label, ImageData, ObjectAnnotation, Rectangle, Point, LabelList)
-from labelbox.data.serialization import NDJsonConverter
-import rasterio
-
 """
+Konieczne biblioteki:
+- środowisko, z którego poziomu można uruchomić pakiet deepforest,
+- biblioteka sahi,
+- biblioteka labelbox
+
 Skrypt ponownie trenuje sieć RetinaNet na modelu deepforest.
 Adnotacje pisane są w pliku .csv w formacie:
     path/to/image1.jpg, x1, y1, x2, y2, class_name
     path/to/image2.jpg, x1, y1, x2, y2, class_name
     ...
+
+Kolejność wykonywania skryptu:
+1. Pocięcie zdjęcia do folderu funkcją slice_from_path()
+2. Wstępna predykcja pociętych zdjęć funkcją fast_prediction()
+3. Import danych ze wstępnych predykcji do danego projektu Labelbox API funkcją annotation_import()
+4. Poprawka przygotowanych oznaczeń i ich zatwierdzenie na stronie
+5. Export adnotacji do formatu .csv funkcją export_labels()
+6. Ponowny trening sieci funkcją retraining_custom_model()
 """
 
+import os
+import tempfile
+import torch
+import numpy as np
+import pandas as pd
+from sahi.slicing import slice_image
+from deepforest import main, get_data
+from labelbox.schema.dataset import Dataset
+from labelbox import Client, MALPredictionImport, Project
+from labelbox.data.annotation_types import (
+    Label, ImageData, ObjectAnnotation, Rectangle, Point, LabelList)
+from labelbox.data.serialization import NDJsonConverter
 
-def fast_prediction(path_to_image_dir: str):
+
+def fast_prediction(path_to_image_dir: str) -> None:
+    """
+
+    :param path_to_image_dir: folder, w którym znajdują się pocięte zdjęcia do wstępnej predykcji
+    :return: plik .csv z adnotacjami zapisany w folderze ze zdjęciami o nazwie folderu,
+     w którym jest przechowywany
+    """
+
     # Path declaration
-    CWD = os.getcwd()
-    path = CWD + path_to_image_dir
+    cwd = os.getcwd()
+    path =cwd + path_to_image_dir
     print(path)
 
     # Fast annotations
@@ -34,10 +52,12 @@ def fast_prediction(path_to_image_dir: str):
     model.use_release()
     # annotations = model.predict_file(csv_file=path, root_dir=path, device='cuda' )
 
-    annotations: pd.DataFrame = pd.DataFrame(columns=["image_path", "xmin", "ymin", "xmax", "ymax", "label"])
+    annotations: pd.DataFrame = pd.DataFrame(
+        columns=["image_path", "xmin", "ymin", "xmax", "ymax", "label"]
+    )
 
     for images in os.listdir(path):
-        if images.format() == '.jpg' or 'png':
+        if images.format() == ('.jpg' or '.png'):
             temp_annotations: pd.DataFrame = model.predict_tile(raster_path=path + "\\" + images,
                                                                 return_plot=False,
                                                                 patch_size=1000,
@@ -46,10 +66,9 @@ def fast_prediction(path_to_image_dir: str):
                                                                 thresh=0.2)
             if temp_annotations is None:
                 continue
-            else:
-                annotations = annotations.append(temp_annotations, ignore_index=True)
-                annotations['image_path'].fillna(images, inplace=True)
-                print(annotations)
+            annotations = annotations.append(temp_annotations, ignore_index=True)
+            annotations['image_path'].fillna(images, inplace=True)
+            print(annotations)
 
     print("After loop: ", annotations)
 
@@ -57,21 +76,31 @@ def fast_prediction(path_to_image_dir: str):
     annotations.to_csv(path + "\\" + path_to_image_dir.split("\\")[1] + ".csv", index=False)
 
 
-def slice():
-    CWD = os.getcwd()
+def slice_from_path(path_to_image: str) -> None:
+    """
 
-    image = "\\Las19.jpg"
+    :param path_to_image: ścieżka z obrazem do pocięcia
+    :return: folder z pociętymi obrazami
+    """
+    cwd = os.getcwd()
 
-    path = CWD + image
+    image = path_to_image
 
-    slice_image_result = slice_image(image=path, output_dir=CWD + "\\sliced19\\",
+    path = image
+
+    slice_image_result = slice_image(image=path, output_dir=cwd + "\\sliced19\\",
                                      output_file_name="Las19_sliced", slice_width=2000,
                                      slice_height=2000)
 
     print(slice_image_result)
 
 
-def read_csv(path):
+def read_csv(path: str) -> None:
+    """
+
+    :param path: ścieżka do folderu z adnotacjami .csv wygenerowanymi z label.ai API
+    :return: sformatowany plik zgodny z przyjętym formatem do trenowania deepforest
+    """
     df = pd.read_csv(path)
 
     df: pd.DataFrame = df.drop(["imageId", "width", "height", "imageUrl"], axis=1)
@@ -92,29 +121,27 @@ def read_csv(path):
     print(df)
 
 
-def trainig():
+def retraining_custom_model(path: str) -> None:
+    """
+
+    :param path: ścieżka z plikiem .csv zgodnym z formatem do trenowania sieci
+    deepforest - musi by w tym samym folderze, co pocięte zdjęcia
+    :return: nowy zestaw wag
+    """
+
     model = main.deepforest()
     model.use_release()
-    CWD = os.getcwd()
+    cwd = os.getcwd()
     tmpdir = tempfile.TemporaryDirectory().name
 
-    annotations = get_data(CWD + "\\sliced19\\tuszyma_transfer_learning.csv")
+    annotations = get_data(cwd + path)
 
-    csv = pd.read_csv(annotations)
-    sample_image_path = csv['image_path'][0]
-    raster_path = CWD + "\\sliced19\\" + sample_image_path
-    sample_image = rasterio.open(raster_path)
+    # annotations = get_data(cwd + "\\sliced19\\tuszyma_transfer_learning.csv")
 
-
-    # if sample_image.read().shape[1] or sample_image.read().shape[2] > 400:
-    #     annotations_file = preprocess.split_raster(path_to_raster=raster_path,
-    #                                                annotations_file=annotations,
-    #                                                base_dir=tmpdir,
-    #                                                patch_size=500,
-    #                                                patch_overlap=0.25)
-    #     print(annotations_file)
-    #
-    #     assert annotations_file.shape[1] == 6
+    # csv = pd.read_csv(annotations)
+    # sample_image_path = csv['image_path'][0]
+    # raster_path = cwd + "\\sliced19\\" + sample_image_path
+    # sample_image = rasterio.open(raster_path)
 
     model.config['gpus'] = -1
     model.config['workers'] = 10
@@ -132,20 +159,24 @@ def trainig():
 
     # model.create_trainer()
     model.create_trainer(amp_backend="apex", enable_progress_bar=True)
-    #
+
     model.trainer.fit(model)
-    #
+
     model.trainer.save_checkpoint(r"{}\tuszyma19.pl".format(tmpdir))
-    #
-    model_path = os.path.dirname(annotations)
-    #
+    # model_path = os.path.dirname(annotations)
+
     torch.save(model.state_dict(), "tuszyma19.pth")
 
 
 def annotation_import(path: str, api_key):
-    '''
-    Preparing Labelbox API
-    '''
+    """
+
+    :param path: ścieżka do wygenerowanego pliku .csv po wstępnej predykcji
+    :param api_key: klucz api konta, w którym jest projekt
+    :return: przesłanie adnotacji do projektu na stronie
+    """
+
+    # Preparing Labelbox API
 
     # Accesing to client user
     client = Client(api_key=api_key)
@@ -165,29 +196,12 @@ def annotation_import(path: str, api_key):
             # Get that what we want to label
             working_dataset: Dataset = client.get_dataset(dataset.uid)
 
-    # print(working_dataset)
 
-    ontology: Ontology = project.ontology()
+    # Preparing csv annotations
 
-    # print(ontology)
 
-    tools = ontology.tools()
-
-    # print(tools)
-
-    for tool in tools:
-        # From tools, get bbox tool name, which is needed to creating labels
-        if tool.name == "Tree":
-            working_tool = tool
-
-    # print(tool)
-
-    '''
-    Preparing csv annotations 
-    '''
-
-    CWD = os.getcwd()
-    csv_file = CWD + path
+    cwd = os.getcwd()
+    csv_file = cwd + path
 
     df = pd.read_csv(csv_file)
 
@@ -200,9 +214,9 @@ def annotation_import(path: str, api_key):
 
     list_of_external_ids = list_of_external_ids.tolist()
 
-    '''
-    Getting data rows
-    '''
+
+    # Getting data rows
+
     data_rows = client.get_data_row_ids_for_external_ids(external_ids=list_of_external_ids)
 
     # print(data_rows.keys())
@@ -213,9 +227,9 @@ def annotation_import(path: str, api_key):
         url = client.upload_data(content=obj_bytes, sign=True)
         return url
 
-    for index, key in enumerate(data_rows.keys()):
-        data_row_uid = data_rows[key][0]
-        image_data_rows = working_dataset.data_rows()
+    for _, key in enumerate(data_rows.keys()):
+        # data_row_uid = data_rows[key][0]
+        # image_data_rows = working_dataset.data_rows()
         data_row = working_dataset.data_row_for_external_id(key)
         image_to_label = ImageData(uid=data_row.uid)
         # print(image_to_label)
@@ -224,8 +238,9 @@ def annotation_import(path: str, api_key):
             if annotation[0] == key:
                 rectangle = Rectangle(start=Point(x=annotation[1], y=annotation[2]),
                                       end=Point(x=annotation[3], y=annotation[4]))
-                rectangle_annotation = ObjectAnnotation(value=rectangle, name="Tree",
-                                                        feature_schema_id="cl0i0lmf43u2w10ca1ojfasfs")
+                rectangle_annotation = ObjectAnnotation(
+                                        value=rectangle, name="Tree",
+                                        feature_schema_id="cl0i0lmf43u2w10ca1ojfasfs")
                 annotations_labels.append(rectangle_annotation)
             else:
                 continue
@@ -247,7 +262,14 @@ def annotation_import(path: str, api_key):
 
 
 def export_labels(path, api_key):
-    CWD = os.getcwd()
+    """
+
+    :param path: ścieżka do zapisania zmodyfikowanego pliku .csv z adnotacjami
+    :param api_key: klucz konta do Labelbox API
+    :return: plik .csv z adnotacjami gotowymi do przetrenowania
+    """
+
+    cwd = os.getcwd()
     client = Client(api_key=api_key)
     project: Project = client.get_project('cl0i05w3f9zby0zbz9pwu4ccu')
 
@@ -265,12 +287,16 @@ def export_labels(path, api_key):
             x_max = annotation.value.end.x
             y_max = annotation.value.end.y
 
-            d = {"image_path": image_path, "xmin": x_min, "ymin": y_min, "xmax": x_max, "ymax": y_max,
-                 "label": class_name}
+            data = {"image_path": image_path,
+                    "xmin": x_min,
+                    "ymin": y_min,
+                    "xmax": x_max,
+                    "ymax": y_max,
+                    "label": class_name}
 
-            data_frame = data_frame.append(d, ignore_index=True)
+            data_frame = data_frame.append(data, ignore_index=True)
 
-    data_frame.to_csv(CWD + path, index=False)
+    data_frame.to_csv(cwd + path, index=False)
 
 
 if __name__ == "__main__":
@@ -280,5 +306,5 @@ if __name__ == "__main__":
     # export_labels("\\sliced19\\tuszyma_transfer_learning.csv", API_KEY)
     # slice()
     # read_csv(r"C:\Users\quadro5000\Downloads\tuszyma-2022-03-04T033748.csv")
-    trainig()
-    pass
+    retraining_custom_model(None)
+

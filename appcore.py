@@ -1,10 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import cv2
 from PySide2.QtCore import Slot, Property, QObject, Signal
-# from PySide2.QtQml import QmlElement, QmlSingleton
-from PySide2.QtWidgets import QFileDialog
-
-import os
 from projectMenager import ProjectMenager
 from opencvImageProvider import OpencvImageProvider
 from paintHandler import PaintHandler
@@ -19,8 +15,11 @@ class Appcore(QObject):
     polygonMenagerChanged = Signal()
     procesManagerChanged = Signal()
 
-    def __init__(self, projectMenager: ProjectMenager, opencvMenager: OpencvImageProvider, paintHandler: PaintHandler,
-                 polygonMenager: PolygonMenager, processing: Processing):
+    def __init__(self, projectMenager: ProjectMenager,
+                 opencvMenager: OpencvImageProvider,
+                 paintHandler: PaintHandler,
+                 polygonMenager: PolygonMenager,
+                 processing: Processing):
         super(Appcore, self).__init__()
         self.projectMenager = projectMenager
         self.opencvMenager = opencvMenager

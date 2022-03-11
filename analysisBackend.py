@@ -20,10 +20,10 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 8. W requstImage jeżeli przyjdzie pusty string onzacza to że to jest odswieżenie obrazu i wysyłamy
     nadpisany obraz do QML'a
 
-
 '''
-
+import cv2 as cv
 import matplotlib.cm
+import numpy as np
 import torch
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
@@ -31,8 +31,7 @@ from deepforest import main
 from polygonMenager import PolygonMenager
 from opencvImageProvider import OpencvImageProvider
 from crop_img import *
-from ALGORITHMS.maps import *
-from ALGORITHMS.detectron_prediction import *
+from ALGORITHMS import *
 
 
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
@@ -67,40 +66,104 @@ def is_correct(pt1: tuple, pt2: tuple, tan_thresh_val):
 
     if tan < tan_thresh_val:
         return False
-    else:
-        return True
+
+    return True
 
 
-# def mistleton_detector(original_image, coords):
-#     print("Analysis 13 - Mistletone detector")
-#     rgb, _ = crop_rgb(original_image[:, :, :3], coords)
-#     model = main.deepforest()
-#     model.use_amp = True
-#     model.use_release()
-#
-#     predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=800, patch_overlap=0.1,
-#                                      iou_threshold=0.4, thresh=0.8)
-#
-#     print("Prediction successful")
-#
-#     numpy_pred = predictions.to_numpy()
-#
-#     print("Pred. conv", numpy_pred)
-#
-#     for predict in numpy_pred:
-#         pt1 = (predict[0], predict[1])
-#         pt2 = (predict[2], predict[3])
-#         if predict[5] > 0.5 and is_correct(pt1, pt2, 0.5):
-#             print("Drawing rec")
-#             rgb = cv2.rectangle(img=rgb, pt1=pt1, pt2=pt2, color=(125, 125, 125), thickness=5)
-#             print("Drawed")
-#
-#     print("Draw edned")
-#
-#     img = cv.cvtColor(rgb, cv.COLOR_RGB2BGR)
-#     image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
-#
-#     return image
+def mistletone_detector(original_image, coords, cropped_bands):
+    print("Analysis 13 - Mistletone detector")
+    rgb, _ = crop_rgb(original_image[:, :, :3], coords)
+    model = main.deepforest()
+    model.use_amp = True
+    model.load_state_dict(torch.load("ALGORITHMS/tuszyma19.pth"))
+
+    predictions = model.predict_tile(image=rgb,
+                                     return_plot=False,
+                                     patch_size=1000,
+                                     patch_overlap=0.1,
+                                     iou_threshold=0.6,
+                                     thresh=0.6)
+
+    print("Prediction successful")
+
+    numpy_pred = predictions.to_numpy()
+
+    print("Pred. conv", numpy_pred)
+
+    for predict in numpy_pred:
+        pt1 = (int(predict[0]), int(predict[1]))
+        pt2 = (int(predict[2]), int(predict[3]))
+        if predict[5] > 0.2 and is_correct(pt1, pt2, 0.5):
+            # print("Drawing rec")
+            # print(f"Pt1: {pt1}, pt2: {pt2}")
+            # if sprawdzamy czy jest jemioła:
+            #   rusujemy obwolutę na czerwono
+            # else:
+
+            coord1 = {
+                "x": pt1[0],
+                "y": pt1[1]
+            }
+
+            coord2 = {
+                "x": pt2[0],
+                "y": pt1[1]
+            }
+
+            coord3 = {
+                "x": pt2[0],
+                "y": pt2[1]
+            }
+
+            coord4 = {
+                "x": pt1[0],
+                "y": pt2[1]
+            }
+
+            bbox_coords = [coord1, coord2, coord3, coord4]
+
+            image = mistletone_analysis(cropped_rect=cropped_bands, original_image=rgb, coords=bbox_coords)
+            # TODO: Zbinaryzować, dylatacja, erozja, zamknięcie, regionproposal
+            # print("image created")
+            # mask = create_circular_mask(h=16, w=16)
+            # print(f"Mask: {mask}")
+            # template = np.dstack((np.zeros((16, 16), dtype=np.uint8),
+            #                       np.ones((16, 16), dtype=np.uint8) * 255,
+            #                       np.ones((16, 16), dtype=np.uint8) * 255))
+            # print(f"Template: {template}")
+            # template[~mask] = 0
+            # print(f"Template after masking: {template}")
+            # print(f"Time for template")
+            # print(f"Is the same shape? {image.shape == template.shape}")
+            # print(f"Image shape: {image.shape}, template shape: {template.shape}")
+            # res = cv.matchTemplate(image, template, cv.TM_CCOEFF_NORMED)
+            # print(f"Result{res}")
+            # threshold = 0.5
+            # print(f"Res > Threshold? : {np.any(res > threshold)}")
+            if np.any(image == [0, 255, 255]):
+                # print(f"rysuje na czerwowono")
+                rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=1)
+            else:
+                # print(f"rysuje na niebiesko")
+                rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
+
+            pt3 = (pt1[0], pt2[1] + 10)
+
+            rgb = cv.putText(img=rgb,
+                             text=f"{predict[5]:.2f}",
+                             org=pt3,
+                             fontFace=cv.FONT_HERSHEY_SIMPLEX,
+                             fontScale=0.3,
+                             color=(255, 125, 255),
+                             thickness=1,
+                             lineType=cv.LINE_AA)
+
+            print("Drawed")
+
+    print("Draw edned")
+
+    image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
+    return image
 
 
 def tree_crown_detector(original_image, coords):
@@ -335,6 +398,10 @@ def ndvi_analysis(cropped_rect):
 
 
 class Worker(QObject):
+    """
+    Worker docstring
+    """
+
     workerFinished = Signal(str)
     workerInProgress = Signal()
     workerResult = Signal(object)
@@ -401,55 +468,18 @@ class Worker(QObject):
                 image = vari_analysis(cropped_rect)
 
             elif self._analysis == 10:
-                image = mistletone_analysis(cropped_rect, original_image=original_image, coords=coords)
+                image = mistletone_analysis(cropped_rect,
+                                            original_image=original_image,
+                                            coords=coords)
 
             elif self._analysis == 11:
-                image = segmentaion_analysis(byte_band_list, coords)
+                image = segmentaion_analysis(cropped_rect, coords)
 
             elif self._analysis == 12:
                 image = tree_crown_detector(original_image, coords)
 
             elif self._analysis == 13:
-                print("Analysis 13 - Mistletone detector")
-                rgb, _ = crop_rgb(original_image[:, :, :3], coords)
-                model = main.deepforest()
-                model.use_amp = True
-                model.load_state_dict(torch.load("ALGORITHMS/tuszyma19.pth"))
-
-                predictions = model.predict_tile(image=rgb, return_plot=False, patch_size=1000, patch_overlap=0.1,
-                                                 iou_threshold=0.5, thresh=0.5)
-
-                print("Prediction successful")
-
-                numpy_pred = predictions.to_numpy()
-
-                print("Pred. conv", numpy_pred)
-
-                for predict in numpy_pred:
-                    pt1 = (int(predict[0]), int(predict[1]))
-                    pt2 = (int(predict[2]), int(predict[3]))
-                    if predict[5] > 0.5 and is_correct(pt1, pt2, 0.5):
-                        print("Drawing rec")
-                        print(f"Pt1: {pt1}, pt2: {pt2}")
-                        try:
-                            rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
-                            # rgb = cv.circle(rgb, center=(int((pt2[0] - pt1[0]) / 2), int((pt2[1] - pt1[1]) / 2)),
-                            #                 color=(225, 0, 225), radius=2, thickness=-1)
-                            pt3 = (pt1[0], pt2[1] + 10)
-
-                            rgb = cv.putText(rgb, f"{predict[5]:.2f}", pt3, cv.FONT_HERSHEY_SIMPLEX, 0.3,
-                                             (255, 125, 255),
-                                             1, cv.LINE_AA)
-
-                        except Exception as e:
-                            self.workerException(e)
-                            return
-
-                        print("Drawed")
-
-                print("Draw edned")
-
-                image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
+                image = mistletone_detector(original_image, coords, cropped_rect)
 
             polygon, _, _ = poly_img(image, coords, params[0], params[1],
                                      original_image[params[1]: params[1] + params[3],

@@ -1,35 +1,37 @@
+"""
+IMPORTANT INFO
+GDAL paginate rasters number from 1 to n, NOT FROM 0 !
+Agisoft exports channels with this order:
+channel 1 - Blue
+channel 2 - Green
+channel 3 - Red
+channel 5 - NIR
+channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwinów na st. celcujsza
+"""
+
 # This Python file uses the following encoding: utf-8
-import cv2
-import matplotlib.pyplot
-from PySide2.QtCore import QSize, QByteArray, Slot, QObject
-from PySide2.QtGui import QImage, QImageReader
+import time
+
+from PySide2.QtCore import QSize, QByteArray, QObject
+from PySide2.QtGui import QImage
 from PySide2.QtQuick import QQuickImageProvider
 import cv2 as cv
 import numpy as np
 from osgeo import gdal
 from tifffile import TiffFile
 
-from ALGORITHMS.maps import *
-from ALGORITHMS.color_corection import simplest_cb
+from ALGORITHMS import rgb_image, simplest_cb
 
-import time
-
-'''
-IMPORTANT INFO 
-GDAL paginate rasters number from 1 to n, NOT FROM 0 !
-Agisoft exports channels with this order: 
-channel 1 - Blue
-channel 2 - Green
-channel 3 - Red 
-channel 5 - NIR
-channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwinów na st. celcujsza  
-'''
-
-debug = False
+Debug = False
 
 
 def convert_from_cv_to_qimage(image: np.ndarray) -> QImage:
-    is_succes, img_to_bytes = cv.imencode(".png", image)
+    """
+
+    :param image:
+    :return:
+    """
+    _, img_to_bytes = cv.imencode(".png", image)
     img_byte_array = img_to_bytes.tobytes()
     bytearr = QByteArray(img_byte_array)
     qimage = QImage()
@@ -38,6 +40,10 @@ def convert_from_cv_to_qimage(image: np.ndarray) -> QImage:
 
 
 class OpencvImageProvider(QQuickImageProvider, QObject):
+    """
+    QML Image Provider class
+    """
+
     def __init__(self):
         super(OpencvImageProvider, self).__init__(QQuickImageProvider.Image,
                                                   QQuickImageProvider.ForceAsynchronousImageLoading)
@@ -49,7 +55,6 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
         self.polygon_params = None
         self._image_params = []
         self._dataset = None
-        # print("Inicjalizacja OpencvImageProvider")
 
     def get_byte_band_list(self):
         return self._byte_band_list
@@ -75,7 +80,9 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
             return qimage
 
         if path == "reload_with_params":
-            rgb = rgb_image(self._byte_band_list, min_val=self._image_params[0], max_val=self._image_params[1])
+            rgb = rgb_image(self._byte_band_list,
+                            min_val=self._image_params[0],
+                            max_val=self._image_params[1])
             rgb = simplest_cb(rgb, int(self._image_params[2]))
             rgba = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
             self._image = rgba
@@ -105,17 +112,17 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                 # Read dataset
                 self._dataset = gdal.Open(self._image_file_path, gdal.GA_ReadOnly)
 
-
                 # TODO Pomyśleć nad optymalizacją
                 checkpoint_2 = time.time()
 
                 # Check if dataset is valid
                 if self._dataset is None:
                     raise TypeError("Image is None type. Check image source file")
+                    return None
 
                 # Get rasters count
                 rasters = self._dataset.RasterCount
-                if debug:
+                if Debug:
                     print(rasters)
 
                 # Calculate min and max value of rasters (raster num, val)
@@ -141,7 +148,7 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                 checkpoint_3 = time.time()
 
                 # For debug purposes
-                if debug:
+                if Debug:
                     print("Driver: {}/{}".format(self._dataset.GetDriver().ShortName,
                                                  self._dataset.GetDriver().LongName))
                     print("Size is {} x {} x {}".format(self._dataset.RasterXSize,
@@ -168,7 +175,6 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                     for page in TiffFile(self._image_file_path).pages:
                         for tag in page.tags.values():
                             print(tag.name, tag.code, tag.dtype, tag.count, tag.value)
-
 
                 # Convert to rgb image
                 rgb = rgb_image(self._byte_band_list)
@@ -201,8 +207,6 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                       f"Konwersja na QImage: {checkpoint_7 - checkpoint_6} \n "
                       f"Całość trwania skrypytu: {checkpoint_7 - start}")
 
-                return qimage
-
             # Standard Reading
             else:
 
@@ -210,4 +214,4 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                 # self._image = img
                 qimage = convert_from_cv_to_qimage(image=img)
 
-                return qimage
+        return qimage
