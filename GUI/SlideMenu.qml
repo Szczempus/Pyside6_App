@@ -137,5 +137,14 @@ Item {
             action: "action_createReport"
             onClicked: control.actionTriggered(action)
         }
+        Separator {
+            separation: "column"
+        }
+        ButtonText {
+            text: qsTr("ABOUT")
+            action: "action_about"
+            onClicked: control.actionTriggered(action)
+        }
+
     }
 }

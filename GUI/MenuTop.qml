@@ -5,7 +5,7 @@ import "Colors.js" as Colors
 Item {
     id: control
 
-    implicitHeight: Screen.height/20
+    implicitHeight: Screen.height/18
     implicitWidth: parent.width
 
     height: implicitHeight
@@ -45,13 +45,22 @@ Item {
     Image {
         id: imageLogo
         source: "./images/png_images/logo_biale.png"
-        antialiasing: true
-        smooth: true
         mipmap: true
         fillMode: Image.PreserveAspectFit
         height: parent.height
         width: height*2
         anchors.left: buttonMenu.right
+    }
+
+    Image {
+        id: imageEU
+        source: "./images/png_images/UE_EFRR_rgb-1-modified-WhiteLetters.png"
+        mipmap: true
+        fillMode: Image.PreserveAspectFit
+        height: parent.height
+        width: height*2
+        anchors.left: imageLogo.right
+        anchors.leftMargin: 5
     }
 
     ToolbarPolygon {

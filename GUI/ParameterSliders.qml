@@ -26,11 +26,32 @@ Item {
 
     property var paramList: [minList, maxList, colorBalnace]
 
+//    onSlidersVisibleChanged: {
+//        if(slidersVisible){
+//            paramSliderBgBlocker.visible = true
+//        }
+//        else
+//            paramSliderBgBlocker.visible = false
+//    }
 
     width: 500
     height: 200
     anchors.centerIn: parent
     visible: slidersVisible
+
+//    Rectangle{
+//        id: paramSliderBgBlocker
+//        anchors.fill:window
+//        color: "black"
+//        opacity: 0.2
+//        visible: false
+
+//        MouseArea{
+//            anchors.fill:window
+//            enabled: window.visible
+//            hoverEnabled: enabled
+//        }
+//    }
 
     Rectangle {
         anchors.centerIn: parent
@@ -346,6 +367,8 @@ Item {
 
                     onClicked: {
                         sliderTool.applyParams()
+                        menuTop.deactivateTool()
+                        slidersWindow.slidersVisible = !slidersWindow.slidersVisible
                     }
                 }
 
@@ -385,6 +408,8 @@ Item {
 
                     onClicked: {
                         sliderTool.cancelParams()
+                        menuTop.deactivateTool()
+                        slidersWindow.slidersVisible = !slidersWindow.slidersVisible
                     }
                 }
             }

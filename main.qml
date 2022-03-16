@@ -19,8 +19,8 @@ Window {
     id: window
     width: 1280
     height: 720
-    minimumWidth: 640
-    minimumHeight: 360
+    minimumWidth: 960
+    minimumHeight: 540
     visible: true
     color: "#ffffffff"
     title: qsTr("Main window")
@@ -115,6 +115,9 @@ Window {
             else if (action == "action_createReport"){
                 console.log("Work in progress...")
             }
+            else if (action == "action_about"){
+                aboutPopup.open()
+            }
         }
 
         //onToolSelected: console.log(tool, active) // handle tool (de)selections here
@@ -133,7 +136,6 @@ Window {
                     messageManager.getString(true, qsTr("New name"))
             }
             else if(tool == "slider"){
-                console.log("Przyszedł click")
 
                 slidersWindow.slidersVisible = !slidersWindow.slidersVisible
             }
@@ -218,6 +220,11 @@ Window {
 
     Dialogs.ProcessingScreen{
         id: processing
+        modal: True
+    }
+
+    Dialogs.AboutApplication{
+        id: aboutPopup
         modal: True
     }
 

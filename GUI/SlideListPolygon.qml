@@ -232,8 +232,8 @@ Item {
                     Text {
                         id: polyName
                         width: column.width - height
-                        anchors.right: parent.right
-                        anchors.rightMargin: height/2
+                        anchors.left: image.right
+                        anchors.leftMargin: 10
                         height: Screen.height/30
                         padding: 6
                         text: parent.name
@@ -249,7 +249,8 @@ Item {
                     }
 
                     MouseArea {
-                        width: column.width
+                        id: polygonMauseArea
+                        width: column.width- height
                         height: Screen.height/30
                         hoverEnabled: true
                         onEntered: parent.state = "hovered"
@@ -265,7 +266,7 @@ Item {
                     Image {
                         height: Screen.height/60
                         width: height
-                        anchors.right: parent.right
+                        anchors.right: polygonMauseArea.right
                         anchors.verticalCenter: polyName.verticalCenter
                         fillMode: Image.PreserveAspectFit
                         source: "./images/png_images/delete_cross.png"
@@ -281,6 +282,12 @@ Item {
 //                                appManager.polygonManager.deletePolygon(polyItem.polygon)
                             }
                         }
+                    }
+
+                    RadioButton{
+                        height: Screen.height/60
+                        width: height
+                        anchors.right: parent.right
                     }
 
 

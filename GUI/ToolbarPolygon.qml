@@ -36,7 +36,7 @@ Item {
 
         ButtonTool {
             icon_source: "./images/png_images/slider.png"
-//            icon_source_highlighted: "./images/png_images/polygon_highlighted.png"
+            icon_source_highlighted: "./images/png_images/slider_highlighted.png"
             tool: "slider"
             text: qsTr("PARAMETERS")
             visible: visibility
