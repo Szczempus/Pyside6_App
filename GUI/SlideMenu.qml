@@ -118,15 +118,12 @@ Item {
             action: "action_importImage"
             onClicked: control.actionTriggered(action)
         }
-<<<<<<< Updated upstream
-=======
         ButtonText {
             text: qsTr("ZAPISZ OBRAZ")
             action: "action_saveImage"
             onClicked: control.actionTriggered(action)
         }
 
->>>>>>> Stashed changes
         Separator {
             separation: "column"
         }
@@ -140,8 +137,6 @@ Item {
             action: "action_createReport"
             onClicked: control.actionTriggered(action)
         }
-<<<<<<< Updated upstream
-=======
         Separator {
             separation: "column"
         }
@@ -151,6 +146,5 @@ Item {
             onClicked: control.actionTriggered(action)
         }
 
->>>>>>> Stashed changes
     }
 }

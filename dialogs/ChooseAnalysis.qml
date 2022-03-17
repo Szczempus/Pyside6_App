@@ -12,7 +12,7 @@ Dialog{
 
     id: rootDialog
 
-    property var polygonManager: appCore.polygonManager
+    property var polygonManager: undefined
     property int chosedAnalysis: 1
 
     implicitHeight: parent.height * 0.6
@@ -25,16 +25,75 @@ Dialog{
 
     modal: true
 
+    background: Rectangle{
+            id: background
+            anchors.fill: parent
+            color:Colors.main
+            radius: 7
+        }
+
+
+
+
+
     standardButtons: Dialog.Ok | Dialog.Cancel
+//    footer: Item{
+//        id: footerControl
+////        anchors.fill: parent
+
+//        height: 20
+
+//        Rectangle{
+//            id: footerBackground
+//            anchors.fill: parent
+//            color:"#ffffaa"
+
+//        }
+
+
+//    }
+
+    header: Item{
+        id: headerControl
+
+        Row{
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: rootDialog.contentItem.top
+        }
+
+
+
+//        Rectangle{
+//            id:topTextAnalysis
+//            width: parent.width
+//            height: 20
+//            color: Colors.main
+//            radius: 7
+
+//            Text{
+//                anchors.fill: parent
+//                text: "Analysis"
+//                horizontalAlignment: Text.AlignHCenter
+//                verticalAlignment: Text.AlignVCenter
+//                color: Colors.text
+//                font{
+//                    family: "Ubuntu"
+//                    pixelSize: 14
+//                    bold: true
+//                }
+//            }
+//        }
+
+    }
+
 
     contentItem: Item {
-
         id: control
 
-        anchors.fill: parent
-
         Rectangle{
-            id: background
+            id: contentBackground
             anchors.fill: parent
             color:Colors.main
             radius: 7
@@ -44,47 +103,12 @@ Dialog{
         Row{
             anchors.fill: parent
 
-            // Left column with analysis radio buttons
-            Column{
-                id: leftColumn
-                width: parent.width/2
+            Flickable{
 
-<<<<<<< Updated upstream
-                // Header
-                Rectangle{
-                    id:topTextAnalysis
-                    width: parent.width
-                    height: 20
-                    color: Colors.main
+                width: contentBackground.width/2
+                height: contentBackground.height
+                clip: true
 
-                    Text{
-                        anchors.fill: parent
-                        text: "Analysis"
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        color: Colors.text
-                        font{
-                            family: "Ubuntu"
-                            pixelSize: 14
-                            bold: true
-                        }
-
-                    }
-                }
-
-                // Content
-                ButtonGroup{id: firstGroup}
-
-                ColumnLayout{
-                    spacing: 2
-
-                    Control.CustomRadioButton{
-                        checked: true
-                        text: "NDVI MAP"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 1
-=======
                 flickableDirection: Flickable.AutoFlickIfNeeded
                 ScrollBar.vertical: ScrollBar {
                     policy: "AsNeeded"
@@ -204,58 +228,30 @@ Dialog{
                             onClicked: {
                                 rootDialog.chosedAnalysis = 10
                             }
->>>>>>> Stashed changes
                         }
-                    }
 
-<<<<<<< Updated upstream
-                    Control.CustomRadioButton{
-                        text: "LCI MAP"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 2
-=======
                         Control.CustomRadioButton{
                             text: "DETEKCJA I SEGMENTACJA ROŚLINY"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 11
                             }
->>>>>>> Stashed changes
                         }
-                    }
 
-<<<<<<< Updated upstream
-                    Control.CustomRadioButton{
-                        text: "Segmentation"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 3
-=======
                         Control.CustomRadioButton{
                             text: "DETEKTOR KORON DRZEW"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 12
                             }
->>>>>>> Stashed changes
                         }
-                    }
 
-<<<<<<< Updated upstream
-                    Control.CustomRadioButton{
-                        text: "Counting"
-                        ButtonGroup.group: firstGroup
-                        onClicked: {
-                            rootDialog.chosedAnalysis = 4
-=======
                         Control.CustomRadioButton{
                             text: "DETEKTOR JEMIOŁY"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 13
                             }
->>>>>>> Stashed changes
                         }
 
                         Control.CustomRadioButton{
@@ -286,7 +282,7 @@ Dialog{
                             text: "MAPA WIEKU DRZEWOSTANU"
                             ButtonGroup.group: firstGroup
                             onClicked: {
-                                rootDialog.chosedAnalysis = 16
+                                rootDialog.chosedAnalysis = 17
                             }
                         }
                     }
@@ -300,8 +296,8 @@ Dialog{
 
             // Right column with polygon list and combo boxes
             Flickable {
-                width: background.width/2
-                height: background.height
+                width: contentBackground.width/2
+                height: contentBackground.height
                 clip: true
 
                 flickableDirection: Flickable.AutoFlickIfNeeded
@@ -426,7 +422,7 @@ Dialog{
                                 width: height
                                 anchors.verticalCenter: polyName.verticalCenter
                                 fillMode: Image.PreserveAspectFit
-                                source: "qrc:/images/png/arrow_highlighted"
+                                source: "../GUI/images/png_images/arrow_highlighted.png"
                                 antialiasing: true
                                 mipmap: true
                                 smooth: true

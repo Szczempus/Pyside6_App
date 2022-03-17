@@ -15,10 +15,8 @@ Popup{
     x: window.width / 2 - width / 2
     y: window.height / 2 - height / 2
 
-
     implicitHeight: 500
     implicitWidth: 650
-
     closePolicy: popupPolicy
 
 

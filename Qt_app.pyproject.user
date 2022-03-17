@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 6.0.2, 2022-03-16T16:03:49. -->
+<!-- Written by QtCreator 6.0.2, 2022-03-17T16:38:34. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -115,23 +115,6 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
@@ -150,29 +133,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/pin.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/pin.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/pin.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\pin.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -184,29 +151,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/nametag.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/nametag.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/nametag.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\nametag.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -218,29 +169,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/checked.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/checked.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/checked.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\checked.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -252,29 +187,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/pin_hovered.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/pin_hovered.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/pin_hovered.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\pin_hovered.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -286,23 +205,6 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
@@ -321,29 +223,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/save.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/save.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/save.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\save.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -355,29 +241,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/arrow_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/arrow_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/arrow_highlighted.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\arrow_highlighted.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -389,29 +259,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/paintHandler.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/paintHandler.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/paintHandler.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\paintHandler.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -423,29 +277,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/polygon_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/polygon_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/polygon_highlighted.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\polygon_highlighted.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -457,29 +295,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/crop_img.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/crop_img.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/crop_img.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\crop_img.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -491,29 +313,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/opencvImageProvider.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/opencvImageProvider.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/opencvImageProvider.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\opencvImageProvider.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -525,29 +331,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/load_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/load_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/load_highlighted.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\load_highlighted.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -559,29 +349,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/nametag_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/nametag_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/nametag_highlighted.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\nametag_highlighted.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -593,29 +367,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/appcore.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/appcore.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/appcore.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\appcore.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -627,29 +385,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/slider.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/slider.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/slider.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\slider.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -661,29 +403,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/Logotypy_do_aplikacji.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/Logotypy_do_aplikacji.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/Logotypy_do_aplikacji.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\Logotypy_do_aplikacji.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -695,29 +421,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/dialogs/about_descrption.html</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/dialogs/about_descrption.html</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/dialogs/about_descrption.html</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\dialogs\about_descrption.html</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -729,29 +439,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/slider_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/slider_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/slider_highlighted.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\slider_highlighted.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -763,29 +457,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/polygonMenager.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/polygonMenager.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/polygonMenager.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\polygonMenager.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -797,29 +475,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/load.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/load.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/load.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\load.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -831,29 +493,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/projectMenager.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/projectMenager.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/projectMenager.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\projectMenager.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -865,29 +511,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/save_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/save_highlighted.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/save_highlighted.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\save_highlighted.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -899,29 +529,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/arrow.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/arrow.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/arrow.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\arrow.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -933,29 +547,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/delete_cross.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/delete_cross.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/delete_cross.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\delete_cross.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
@@ -967,29 +565,13 @@
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.QmlProfiler.Settings.UseGlobalSettings">true</value>
     <value type="bool" key="Analyzer.Valgrind.Settings.UseGlobalSettings">true</value>
-    <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="QString">0</value>
-     <value type="QString">1</value>
-     <value type="QString">2</value>
-     <value type="QString">3</value>
-     <value type="QString">4</value>
-     <value type="QString">5</value>
-     <value type="QString">6</value>
-     <value type="QString">7</value>
-     <value type="QString">8</value>
-     <value type="QString">9</value>
-     <value type="QString">10</value>
-     <value type="QString">11</value>
-     <value type="QString">12</value>
-     <value type="QString">13</value>
-     <value type="QString">14</value>
-    </valuelist>
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/polygon.png</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/polygon.png</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/quadro5000/PycharmProjects/Qt_Quick_Python/Pyside6_App/GUI/images/png_images/polygon.png</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{4a7e493f-13c0-42b5-b163-aef771327793}</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\quadro5000\PycharmProjects\Qt_Quick_Python\Pyside6_App\GUI\images\png_images\polygon.png</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
