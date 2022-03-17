@@ -51,7 +51,7 @@ Item {
                 anchors.fill: parent
                 spacing: 0
                 Text {
-                    text: qsTr("New polygon name:")
+                    text: qsTr("Nowy poligon:")
                     color: Colors.text
                     width: parent.width
                     height: parent.height/3 - 4

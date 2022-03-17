@@ -96,17 +96,17 @@ Item {
         spacing: 0
 
         ButtonText {
-            text: qsTr("NEW PROJECT")
+            text: qsTr("NOWY PROJEKT")
             action: "action_newProject"
             onClicked: control.actionTriggered(action)
         }
         ButtonText {
-            text: qsTr("OPEN PROJECT")
+            text: qsTr("OTWÓRZ PROJEKT")
             action: "action_openProject"
             onClicked: control.actionTriggered(action)
         }
         ButtonText {
-            text: qsTr("SAVE PROJECT")
+            text: qsTr("ZAPISZ PROJEKT")
             action: "action_saveProject"
             onClicked: control.actionTriggered(action)
         }
@@ -114,37 +114,43 @@ Item {
             separation: "column"
         }
         ButtonText {
-            text: qsTr("IMPORT IMAGE")
+            text: qsTr("ZAIMPORTUJ OBRAZ")
             action: "action_importImage"
             onClicked: control.actionTriggered(action)
         }
+<<<<<<< Updated upstream
+=======
         ButtonText {
-            text: qsTr("SAVE IMAGE")
+            text: qsTr("ZAPISZ OBRAZ")
             action: "action_saveImage"
             onClicked: control.actionTriggered(action)
         }
 
+>>>>>>> Stashed changes
         Separator {
             separation: "column"
         }
         ButtonText {
-            text: qsTr("RUN ANALYSIS")
+            text: qsTr("URUCHOM ANALIZĘ")
             action: "action_runAnalysis"
             onClicked: control.actionTriggered(action)
         }
         ButtonText {
-            text: qsTr("CREATE REPORT")
+            text: qsTr("STWÓRZ RAPOPORT")
             action: "action_createReport"
             onClicked: control.actionTriggered(action)
         }
+<<<<<<< Updated upstream
+=======
         Separator {
             separation: "column"
         }
         ButtonText {
-            text: qsTr("ABOUT")
+            text: qsTr("O APLIKACJI")
             action: "action_about"
             onClicked: control.actionTriggered(action)
         }
 
+>>>>>>> Stashed changes
     }
 }

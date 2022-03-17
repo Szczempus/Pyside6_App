@@ -146,6 +146,10 @@ def ndre_map(band_list):
 
     image = (nir - rededge) / (nir + rededge)
 
+    image[image == inf] = 1
+    image[image == -inf] = -1
+
+
     return image
 
 

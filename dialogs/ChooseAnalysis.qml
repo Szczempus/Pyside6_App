@@ -12,7 +12,7 @@ Dialog{
 
     id: rootDialog
 
-    property var polygonManager: undefined
+    property var polygonManager: appCore.polygonManager
     property int chosedAnalysis: 1
 
     implicitHeight: parent.height * 0.6
@@ -25,75 +25,16 @@ Dialog{
 
     modal: true
 
-    background: Rectangle{
-            id: background
-            anchors.fill: parent
-            color:Colors.main
-            radius: 7
-        }
-
-
-
-
-
     standardButtons: Dialog.Ok | Dialog.Cancel
-//    footer: Item{
-//        id: footerControl
-////        anchors.fill: parent
-
-//        height: 20
-
-//        Rectangle{
-//            id: footerBackground
-//            anchors.fill: parent
-//            color:"#ffffaa"
-
-//        }
-
-
-//    }
-
-    header: Item{
-        id: headerControl
-
-        Row{
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: rootDialog.contentItem.top
-        }
-
-
-
-//        Rectangle{
-//            id:topTextAnalysis
-//            width: parent.width
-//            height: 20
-//            color: Colors.main
-//            radius: 7
-
-//            Text{
-//                anchors.fill: parent
-//                text: "Analysis"
-//                horizontalAlignment: Text.AlignHCenter
-//                verticalAlignment: Text.AlignVCenter
-//                color: Colors.text
-//                font{
-//                    family: "Ubuntu"
-//                    pixelSize: 14
-//                    bold: true
-//                }
-//            }
-//        }
-
-    }
-
 
     contentItem: Item {
+
         id: control
 
+        anchors.fill: parent
+
         Rectangle{
-            id: contentBackground
+            id: background
             anchors.fill: parent
             color:Colors.main
             radius: 7
@@ -103,12 +44,47 @@ Dialog{
         Row{
             anchors.fill: parent
 
-            Flickable{
+            // Left column with analysis radio buttons
+            Column{
+                id: leftColumn
+                width: parent.width/2
 
-                width: contentBackground.width/2
-                height: contentBackground.height
-                clip: true
+<<<<<<< Updated upstream
+                // Header
+                Rectangle{
+                    id:topTextAnalysis
+                    width: parent.width
+                    height: 20
+                    color: Colors.main
 
+                    Text{
+                        anchors.fill: parent
+                        text: "Analysis"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        color: Colors.text
+                        font{
+                            family: "Ubuntu"
+                            pixelSize: 14
+                            bold: true
+                        }
+
+                    }
+                }
+
+                // Content
+                ButtonGroup{id: firstGroup}
+
+                ColumnLayout{
+                    spacing: 2
+
+                    Control.CustomRadioButton{
+                        checked: true
+                        text: "NDVI MAP"
+                        ButtonGroup.group: firstGroup
+                        onClicked: {
+                            rootDialog.chosedAnalysis = 1
+=======
                 flickableDirection: Flickable.AutoFlickIfNeeded
                 ScrollBar.vertical: ScrollBar {
                     policy: "AsNeeded"
@@ -151,7 +127,7 @@ Dialog{
 
                         Control.CustomRadioButton{
                             checked: true
-                            text: "NDVI MAP"
+                            text: "MAPA NDVI"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 1
@@ -159,7 +135,7 @@ Dialog{
                         }
 
                         Control.CustomRadioButton{
-                            text: "BNDVI MAP"
+                            text: "MAPA BNDVI"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 2
@@ -167,7 +143,7 @@ Dialog{
                         }
 
                         Control.CustomRadioButton{
-                            text: "GNDVI MAP"
+                            text: "MAPA GNDVI"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 3
@@ -175,7 +151,7 @@ Dialog{
                         }
 
                         Control.CustomRadioButton{
-                            text: "LCI MAP"
+                            text: "MAPA LCI"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 4
@@ -183,7 +159,7 @@ Dialog{
                         }
 
                         Control.CustomRadioButton{
-                            text: "MCAR MAP"
+                            text: "MAPA MCAR"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 5
@@ -191,7 +167,7 @@ Dialog{
                         }
 
                         Control.CustomRadioButton{
-                            text: "NDRE MAP"
+                            text: "MAPA NDRE"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 6
@@ -199,7 +175,7 @@ Dialog{
                         }
 
                         Control.CustomRadioButton{
-                            text: "SIPI2 MAP"
+                            text: "MAPA SIPI2"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 7
@@ -207,7 +183,7 @@ Dialog{
                         }
 
                         Control.CustomRadioButton{
-                            text: "OSAVI MAP"
+                            text: "MAPA OSAVI"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 8
@@ -215,7 +191,7 @@ Dialog{
                         }
 
                         Control.CustomRadioButton{
-                            text: "VARI MAP"
+                            text: "MAPA VARI"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 9
@@ -223,34 +199,94 @@ Dialog{
                         }
 
                         Control.CustomRadioButton{
-                            text: "MISTLETONE MAP"
+                            text: "MAPA JEMIOŁY"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 10
                             }
+>>>>>>> Stashed changes
                         }
+                    }
 
+<<<<<<< Updated upstream
+                    Control.CustomRadioButton{
+                        text: "LCI MAP"
+                        ButtonGroup.group: firstGroup
+                        onClicked: {
+                            rootDialog.chosedAnalysis = 2
+=======
                         Control.CustomRadioButton{
-                            text: "SEGMENTATION"
+                            text: "DETEKCJA I SEGMENTACJA ROŚLINY"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 11
                             }
+>>>>>>> Stashed changes
                         }
+                    }
 
+<<<<<<< Updated upstream
+                    Control.CustomRadioButton{
+                        text: "Segmentation"
+                        ButtonGroup.group: firstGroup
+                        onClicked: {
+                            rootDialog.chosedAnalysis = 3
+=======
                         Control.CustomRadioButton{
-                            text: "TREE CROWN DETECTOR"
+                            text: "DETEKTOR KORON DRZEW"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 12
                             }
+>>>>>>> Stashed changes
                         }
+                    }
 
+<<<<<<< Updated upstream
+                    Control.CustomRadioButton{
+                        text: "Counting"
+                        ButtonGroup.group: firstGroup
+                        onClicked: {
+                            rootDialog.chosedAnalysis = 4
+=======
                         Control.CustomRadioButton{
-                            text: "MISTLETON DETECTOR"
+                            text: "DETEKTOR JEMIOŁY"
                             ButtonGroup.group: firstGroup
                             onClicked: {
                                 rootDialog.chosedAnalysis = 13
+                            }
+>>>>>>> Stashed changes
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "MAPA RDZY BRUNATNEJ"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 14
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "MAPA GŁOWNI PYLĄCEJ"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 15
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "MAPA MSZYCY KAPUŚCIANEJ"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 16
+                            }
+                        }
+
+                        Control.CustomRadioButton{
+                            text: "MAPA WIEKU DRZEWOSTANU"
+                            ButtonGroup.group: firstGroup
+                            onClicked: {
+                                rootDialog.chosedAnalysis = 16
                             }
                         }
                     }
@@ -264,8 +300,8 @@ Dialog{
 
             // Right column with polygon list and combo boxes
             Flickable {
-                width: contentBackground.width/2
-                height: contentBackground.height
+                width: background.width/2
+                height: background.height
                 clip: true
 
                 flickableDirection: Flickable.AutoFlickIfNeeded
@@ -390,7 +426,7 @@ Dialog{
                                 width: height
                                 anchors.verticalCenter: polyName.verticalCenter
                                 fillMode: Image.PreserveAspectFit
-                                source: "../GUI/images/png_images/arrow_highlighted.png"
+                                source: "qrc:/images/png/arrow_highlighted"
                                 antialiasing: true
                                 mipmap: true
                                 smooth: true

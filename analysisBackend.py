@@ -34,6 +34,10 @@ from crop_img import *
 from ALGORITHMS import *
 
 
+COLOR_MAP = "Spectral"
+
+
+
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
 # Todo z importem nowego zdjęcia usunąć poligony z listy
 
@@ -124,23 +128,27 @@ def mistletone_detector(original_image, coords, cropped_bands):
 
             image = mistletone_analysis(cropped_rect=cropped_bands, original_image=rgb, coords=bbox_coords)
             # TODO: Zbinaryzować, dylatacja, erozja, zamknięcie, regionproposal
-            # print("image created")
-            # mask = create_circular_mask(h=16, w=16)
-            # print(f"Mask: {mask}")
-            # template = np.dstack((np.zeros((16, 16), dtype=np.uint8),
-            #                       np.ones((16, 16), dtype=np.uint8) * 255,
-            #                       np.ones((16, 16), dtype=np.uint8) * 255))
-            # print(f"Template: {template}")
-            # template[~mask] = 0
-            # print(f"Template after masking: {template}")
-            # print(f"Time for template")
-            # print(f"Is the same shape? {image.shape == template.shape}")
-            # print(f"Image shape: {image.shape}, template shape: {template.shape}")
-            # res = cv.matchTemplate(image, template, cv.TM_CCOEFF_NORMED)
-            # print(f"Result{res}")
-            # threshold = 0.5
-            # print(f"Res > Threshold? : {np.any(res > threshold)}")
-            if np.any(image == [0, 255, 255]):
+
+            print("image created")
+            mask = create_circular_mask(h=16, w=16)
+            print(f"Mask: {mask}")
+            template = np.dstack((np.zeros((16, 16), dtype=np.uint8),
+                                  np.ones((16, 16), dtype=np.uint8) * 255,
+                                  np.ones((16, 16), dtype=np.uint8) * 255))
+            print(f"Template: {template}")
+            template[~mask] = 0
+            print(f"Template after masking: {template}")
+            print(f"Time for template")
+            print(f"Is the same shape? {image.shape == template.shape}")
+            print(f"Image shape: {image.shape}, template shape: {template.shape}")
+            res = cv.matchTemplate(image, template, cv.TM_CCOEFF_NORMED)
+            print(f"Result{res}")
+            threshold = 0.4
+            print(f"Res > Threshold? : {np.any(res > threshold)}")
+
+            # if np.any(image == [0, 255, 255]):
+            if np.any(res > threshold):
+
                 # print(f"rysuje na czerwowono")
                 rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=1)
             else:
@@ -253,7 +261,7 @@ def vari_analysis(cropped_rect):
 
     print("Analysis 9 - seismic")
     index_image = vari_map(cropped_rect)
-    my_cmap = matplotlib.cm.get_cmap("BrBG")
+    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
@@ -270,7 +278,9 @@ def osavi_analysis(cropped_rect):
 
     print("Analysis 8 - OSAVI")
     index_image = osavi_map(cropped_rect)
-    my_cmap = matplotlib.cm.get_cmap("BrBG")
+
+    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
+
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
@@ -287,7 +297,9 @@ def sipi2_analysis(cropped_rect):
 
     print("Analysis 7 - SIPI2")
     index_image = sipi2_map(cropped_rect)
-    my_cmap = matplotlib.cm.get_cmap("coolwarm")
+
+    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
+
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
@@ -304,12 +316,20 @@ def ndre_analysis(cropped_rect):
 
     print("Analysis 6 - NDRE")
     index_image = ndre_map(cropped_rect)
-    my_cmap = matplotlib.cm.get_cmap("RdBu")
+    map_threshold = 0.4
+    index_sum = np.sum(index_image)
+    print(f"WARTOŚC SUMY INDEKSU: {index_sum}")
+    above_thresh_sum = np.sum(index_image >= map_threshold)
+    print(f"WARTOŚC SUMY POWYŻEJ 0.4: {above_thresh_sum}")
+    map_value = above_thresh_sum/index_sum
+    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-    return image
+
+    return map_value, image
+
 
 
 def mcar_analysis(cropped_rect):
@@ -321,7 +341,9 @@ def mcar_analysis(cropped_rect):
 
     print("Analysis 5 - MCAR")
     index_image = mcar_map(cropped_rect)
-    my_cmap = matplotlib.cm.get_cmap("BrBG")
+
+    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
+
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
@@ -338,7 +360,9 @@ def lci_analysis(cropped_rect):
 
     print("Analysis 4 - LCI")
     index_image = lci_map(cropped_rect)
-    my_cmap = matplotlib.cm.get_cmap("PiYG")
+
+    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
+
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
@@ -355,7 +379,9 @@ def gndvi_analysis(cropped_rect):
 
     print("Analysis 3 - GNDVI")
     index_image = gndvi_map(cropped_rect)
-    my_cmap = matplotlib.cm.get_cmap("RdYlGn")
+
+    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
+
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
@@ -372,7 +398,9 @@ def bndvi_analysis(cropped_rect):
 
     print("Analysis 2 - BNDVI")
     index_image = bndvi_map(cropped_rect)
-    my_cmap = matplotlib.cm.get_cmap("RdYlBu")
+
+    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
+
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
@@ -389,7 +417,9 @@ def ndvi_analysis(cropped_rect):
 
     print("Analysis 1 - NDVI")
     index_image = ndvi_map(cropped_rect)
-    my_cmap = matplotlib.cm.get_cmap("Spectral")
+
+    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
+
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
@@ -455,8 +485,9 @@ class Worker(QObject):
             elif self._analysis == 5:
                 image = mcar_analysis(cropped_rect)
 
-            elif self._analysis == 6:
-                image = ndre_analysis(cropped_rect)
+            elif self._analysis == 6 or self._analysis == 14 or self._analysis == 15 or self._analysis == 16 or self._analysis == 17:
+                map_value, image = ndre_analysis(cropped_rect)
+                print(f"WARTOŚ WSKAŹNIKA:{map_value}")
 
             elif self._analysis == 7:
                 image = sipi2_analysis(cropped_rect)

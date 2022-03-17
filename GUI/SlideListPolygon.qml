@@ -129,6 +129,9 @@ Item {
                     property string name: modelData.name
                     property bool listOpened: false
                     property var polygon: modelData
+
+                    signal sendPolygonToReceiveResult (var polygon)
+
                     onStateChanged: {
                         if(state == "hovered")
                             polygon.hovered = true
@@ -195,7 +198,7 @@ Item {
 
                     Rectangle {
                         id: polyItemBg
-                        width: column.width
+                        width: column.width - polygonMauseArea.height
                         height: Screen.height/30
                         Component.onCompleted: color = Colors.main
                     }
@@ -206,7 +209,7 @@ Item {
                         width: height
                         anchors.verticalCenter: polyName.verticalCenter
                         fillMode: Image.PreserveAspectFit
-                        source: "./images/png_images/arrow"
+                        source: "qrc:/images/png/arrow"
                         antialiasing: true
                         mipmap: true
                         smooth: true
@@ -220,7 +223,7 @@ Item {
                         width: height
                         anchors.verticalCenter: polyName.verticalCenter
                         fillMode: Image.PreserveAspectFit
-                        source: "./images/png_images/arrow_highlighted.png"
+                        source: "qrc:/images/png/arrow_highlighted"
                         antialiasing: true
                         mipmap: true
                         smooth: true
@@ -232,8 +235,8 @@ Item {
                     Text {
                         id: polyName
                         width: column.width - height
-                        anchors.left: image.right
-                        anchors.leftMargin: 10
+                        anchors.right: parent.right
+                        anchors.rightMargin: height/2
                         height: Screen.height/30
                         padding: 6
                         text: parent.name
@@ -249,8 +252,12 @@ Item {
                     }
 
                     MouseArea {
+<<<<<<< Updated upstream
+                        width: column.width
+=======
                         id: polygonMauseArea
-                        width: column.width- height
+                        width: column.width- analysisItemBg.width
+>>>>>>> Stashed changes
                         height: Screen.height/30
                         hoverEnabled: true
                         onEntered: parent.state = "hovered"
@@ -266,10 +273,10 @@ Item {
                     Image {
                         height: Screen.height/60
                         width: height
-                        anchors.right: polygonMauseArea.right
+                        anchors.right: parent.right
                         anchors.verticalCenter: polyName.verticalCenter
                         fillMode: Image.PreserveAspectFit
-                        source: "./images/png_images/delete_cross.png"
+                        source: "qrc:/images/png/delete_cross"
                         antialiasing: true
                         mipmap: true
                         smooth: true
@@ -278,18 +285,96 @@ Item {
                         anchors.rightMargin: polyName.padding/2
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: {control.polygonManager.deletePolygon(polyItem.polygon)
-//                                appManager.polygonManager.deletePolygon(polyItem.polygon)
+                            onClicked: {
+                                control.polygonManager.deletePolygon(polyItem.polygon)
                             }
                         }
                     }
 
-                    RadioButton{
-                        height: Screen.height/60
+<<<<<<< Updated upstream
+=======
+                    //Button to launch analysis
+
+                    Rectangle{
+                        id: analysisItemBg
+                        height: Screen.height/30
                         width: height
-                        anchors.right: parent.right
+                        anchors.left: polyItemBg.right
+                        Component.onCompleted: color = Colors.main
+
+                        states:[
+                            State {name: "normal"},
+                            State {name: "hovered"}
+                        ]
+                        state: "normal"
+
+                        transitions: [
+                            Transition {
+                                from: "normal"
+                                to: "hovered"
+
+                                ParallelAnimation{
+                                    PropertyAnimation{
+                                        target: analysisItemBg
+                                        property: "color"
+                                        to: Colors.highlighted_main
+                                        duration: 300
+                                    }
+                                }
+                            },
+                            Transition {
+                                from: "hovered"
+                                to: "normal"
+
+                                ParallelAnimation{
+                                    PropertyAnimation{
+                                        target: analysisItemBg
+                                        property: "color"
+                                        to: Colors.main
+                                        duration: 300
+                                    }
+                                }
+                            }]
+
+
+
                     }
 
+                    MouseArea{
+                        id: analysisMouseArea
+                        width: analysisItemBg.width
+                        hoverEnabled: true
+                        height: Screen.height/30
+                        onEntered: analysisItemBg.state = "hovered"
+                        onExited: analysisItemBg.state = "normal"
+                        anchors.right: polyItem.right
+                    }
+
+                    Image{
+                        height: Screen.height/60
+                        width: height
+                        anchors.left: polygonMauseArea.right
+                        anchors.verticalCenter: analysisItemBg.verticalCenter
+                        anchors.horizontalCenter: analysisItemBg.horizontalCenter
+                        fillMode: Image.PreserveAspectFit
+                        source: "./images/png_images/results.png"
+                        mipmap: true
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                console.log("Results clicked")
+                                polyItem.sendPolygonToReceiveResult(polyItem.polygon)
+                            }
+                        }
+
+
+                    }
+
+>>>>>>> Stashed changes
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////Subcolumn of polygon points///////////////////////////////////////////////////////////////////////
 
                     Column {
                         id: subcolumn
@@ -429,7 +514,7 @@ Item {
                                     anchors.right: parent.right
                                     anchors.verticalCenter: coordsBg.verticalCenter
                                     fillMode: Image.PreserveAspectFit
-                                    source: "./images/png_images/delete_cross.png"
+                                    source: "qrc:/images/png/delete_cross"
                                     antialiasing: true
                                     mipmap: true
                                     smooth: true
