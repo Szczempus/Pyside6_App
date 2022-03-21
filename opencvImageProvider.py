@@ -22,7 +22,7 @@ from tifffile import TiffFile
 
 from ALGORITHMS import rgb_image, simplest_cb
 
-Debug = False
+Debug = True
 
 
 def convert_from_cv_to_qimage(image: np.ndarray) -> QImage:
@@ -55,6 +55,14 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
         self.polygon_params = None
         self._image_params = []
         self._dataset = None
+        self._geolocation = None
+        self._pixel_size = None
+
+    def get_geolocation(self):
+        return self._geolocation
+
+    def get_pixel_size(self):
+        return self._pixel_size
 
     def get_byte_band_list(self):
         return self._byte_band_list
@@ -111,6 +119,9 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
 
                 # Read dataset
                 self._dataset = gdal.Open(self._image_file_path, gdal.GA_ReadOnly)
+                geotransform = self._dataset.GetGeoTransform()
+                self._geolocation = (geotransform[0], geotransform[3])  # Xp[0], Yp[1]
+                self._pixel_size = (geotransform[1], geotransform[5])  # W-E pix. res, N-S pix. res. (neg. for N)
 
                 # TODO Pomyśleć nad optymalizacją
                 checkpoint_2 = time.time()
@@ -155,10 +166,9 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                                                         self._dataset.RasterYSize,
                                                         self._dataset.RasterCount))
                     print("Projection is {}".format(self._dataset.GetProjection()))
-                    geotransform = self._dataset.GetGeoTransform()
                     if geotransform:
-                        print("Origin = ({}, {})".format(geotransform[0], geotransform[3]))
-                        print("Pixel Size = ({}, {})".format(geotransform[1], geotransform[5]))
+                        print("Origin = ({} E, {} N)".format(self._geolocation[0], self._geolocation[1]))
+                        print("Pixel Size = ({}, {})".format(self._pixel_size[0], self._pixel_size[1]))
 
                     band = self._dataset.GetRasterBand(1)
                     print("Band Type={}".format(gdal.GetDataTypeName(band.DataType)))

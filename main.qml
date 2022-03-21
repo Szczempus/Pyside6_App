@@ -61,6 +61,10 @@ Window {
         polygonManager: polygonCanvas.polygonManager
     }
 
+    GUI.AnalysisReuslts{
+        id: analysisResultWindow
+    }
+
 
     GUI.ParameterSliders{
         id: slidersWindow

@@ -120,7 +120,7 @@ Item {
             spacing: 0
 
             Repeater {
-                model: control.polygonManager.polygonList
+                model: control.polygonManager.polygonList  
 
                 delegate: Item {
                     id: polyItem
@@ -356,8 +356,25 @@ Item {
                         MouseArea{
                             anchors.fill: parent
                             onClicked: {
-                                console.log("Results clicked")
-                                polyItem.sendPolygonToReceiveResult(polyItem.polygon)
+
+                                if (analysisResultWindow.state == "hidden"){
+                                    console.log("jest schowany")
+                                    analysisResultWindow.state = "shown"
+                                }else{
+                                    analysisResultWindow.state = "hidden"
+                                }
+
+//                                var analysis_results = polyItem.polygon.polygonAnalysis.analysisModel
+//                                if(analysis_results !== null){
+//                                    console.log(analysis_results)
+//                                    console.log(model)
+//                                    console.log("Results clicked")
+//                                }
+//                                else{
+//                                    console.log("Null property")
+//                                }
+
+//                                polyItem.sendPolygonToReceiveResult(polyItem.polygon)
                             }
                         }
 

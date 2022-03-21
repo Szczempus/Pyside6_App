@@ -23,23 +23,34 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 '''
 import cv2 as cv
 import matplotlib.cm
+import numpy
 import numpy as np
 import torch
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
 
-from polygonMenager import PolygonMenager
+from analysisResult import AnalysisResult
+from polygonMenager import PolygonMenager, CustomPolygon, PolygonCoords
 from opencvImageProvider import OpencvImageProvider
 from crop_img import *
 from ALGORITHMS import *
 
-
 COLOR_MAP = "Spectral"
-
 
 
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
 # Todo z importem nowego zdjęcia usunąć poligony z listy
+
+
+def index_calculation(index_threshold: float, index_map) -> float:
+    index_sum = np.sum(index_map)
+    print(f"WARTOŚC SUMY INDEKSU: {index_sum}")
+    above_thresh_sum = np.sum(index_map >= index_threshold)
+    print(f"WARTOŚC SUMY POWYŻEJ 0.4: {above_thresh_sum}")
+    map_value = above_thresh_sum / index_sum
+    print(f"WARTOŚ WSKAŹNIKA:{map_value}")
+
+    return map_value
 
 
 def is_correct(pt1: tuple, pt2: tuple, tan_thresh_val):
@@ -261,12 +272,13 @@ def vari_analysis(cropped_rect):
 
     print("Analysis 9 - seismic")
     index_image = vari_map(cropped_rect)
+    map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-    return image
+    return map_value, image
 
 
 def osavi_analysis(cropped_rect):
@@ -278,14 +290,14 @@ def osavi_analysis(cropped_rect):
 
     print("Analysis 8 - OSAVI")
     index_image = osavi_map(cropped_rect)
-
+    map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
 
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-    return image
+    return map_value, image
 
 
 def sipi2_analysis(cropped_rect):
@@ -297,14 +309,14 @@ def sipi2_analysis(cropped_rect):
 
     print("Analysis 7 - SIPI2")
     index_image = sipi2_map(cropped_rect)
-
+    map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
 
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-    return image
+    return map_value, image
 
 
 def ndre_analysis(cropped_rect):
@@ -316,20 +328,13 @@ def ndre_analysis(cropped_rect):
 
     print("Analysis 6 - NDRE")
     index_image = ndre_map(cropped_rect)
-    map_threshold = 0.4
-    index_sum = np.sum(index_image)
-    print(f"WARTOŚC SUMY INDEKSU: {index_sum}")
-    above_thresh_sum = np.sum(index_image >= map_threshold)
-    print(f"WARTOŚC SUMY POWYŻEJ 0.4: {above_thresh_sum}")
-    map_value = above_thresh_sum/index_sum
+    map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-
     return map_value, image
-
 
 
 def mcar_analysis(cropped_rect):
@@ -341,14 +346,14 @@ def mcar_analysis(cropped_rect):
 
     print("Analysis 5 - MCAR")
     index_image = mcar_map(cropped_rect)
-
+    map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
 
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-    return image
+    return map_value, image
 
 
 def lci_analysis(cropped_rect):
@@ -360,14 +365,14 @@ def lci_analysis(cropped_rect):
 
     print("Analysis 4 - LCI")
     index_image = lci_map(cropped_rect)
-
+    map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
 
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-    return image
+    return map_value, image
 
 
 def gndvi_analysis(cropped_rect):
@@ -379,14 +384,14 @@ def gndvi_analysis(cropped_rect):
 
     print("Analysis 3 - GNDVI")
     index_image = gndvi_map(cropped_rect)
-
+    map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
 
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-    return image
+    return map_value, image
 
 
 def bndvi_analysis(cropped_rect):
@@ -398,14 +403,14 @@ def bndvi_analysis(cropped_rect):
 
     print("Analysis 2 - BNDVI")
     index_image = bndvi_map(cropped_rect)
-
+    map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
 
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-    return image
+    return map_value, image
 
 
 def ndvi_analysis(cropped_rect):
@@ -417,14 +422,14 @@ def ndvi_analysis(cropped_rect):
 
     print("Analysis 1 - NDVI")
     index_image = ndvi_map(cropped_rect)
-
+    map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
 
     color_array = my_cmap(index_image)
     image = np.asarray(color_array)
     image = image * 255
 
-    return image
+    return map_value, image
 
 
 class Worker(QObject):
@@ -442,9 +447,23 @@ class Worker(QObject):
                  polygon_provider: PolygonMenager,
                  analysis: int):
         super(Worker, self).__init__()
-        self._img_manager = img_provider
-        self._polygon_manager = polygon_provider
+        self._img_manager: OpencvImageProvider = img_provider
+        self._polygon_manager: PolygonMenager = polygon_provider
         self._analysis = analysis
+
+    def calculate_geolocation(self, params: list):
+        x = params[0] + params[2] / 2
+        y = params[1] + params[3] / 2
+
+        posX = self._img_manager.get_pixel_size()[0] * x + self._img_manager.get_geolocation()[0]
+        posY = self._img_manager.get_pixel_size()[1] * y + self._img_manager.get_geolocation()[1]
+
+        posX += self._img_manager.get_pixel_size()[0] / 2
+        posY += self._img_manager.get_pixel_size()[1] / 2
+
+        print(f"Coordinates: {posX, posY}")
+
+        return posX, posY
 
     def run(self):
         byte_band_list = []
@@ -461,9 +480,12 @@ class Worker(QObject):
             print("None polygon")
             self.workerFinished.emit("Fail")
             return
-
+        # Polygon declaring type
+        polygon: CustomPolygon
         for polygon in checked_polygon_list:
             coords = []
+            # Point declaring type
+            point: PolygonCoords
             for point in polygon.get_point_list():
                 point = (point.x_get(), point.y_get())
                 coords.append({"x": point[0], "y": point[1]})
@@ -471,32 +493,31 @@ class Worker(QObject):
             cropped_rect, params = crop_band_list(byte_band_list, coords)
 
             if self._analysis == 1:
-                image = ndvi_analysis(cropped_rect)
+                map_value, image = ndvi_analysis(cropped_rect)
 
             elif self._analysis == 2:
-                image = bndvi_analysis(cropped_rect)
+                map_value, image = bndvi_analysis(cropped_rect)
 
             elif self._analysis == 3:
-                image = gndvi_analysis(cropped_rect)
+                map_value, image = gndvi_analysis(cropped_rect)
 
             elif self._analysis == 4:
-                image = lci_analysis(cropped_rect)
+                map_value, image = lci_analysis(cropped_rect)
 
             elif self._analysis == 5:
-                image = mcar_analysis(cropped_rect)
+                map_value, image = mcar_analysis(cropped_rect)
 
             elif self._analysis == 6 or self._analysis == 14 or self._analysis == 15 or self._analysis == 16 or self._analysis == 17:
                 map_value, image = ndre_analysis(cropped_rect)
-                print(f"WARTOŚ WSKAŹNIKA:{map_value}")
 
             elif self._analysis == 7:
-                image = sipi2_analysis(cropped_rect)
+                map_value, image = sipi2_analysis(cropped_rect)
 
             elif self._analysis == 8:
-                image = osavi_analysis(cropped_rect)
+                map_value, image = osavi_analysis(cropped_rect)
 
             elif self._analysis == 9:
-                image = vari_analysis(cropped_rect)
+                map_value, image = vari_analysis(cropped_rect)
 
             elif self._analysis == 10:
                 image = mistletone_analysis(cropped_rect,
@@ -512,11 +533,14 @@ class Worker(QObject):
             elif self._analysis == 13:
                 image = mistletone_detector(original_image, coords, cropped_rect)
 
-            polygon, _, _ = poly_img(image, coords, params[0], params[1],
-                                     original_image[params[1]: params[1] + params[3],
-                                     params[0]:params[0] + params[2]])
-            original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = polygon
+            poly, _, _ = poly_img(image, coords, params[0], params[1],
+                                  original_image[params[1]: params[1] + params[3],
+                                  params[0]:params[0] + params[2]])
+            original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = poly
 
+            geolocation = self.calculate_geolocation(params)
+            analysis_result = AnalysisResult(self._analysis, coordinates=geolocation, map_calculus=map_value)
+            polygon.set_analysis_result(analysis_result)
             self._img_manager.write_image(original_image)
 
             print("Koniec procesu")

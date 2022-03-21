@@ -12,6 +12,8 @@ channel 4 - Red edge
 channel 5 - NIR
 '''
 
+# W Przyszłości pomyśleć nad normalizacją miedzy wartości 0 a 1 dla wskaźników
+
 
 def rgb_image(band_list, max_val:list = None, min_val:list = None):
     r = band_list[2]

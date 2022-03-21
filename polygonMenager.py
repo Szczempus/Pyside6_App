@@ -3,6 +3,7 @@ Polygon Menager
 """
 from math import sqrt
 from PySide2.QtCore import QObject, Property, Signal, Slot, QPointF
+from analysisResult import AnalysisResult
 
 minimum_distance = 0.5
 
@@ -69,6 +70,7 @@ class CustomPolygon(QObject):
     polygonCenterChanged = Signal()
     isCheckedChanged = Signal()
     addPointResult = Signal(bool, arguments=['res'])
+    analysisChanged = Signal()
 
     def __init__(self, name):
         super(CustomPolygon, self).__init__()
@@ -78,7 +80,7 @@ class CustomPolygon(QObject):
         self._isChecked = False
         self._pointList = []
         self._polygonCenter = None
-        pass
+        self._analysis = None  # Make analysis to polygon
 
     @Slot(float, float)
     def addPoint(self, x, y):
@@ -148,6 +150,13 @@ class CustomPolygon(QObject):
             y = y / len(self._pointList)
         return QPointF(x, y)
 
+    # analysis property section
+    def set_analysis_result(self, analysis_result: AnalysisResult):
+        self._analysis = analysis_result
+
+    def get_analysis_result(self):
+        return self._analysis
+
     # isChecked property section
     def get_is_checked(self):
         return self._isChecked
@@ -161,6 +170,7 @@ class CustomPolygon(QObject):
     finished = Property(bool, get_finished, set_finished, notify=finishedChanged)
     hovered = Property(bool, get_hoverd, set_hovered, notify=hoveredChanged)
     polygonCenter = Property(QPointF, get_polygon_center, notify=polygonCenterChanged)
+    polygonAnalysis = Property(AnalysisResult, get_analysis_result, notify=analysisChanged)
     isChecked = Property(bool, get_is_checked, set_is_checked, notify=isCheckedChanged)
 
 
