@@ -8,6 +8,7 @@ class AnalysisResult(QObject):
 
     # analysisDictChanged = Signal()
     analysisModelChanged = Signal()
+    analTypeGet = Signal()
 
     def __init__(self, analysis_type: int, **kwargs):
         super(AnalysisResult, self).__init__()
@@ -37,7 +38,8 @@ class AnalysisResult(QObject):
 
     def get_model(self):
         if self._fast_id == 1:
-            self.list_model = [self.coordinates, self.map_calculus]
+            self.list_model = [f"Współrzędne: {self.coordinates[0]} S", f"{self.coordinates[1]} N",
+                               f"Wartość wskaźnika: {self.map_calculus:.2f}"]
         else:
             self.list_model = [self.coordinates, self.counting_total, self.sick, self.health]
         return self.list_model
@@ -58,48 +60,50 @@ class AnalysisResult(QObject):
         if analysis_type == 1:
             self._fast_id = 1
             return "Wskaźnik NDVI"
-        elif self._analysis == 2:
+        elif analysis_type == 2:
             self._fast_id = 1
             return "Wskaźnik BNDVI"
-        elif self._analysis == 3:
+        elif analysis_type == 3:
             self._fast_id = 1
             return "Wskaźnik GNDVI"
-        elif self._analysis == 4:
+        elif analysis_type == 4:
             self._fast_id = 1
             return "Wskaźnik LCI"
-        elif self._analysis == 5:
+        elif analysis_type == 5:
             self._fast_id = 1
             return "Wskaźnik MCARI"
-        elif self._analysis == 6 or self._analysis == 14 or self._analysis == 15 or self._analysis == 16 or self._analysis == 17:
+        elif analysis_type == 6 or analysis_type == 14 or analysis_type == 15 or analysis_type == 16 or analysis_type == 17:
             self._fast_id = 1
             return "Wskaźnik NDRE"
-        elif self._analysis == 7:
+        elif analysis_type == 7:
             self._fast_id = 1
             return "Wskaźnik SIPI2"
-        elif self._analysis == 8:
+        elif analysis_type == 8:
             self._fast_id = 1
             return "Wskaźnik OSAVI"
-        elif self._analysis == 9:
+        elif analysis_type == 9:
             self._fast_id = 1
             return "Wskaźnik VARI"
-        elif self._analysis == 10:
+        elif analysis_type == 10:
             self._fast_id = 1
             return "Wskaźnik Jemioły "
-        elif self._analysis == 11:
+        elif analysis_type == 11:
             self._fast_id = 2
             return "Segemntacja"
-        elif self._analysis == 12:
+        elif analysis_type == 12:
             self._fast_id = 2
             return "Detektor koron drzew"
-        elif self._analysis == 13:
+        elif analysis_type == 13:
             self._fast_id = 2
             return "Detektor jemioły"
 
     # analysisResultList = Property(dict, create_analysis_model, notify=analysisDictChanged)
 
+    def get_anal_type(self):
+        return self.analysis_type
 
     analysisModel = Property(list, get_model, notify=analysisModelChanged)
-
+    analysisType = Property("QString", get_anal_type, notify=analTypeGet)
 
 if __name__ == "__main__":
     analysis = AnalysisResult(analysis_type=1, coordinates=(15.4505450934, 22.43984700), map_calculus=1.22)

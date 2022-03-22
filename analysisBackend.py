@@ -449,7 +449,7 @@ class Worker(QObject):
         super(Worker, self).__init__()
         self._img_manager: OpencvImageProvider = img_provider
         self._polygon_manager: PolygonMenager = polygon_provider
-        self._analysis = analysis
+        self._analysis_number = analysis
 
     def calculate_geolocation(self, params: list):
         x = params[0] + params[2] / 2
@@ -484,6 +484,7 @@ class Worker(QObject):
         polygon: CustomPolygon
         for polygon in checked_polygon_list:
             coords = []
+            map_value = None
             # Point declaring type
             point: PolygonCoords
             for point in polygon.get_point_list():
@@ -492,45 +493,45 @@ class Worker(QObject):
 
             cropped_rect, params = crop_band_list(byte_band_list, coords)
 
-            if self._analysis == 1:
+            if self._analysis_number == 1:
                 map_value, image = ndvi_analysis(cropped_rect)
 
-            elif self._analysis == 2:
+            elif self._analysis_number == 2:
                 map_value, image = bndvi_analysis(cropped_rect)
 
-            elif self._analysis == 3:
+            elif self._analysis_number == 3:
                 map_value, image = gndvi_analysis(cropped_rect)
 
-            elif self._analysis == 4:
+            elif self._analysis_number == 4:
                 map_value, image = lci_analysis(cropped_rect)
 
-            elif self._analysis == 5:
+            elif self._analysis_number == 5:
                 map_value, image = mcar_analysis(cropped_rect)
 
-            elif self._analysis == 6 or self._analysis == 14 or self._analysis == 15 or self._analysis == 16 or self._analysis == 17:
+            elif self._analysis_number == 6 or self._analysis_number == 14 or self._analysis_number == 15 or self._analysis_number == 16 or self._analysis_number == 17:
                 map_value, image = ndre_analysis(cropped_rect)
 
-            elif self._analysis == 7:
+            elif self._analysis_number == 7:
                 map_value, image = sipi2_analysis(cropped_rect)
 
-            elif self._analysis == 8:
+            elif self._analysis_number == 8:
                 map_value, image = osavi_analysis(cropped_rect)
 
-            elif self._analysis == 9:
+            elif self._analysis_number == 9:
                 map_value, image = vari_analysis(cropped_rect)
 
-            elif self._analysis == 10:
+            elif self._analysis_number == 10:
                 image = mistletone_analysis(cropped_rect,
                                             original_image=original_image,
                                             coords=coords)
 
-            elif self._analysis == 11:
+            elif self._analysis_number == 11:
                 image = segmentaion_analysis(cropped_rect, coords)
 
-            elif self._analysis == 12:
+            elif self._analysis_number == 12:
                 image = tree_crown_detector(original_image, coords)
 
-            elif self._analysis == 13:
+            elif self._analysis_number == 13:
                 image = mistletone_detector(original_image, coords, cropped_rect)
 
             poly, _, _ = poly_img(image, coords, params[0], params[1],
@@ -539,8 +540,12 @@ class Worker(QObject):
             original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = poly
 
             geolocation = self.calculate_geolocation(params)
-            analysis_result = AnalysisResult(self._analysis, coordinates=geolocation, map_calculus=map_value)
-            polygon.set_analysis_result(analysis_result)
+            try:
+                analysis_result = AnalysisResult(self._analysis_number, coordinates=geolocation, map_calculus=map_value)
+                polygon.set_analysis_result(analysis_result)
+            except Exception as e:
+                self.workerException.emit(e)
+
             self._img_manager.write_image(original_image)
 
             print("Koniec procesu")

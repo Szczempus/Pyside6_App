@@ -65,7 +65,6 @@ Window {
         id: analysisResultWindow
     }
 
-
     GUI.ParameterSliders{
         id: slidersWindow
         onApplyParams: {
@@ -274,4 +273,6 @@ Window {
              menuTop.toolbarVisible = true
          }
     }
+
+
 }

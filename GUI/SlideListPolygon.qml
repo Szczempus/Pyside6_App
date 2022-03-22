@@ -130,8 +130,6 @@ Item {
                     property bool listOpened: false
                     property var polygon: modelData
 
-                    signal sendPolygonToReceiveResult (var polygon)
-
                     onStateChanged: {
                         if(state == "hovered")
                             polygon.hovered = true
@@ -195,6 +193,10 @@ Item {
                             }
                         }
                     ]
+
+                    Component.onCompleted: {
+                        sendPolygonToReceiveResult.connect()
+                    }
 
                     Rectangle {
                         id: polyItemBg
@@ -357,12 +359,14 @@ Item {
                             anchors.fill: parent
                             onClicked: {
 
-                                if (analysisResultWindow.state == "hidden"){
-                                    console.log("jest schowany")
+                                if (analysisResultWindow.state === "hidden"){
                                     analysisResultWindow.state = "shown"
+                                    analysisResultWindow.getPolygon(polyItem.polygon)
                                 }else{
                                     analysisResultWindow.state = "hidden"
                                 }
+
+
 
 //                                var analysis_results = polyItem.polygon.polygonAnalysis.analysisModel
 //                                if(analysis_results !== null){
