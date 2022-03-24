@@ -1,4 +1,4 @@
-from PySide6.QtCore import QObject, Property
+from PySide2.QtCore import QObject, Property
 import math
 
 

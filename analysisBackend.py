@@ -21,10 +21,8 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
     nadpisany obraz do QML'a
 
 '''
-import cv2 as cv
+
 import matplotlib.cm
-import numpy
-import numpy as np
 import torch
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
@@ -140,25 +138,25 @@ def mistletone_detector(original_image, coords, cropped_bands):
             image = mistletone_analysis(cropped_rect=cropped_bands, original_image=rgb, coords=bbox_coords)
             # TODO: Zbinaryzować, dylatacja, erozja, zamknięcie, regionproposal
 
-            print("image created")
-            mask = create_circular_mask(h=16, w=16)
-            print(f"Mask: {mask}")
-            template = np.dstack((np.zeros((16, 16), dtype=np.uint8),
-                                  np.ones((16, 16), dtype=np.uint8) * 255,
-                                  np.ones((16, 16), dtype=np.uint8) * 255))
-            print(f"Template: {template}")
-            template[~mask] = 0
-            print(f"Template after masking: {template}")
-            print(f"Time for template")
-            print(f"Is the same shape? {image.shape == template.shape}")
-            print(f"Image shape: {image.shape}, template shape: {template.shape}")
-            res = cv.matchTemplate(image, template, cv.TM_CCOEFF_NORMED)
-            print(f"Result{res}")
-            threshold = 0.4
-            print(f"Res > Threshold? : {np.any(res > threshold)}")
-
-            # if np.any(image == [0, 255, 255]):
-            if np.any(res > threshold):
+            # print("image created")
+            # mask = create_circular_mask(h=16, w=16)
+            # print(f"Mask: {mask}")
+            # template = np.dstack((np.zeros((16, 16), dtype=np.uint8),
+            #                       np.ones((16, 16), dtype=np.uint8) * 255,
+            #                       np.ones((16, 16), dtype=np.uint8) * 255))
+            # print(f"Template: {template}")
+            # template[~mask] = 0
+            # print(f"Template after masking: {template}")
+            # print(f"Time for template")
+            # print(f"Is the same shape? {image.shape == template.shape}")
+            # print(f"Image shape: {image.shape}, template shape: {template.shape}")
+            # res = cv.matchTemplate(image, template, cv.TM_CCOEFF_NORMED)
+            # print(f"Result{res}")
+            # threshold = 0.4
+            # print(f"Res > Threshold? : {np.any(res > threshold)}")
+            #
+            if np.any(image == [0, 255, 255]):
+            # if np.any(res > threshold):
 
                 # print(f"rysuje na czerwowono")
                 rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=1)
@@ -234,7 +232,7 @@ def segmentaion_analysis(byte_band_list, coords):
 
     cfg = config_init("", 4000, 8, 1)
     image = prediction(cfg, rgb[:, :, ::-1],
-                       model_path="C:/Users/quadro5000/PycharmProjects/detectron2_training/detectron2/output/model_final.pth")
+                       model_path="ALGORITHMS/model_final.pth")
 
     return image
 

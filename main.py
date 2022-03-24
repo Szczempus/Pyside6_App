@@ -1,10 +1,7 @@
 """
 Main app runfile
 """
-
 # This Python file uses the following encoding: utf-8
-
-
 import sys
 
 from PySide2.QtGui import QGuiApplication

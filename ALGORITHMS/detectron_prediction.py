@@ -1,12 +1,10 @@
 import os
 import cv2
-from sahi.model import Detectron2DetectionModel
-from sahi.predict import get_sliced_prediction, get_prediction
-from sahi.utils.cv import read_image_as_pil
-from sahi.utils.detectron2 import Detectron2TestConstants
+# from sahi.model import Detectron2DetectionModel
+# from sahi.predict import get_sliced_prediction
 from math import floor
 import matplotlib.pyplot as plt
-from detectron2.utils.visualizer import Visualizer, ColorMode
+from detectron2.utils.visualizer import Visualizer
 from detectron2.engine import DefaultPredictor
 from detectron2 import config, model_zoo
 
@@ -104,33 +102,27 @@ def prediction(cfg, img, model_path=None, score_thresh=None):
 if __name__ == "__main__":
 
     model_path = "./model_final.pth"
-    try:
-        detection_model = Detectron2DetectionModel(
-            model_path=model_path,
-            config_path=model_path,
-            confidence_threshold=0.5,
-            image_size=256,
-            device="cuda:0"
-        )
-    except Exception as e:
-        print(e)
-
-    # cfg = config_init("", 4000, 8, 1)
-    try:
-        image = cv2.imread(
-            r"C:\Users\quadro5000\PycharmProjects\detectron2_training\detectron2\predicted_images\OSAVI_mod.png")
-        result = get_sliced_prediction(image, detection_model, slice_width=256, slice_height=256,
-                                       overlap_height_ratio=0.2,
-                                       overlap_width_ratio=0.2)
-
-    except Exception as e:
-        print(e)
-    #
     # try:
-    #     image = prediction(cfg, image,
-    #                        model_path="C:/Users/quadro5000/PycharmProjects/detectron2_training/detectron2/output/model_final.pth")
+    #     detection_model = Detectron2DetectionModel(
+    #         model_path=model_path,
+    #         config_path=model_path,
+    #         confidence_threshold=0.5,
+    #         image_size=256,
+    #         device="cuda:0"
+    #     )
     # except Exception as e:
     #     print(e)
-
-    plt.imshow(image)
-    plt.show()
+    #
+    # # cfg = config_init("", 4000, 8, 1)
+    # try:
+    #     image = cv2.imread(
+    #         r"C:\Users\quadro5000\PycharmProjects\detectron2_training\detectron2\predicted_images\OSAVI_mod.png")
+    #     result = get_sliced_prediction(image, detection_model, slice_width=256, slice_height=256,
+    #                                    overlap_height_ratio=0.2,
+    #                                    overlap_width_ratio=0.2)
+    #
+    # except Exception as e:
+    #     print(e)
+    #
+    # plt.imshow(image)
+    # plt.show()
