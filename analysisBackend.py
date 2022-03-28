@@ -156,7 +156,7 @@ def mistletone_detector(original_image, coords, cropped_bands):
             # print(f"Res > Threshold? : {np.any(res > threshold)}")
             #
             if np.any(image == [0, 255, 255]):
-            # if np.any(res > threshold):
+                # if np.any(res > threshold):
 
                 # print(f"rysuje na czerwowono")
                 rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=1)
@@ -232,7 +232,7 @@ def segmentaion_analysis(byte_band_list, coords):
 
     cfg = config_init("", 4000, 8, 1)
     image = prediction(cfg, rgb[:, :, ::-1],
-                       model_path="ALGORITHMS/model_final.pth")
+                       model_path="./ALGORITHMS/model_final.pth")
 
     return image
 
@@ -524,7 +524,14 @@ class Worker(QObject):
                                             coords=coords)
 
             elif self._analysis_number == 11:
-                image = segmentaion_analysis(cropped_rect, coords)
+                pass
+                # Pyinstaller ma problem z detectron2
+                # Nie możliwe jest wykonywanie detekcji bez skompilowanej CUD'Y
+
+                # try:
+                #     image = segmentaion_analysis(cropped_rect, coords)
+                # except Exception as e:
+                #     self.workerException.emit(e)
 
             elif self._analysis_number == 12:
                 image = tree_crown_detector(original_image, coords)

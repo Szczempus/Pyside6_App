@@ -2,6 +2,7 @@
 Main app runfile
 """
 # This Python file uses the following encoding: utf-8
+import os
 import sys
 
 from PySide2.QtGui import QGuiApplication
@@ -30,6 +31,6 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty('appCore', appCore)
 
     engine.quit.connect(app.quit)
-    engine.load('main.qml')
+    engine.load(os.getcwd() + r'\main.qml')
 
     sys.exit(app.exec_())
