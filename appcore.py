@@ -2,7 +2,11 @@
 import cv2
 from PySide2.QtCore import Slot, Property, QObject, Signal
 
-from Backend import *
+from projectMenager import ProjectMenager
+from opencvImageProvider import OpencvImageProvider
+from paintHandler import PaintHandler
+from polygonMenager import PolygonMenager
+from analysisBackend import Processing
 
 
 class Appcore(QObject):
