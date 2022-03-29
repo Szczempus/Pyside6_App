@@ -91,7 +91,7 @@ def mistletone_detector(original_image, coords, cropped_bands):
         model = main.deepforest()
         print("Model loaded, loading weights...")
         # model.use_amp = True
-        model.load_state_dict(load("ALGORITHMS/tuszyma19.pth"))
+        model.load_state_dict(load("weights/tuszyma19.pth"))
         print("Weights loaded, prediction...")
 
         predictions = model.predict_tile(image=rgb,
@@ -106,6 +106,8 @@ def mistletone_detector(original_image, coords, cropped_bands):
     print("Prediction successful")
 
     numpy_pred = predictions.to_numpy()
+
+
 
     print("Pred. conv", numpy_pred)
 
@@ -186,7 +188,7 @@ def mistletone_detector(original_image, coords, cropped_bands):
     print("Draw edned")
 
     image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
-    return image
+    return numpy_pred, image
 
 
 def tree_crown_detector(original_image, coords):
@@ -236,9 +238,9 @@ def segmentaion_analysis(byte_band_list, coords):
     rgb, _ = crop_rgb(image[:, :, :3], coords)
     print("Wielkość rgb ", rgb.shape)
 
-    cfg = config_init("", 4000, 8, 1)
-    image = prediction(cfg, rgb[:, :, ::-1],
-                       model_path="./ALGORITHMS/model_final.pth")
+    # cfg = config_init("", 4000, 8, 1)
+    # image = prediction(cfg, rgb[:, :, ::-1],
+    #                    model_path="weights/model_final.pth")
 
     return image
 
@@ -489,6 +491,7 @@ class Worker(QObject):
         for polygon in checked_polygon_list:
             coords = []
             map_value = None
+            pred = None
             # Point declaring type
             point: PolygonCoords
             for point in polygon.get_point_list():
@@ -543,7 +546,7 @@ class Worker(QObject):
                 image = tree_crown_detector(original_image, coords)
 
             elif self._analysis_number == 13:
-                image = mistletone_detector(original_image, coords, cropped_rect)
+                pred, image = mistletone_detector(original_image, coords, cropped_rect)
 
             poly, _, _ = poly_img(image, coords, params[0], params[1],
                                   original_image[params[1]: params[1] + params[3],
@@ -553,6 +556,8 @@ class Worker(QObject):
             geolocation = self.calculate_geolocation(params)
             try:
                 analysis_result = AnalysisResult(self._analysis_number, coordinates=geolocation, map_calculus=map_value)
+                # TODO Czemu zwraca null ?? Return self?
+                # analysis_result.set_predictions(pred)
                 polygon.set_analysis_result(analysis_result)
             except Exception as e:
                 self.workerException.emit(e)

@@ -3,7 +3,6 @@ from PySide2.QtCore import Slot, Property, Signal, QObject
 
 import os
 import shutil
-import pathlib
 
 
 class ProjectMenager(QObject):

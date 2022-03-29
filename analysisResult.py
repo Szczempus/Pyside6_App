@@ -1,3 +1,4 @@
+import numpy
 from PySide2.QtCore import QObject, Property, Signal, Slot
 
 
@@ -35,13 +36,13 @@ class AnalysisResult(QObject):
             else:
                 raise KeyError(key)
 
-
     def get_model(self):
         if self._fast_id == 1:
-            self.list_model = [f"Współrzędne: {self.coordinates[0]} S", f"{self.coordinates[1]} N",
+            self.list_model = [f"Współrzędne: \n{self.coordinates[0]} S; {self.coordinates[1]} N",
                                f"Wartość wskaźnika: {self.map_calculus:.2f}"]
         else:
-            self.list_model = [self.coordinates, self.counting_total, self.sick, self.health]
+            self.list_model = [f"Współrzędne: \n {self.coordinates[0]} S; {self.coordinates[1]} N",
+                               f"Ilość predykcji {self.counting_total}", self.sick, self.health]
         return self.list_model
 
     # def create_analysis_model(self):
@@ -55,6 +56,9 @@ class AnalysisResult(QObject):
     #     if value is not None:
     #         model.append(value)
     # print(model)
+
+    def set_predictions(self, predicitons):
+        self.counting_total = len(predicitons)
 
     def analysis_type_to_string(self, analysis_type: int) -> str:
         if analysis_type == 1:
@@ -104,6 +108,7 @@ class AnalysisResult(QObject):
 
     analysisModel = Property(list, get_model, notify=analysisModelChanged)
     analysisType = Property("QString", get_anal_type, notify=analTypeGet)
+
 
 if __name__ == "__main__":
     analysis = AnalysisResult(analysis_type=1, coordinates=(15.4505450934, 22.43984700), map_calculus=1.22)

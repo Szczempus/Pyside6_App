@@ -165,7 +165,7 @@ def retraining_custom_model(path: str) -> None:
     model.trainer.save_checkpoint(r"{}\tuszyma19.pl".format(tmpdir))
     # model_path = os.path.dirname(annotations)
 
-    torch.save(model.state_dict(), "tuszyma19.pth")
+    torch.save(model.state_dict(), "../weights/tuszyma19.pth")
 
 
 def annotation_import(path: str, api_key):

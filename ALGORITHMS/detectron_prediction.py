@@ -101,7 +101,7 @@ def prediction(cfg, img, model_path=None, score_thresh=None):
 
 if __name__ == "__main__":
 
-    model_path = "./model_final.pth"
+    model_path = "../weights/model_final.pth"
     # try:
     #     detection_model = Detectron2DetectionModel(
     #         model_path=model_path,
