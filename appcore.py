@@ -1,11 +1,8 @@
 # This Python file uses the following encoding: utf-8
 import cv2
 from PySide2.QtCore import Slot, Property, QObject, Signal
-from projectMenager import ProjectMenager
-from opencvImageProvider import OpencvImageProvider
-from paintHandler import PaintHandler
-from polygonMenager import PolygonMenager
-from analysisBackend import Processing
+
+from Backend import *
 
 
 class Appcore(QObject):
