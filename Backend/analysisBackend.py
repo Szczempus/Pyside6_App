@@ -23,7 +23,7 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 '''
 
 import matplotlib.cm
-import torch
+from torch import load
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
 
@@ -86,16 +86,22 @@ def is_correct(pt1: tuple, pt2: tuple, tan_thresh_val):
 def mistletone_detector(original_image, coords, cropped_bands):
     print("Analysis 13 - Mistletone detector")
     rgb, _ = crop_rgb(original_image[:, :, :3], coords)
-    model = main.deepforest()
-    model.use_amp = True
-    model.load_state_dict(torch.load("ALGORITHMS/tuszyma19.pth"))
+    try:
+        print("Loading model..")
+        model = main.deepforest()
+        print("Model loaded, loading weights...")
+        # model.use_amp = True
+        model.load_state_dict(load("ALGORITHMS/tuszyma19.pth"))
+        print("Weights loaded, prediction...")
 
-    predictions = model.predict_tile(image=rgb,
-                                     return_plot=False,
-                                     patch_size=1000,
-                                     patch_overlap=0.1,
-                                     iou_threshold=0.6,
-                                     thresh=0.6)
+        predictions = model.predict_tile(image=rgb,
+                                         return_plot=False,
+                                         patch_size=1000,
+                                         patch_overlap=0.1,
+                                         iou_threshold=0.6,
+                                         thresh=0.6)
+    except Exception as e:
+        return print(e)
 
     print("Prediction successful")
 
@@ -230,9 +236,9 @@ def segmentaion_analysis(byte_band_list, coords):
     rgb, _ = crop_rgb(image[:, :, :3], coords)
     print("Wielkość rgb ", rgb.shape)
 
-    cfg = config_init("", 4000, 8, 1)
-    image = prediction(cfg, rgb[:, :, ::-1],
-                       model_path="./ALGORITHMS/model_final.pth")
+    # cfg = config_init("", 4000, 8, 1)
+    # image = prediction(cfg, rgb[:, :, ::-1],
+    #                    model_path="./ALGORITHMS/model_final.pth")
 
     return image
 

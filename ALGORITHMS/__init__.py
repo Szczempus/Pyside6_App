@@ -1,7 +1,7 @@
 from .maps import rgb_image, mis_map, mcar_map, lci_map, tgi_map, ndvi_map, ndre_map, vari_map, osavi_map, gndvi_map, \
     bndvi_map, sipi2_map, mis_filtration
 
-from .detectron_prediction import config_init, prediction
+# from .detectron_prediction import config_init, prediction
 
 from .watershed import watershed
 

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/build/exe.win-amd64-3.8/lib/detectron2" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/detectron2" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/ninja" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/ninja/detectron2" vcs="Git" />

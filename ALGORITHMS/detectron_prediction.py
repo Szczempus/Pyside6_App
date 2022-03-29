@@ -3,7 +3,7 @@ import cv2
 # from sahi.model import Detectron2DetectionModel
 # from sahi.predict import get_sliced_prediction
 from math import floor
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from detectron2.utils.visualizer import Visualizer
 from detectron2.engine import DefaultPredictor
 from detectron2 import config, model_zoo
