@@ -29,6 +29,8 @@ class AnalysisResult(QObject):
         self.map_calculus: float = None
         # Model listy do QML
         self.list_model = []
+        # Model listy predykcji
+        self.pred_lis_model = []
 
         for key, value in kwargs.items():
             if key in self.__dict__:
@@ -38,10 +40,10 @@ class AnalysisResult(QObject):
 
     def get_model(self):
         if self._fast_id == 1:
-            self.list_model = [f"Współrzędne: \n{self.coordinates[0]} S; {self.coordinates[1]} N",
+            self.list_model = [f"Współrzędne:\n{self.coordinates[0]} S; {self.coordinates[1]} N",
                                f"Wartość wskaźnika: {self.map_calculus:.2f}"]
         else:
-            self.list_model = [f"Współrzędne: \n {self.coordinates[0]} S; {self.coordinates[1]} N",
+            self.list_model = [f"Współrzędne:\n {self.coordinates[0]} S; {self.coordinates[1]} N",
                                f"Ilość predykcji {self.counting_total}", self.sick, self.health]
         return self.list_model
 
@@ -59,6 +61,7 @@ class AnalysisResult(QObject):
 
     def set_predictions(self, predicitons):
         self.counting_total = len(predicitons)
+
 
     def analysis_type_to_string(self, analysis_type: int) -> str:
         if analysis_type == 1:

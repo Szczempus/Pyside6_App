@@ -21,7 +21,7 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
     nadpisany obraz do QML'a
 
 '''
-
+import cv2
 import matplotlib.cm
 from torch import load
 from PySide2.QtCore import Slot, Signal, QObject, QThread
@@ -106,8 +106,6 @@ def mistletone_detector(original_image, coords, cropped_bands):
     print("Prediction successful")
 
     numpy_pred = predictions.to_numpy()
-
-
 
     print("Pred. conv", numpy_pred)
 
@@ -211,12 +209,23 @@ def tree_crown_detector(original_image, coords):
     #                      color=(0, 0, 255), thickness=2)
     # image = rgb
 
-    img = model.predict_tile(image=rgb, return_plot=True, patch_size=1000, patch_overlap=0.1,
-                             iou_threshold=0.4, thresh=0.2)
-    img = cv.cvtColor(img, cv.COLOR_RGB2BGR)
-    image = cv.cvtColor(img, cv.COLOR_BGR2BGRA)
+    # img = model.predict_tile(image=rgb, return_plot=True, patch_size=1000, patch_overlap=0.1,
+    #                          iou_threshold=0.4, thresh=0.2)
+    try:
+        pred = model.predict_tile(image=rgb, return_plot=False, patch_size=1000, patch_overlap=0.1,
+                                  iou_threshold=0.4, thresh=0.2)
 
-    return image
+        for index, row in pred.iterrows():
+            rgb = cv.rectangle(rgb, (int(row["xmin"]), int(row["ymin"])), (int(row["xmax"]), int(row["ymax"])),
+                               color=(0, 165, 255), thickness=1, lineType=cv2.LINE_AA)
+
+    except Exception as e:
+        return print(e)
+
+    # img = cv.cvtColor(rgb, cv.COLOR_RGB2BGR)
+    image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
+
+    return pred, image
 
 
 def segmentaion_analysis(byte_band_list, coords):
@@ -543,7 +552,7 @@ class Worker(QObject):
                 #     self.workerException.emit(e)
 
             elif self._analysis_number == 12:
-                image = tree_crown_detector(original_image, coords)
+                pred, image = tree_crown_detector(original_image, coords)
 
             elif self._analysis_number == 13:
                 pred, image = mistletone_detector(original_image, coords, cropped_rect)
@@ -557,7 +566,8 @@ class Worker(QObject):
             try:
                 analysis_result = AnalysisResult(self._analysis_number, coordinates=geolocation, map_calculus=map_value)
                 # TODO Czemu zwraca null ?? Return self?
-                # analysis_result.set_predictions(pred)
+                if analysis_result._fast_id == 2:
+                    analysis_result.set_predictions(pred)
                 polygon.set_analysis_result(analysis_result)
             except Exception as e:
                 self.workerException.emit(e)
