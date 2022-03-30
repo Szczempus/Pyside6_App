@@ -22,8 +22,11 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 
 '''
 import cv2
+import cv2.cv2.SimpleBlobDetector_Params
 import matplotlib.cm
+import numpy as np
 from torch import load
+import random
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
 
@@ -38,6 +41,7 @@ COLOR_MAP = "Spectral"
 
 # Todo zrobić warunek czy mamy chociaż jeden poligon czy nie
 # Todo z importem nowego zdjęcia usunąć poligony z listy
+# Todo KAŻDA Z ANALIZ ODDZIELNĄ KLASĄ!!
 
 
 def index_calculation(index_threshold: float, index_map) -> float:
@@ -109,7 +113,7 @@ def mistletone_detector(original_image, coords, cropped_bands):
 
     print("Pred. conv", numpy_pred)
 
-    for predict in numpy_pred:
+    for index, predict in enumerate(numpy_pred):
         pt1 = (int(predict[0]), int(predict[1]))
         pt2 = (int(predict[2]), int(predict[3]))
         if predict[5] > 0.2 and is_correct(pt1, pt2, 0.5):
@@ -141,47 +145,56 @@ def mistletone_detector(original_image, coords, cropped_bands):
 
             bbox_coords = [coord1, coord2, coord3, coord4]
 
-            image = mistletone_analysis(cropped_rect=cropped_bands, original_image=rgb, coords=bbox_coords)
-            # TODO: Zbinaryzować, dylatacja, erozja, zamknięcie, regionproposal
+            try:
+                # cropped_bands, _ = crop_band_list(cropped_bands, bbox_coords)
 
-            # print("image created")
-            # mask = create_circular_mask(h=16, w=16)
-            # print(f"Mask: {mask}")
-            # template = np.dstack((np.zeros((16, 16), dtype=np.uint8),
-            #                       np.ones((16, 16), dtype=np.uint8) * 255,
-            #                       np.ones((16, 16), dtype=np.uint8) * 255))
-            # print(f"Template: {template}")
-            # template[~mask] = 0
-            # print(f"Template after masking: {template}")
-            # print(f"Time for template")
-            # print(f"Is the same shape? {image.shape == template.shape}")
-            # print(f"Image shape: {image.shape}, template shape: {template.shape}")
-            # res = cv.matchTemplate(image, template, cv.TM_CCOEFF_NORMED)
-            # print(f"Result{res}")
-            # threshold = 0.4
-            # print(f"Res > Threshold? : {np.any(res > threshold)}")
-            #
-            if np.any(image == [0, 255, 255]):
-                # if np.any(res > threshold):
+                cv2.SimpleBlobDetector_Params
+                image = mistletone_analysis(cropped_rect=cropped_bands, original_image=rgb, coords=bbox_coords)
+                # TODO: Zbinaryzować, dylatacja, erozja, zamknięcie, regionproposal, blob
+                sqr = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
+                image = cv.dilate(image, sqr)
+                cv.imwrite(f"kafelki/kafelek{index}.jpg", image)
+                # print("image created")
+                # mask = create_circular_mask(h=16, w=16)
+                # print(f"Mask: {mask}")
+                # template = np.dstack((np.zeros((16, 16), dtype=np.uint8),
+                #                       np.ones((16, 16), dtype=np.uint8) * 255,
+                #                       np.ones((16, 16), dtype=np.uint8) * 255))
+                # print(f"Template: {template}")
+                # template[~mask] = 0
+                # print(f"Template after masking: {template}")
+                # print(f"Time for template")
+                # print(f"Is the same shape? {image.shape == template.shape}")
+                # print(f"Image shape: {image.shape}, template shape: {template.shape}")
+                # res = cv.matchTemplate(image, template, cv.TM_CCOEFF_NORMED)
+                # print(f"Result{res}")
+                # threshold = 0.4
+                # print(f"Res > Threshold? : {np.any(res > threshold)}")
+                #
+                if np.any(image == [0, 255, 255]):
+                    # if np.any(res > threshold):
 
-                # print(f"rysuje na czerwowono")
-                rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=1)
-            else:
-                # print(f"rysuje na niebiesko")
-                rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
+                    # print(f"rysuje na czerwowono")
+                    rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=1)
+                else:
+                    # print(f"rysuje na niebiesko")
+                    rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
 
-            pt3 = (pt1[0], pt2[1] + 10)
+                pt3 = (pt1[0], pt2[1] + 10)
 
-            rgb = cv.putText(img=rgb,
-                             text=f"{predict[5]:.2f}",
-                             org=pt3,
-                             fontFace=cv.FONT_HERSHEY_SIMPLEX,
-                             fontScale=0.3,
-                             color=(255, 125, 255),
-                             thickness=1,
-                             lineType=cv.LINE_AA)
+                rgb = cv.putText(img=rgb,
+                                 text=f"{predict[5]:.2f}",
+                                 org=pt3,
+                                 fontFace=cv.FONT_HERSHEY_SIMPLEX,
+                                 fontScale=0.3,
+                                 color=(255, 125, 255),
+                                 thickness=1,
+                                 lineType=cv.LINE_AA)
 
-            print("Drawed")
+                print("Drawed")
+
+            except Exception as e:
+                return print(e)
 
     print("Draw edned")
 
@@ -211,6 +224,7 @@ def tree_crown_detector(original_image, coords):
 
     # img = model.predict_tile(image=rgb, return_plot=True, patch_size=1000, patch_overlap=0.1,
     #                          iou_threshold=0.4, thresh=0.2)
+
     try:
         pred = model.predict_tile(image=rgb, return_plot=False, patch_size=1000, patch_overlap=0.1,
                                   iou_threshold=0.4, thresh=0.2)
@@ -263,12 +277,20 @@ def mistletone_analysis(cropped_rect, original_image, coords):
     :return:
     '''
 
-    print("Analysis 10 - Mistolete")
-    mis_image = mis_map(cropped_rect)
-    ndvi_image = ndvi_map(cropped_rect)
-    mis_filtered = mis_filtration(mis_image, ndvi_image)
-    int_mis = mis_filtered.astype(int) * 255
-    image, _ = crop_rgb(original_image[:, :, :3], coords)
+    try:
+
+        print("Analysis 10 - Mistolete")
+        mis_image = mis_map(cropped_rect)
+        ndvi_image = ndvi_map(cropped_rect)
+        mis_filtered = mis_filtration(mis_image, ndvi_image)
+        int_mis = mis_filtered.astype(int) * 255
+        # if np.any(int_mis > 0):
+        #     cv.imwrite(f"kafelki/kafelek{random.randint(0, 1000)}.jpg", int_mis)
+        image, _ = crop_rgb(original_image[:, :, :3], coords)
+
+    except Exception as e:
+        return print(e)
+
 
     for i in range(image.shape[0]):
         for j in range(image.shape[1]):

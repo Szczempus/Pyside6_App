@@ -23,7 +23,7 @@ Window {
     minimumHeight: 540
     visible: true
     color: "#ffffffff"
-    title: qsTr("Main window")
+    title: qsTr("eUprawy")
 
     property int windowStatus: 0
     property int windowMargin: 10

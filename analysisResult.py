@@ -62,7 +62,6 @@ class AnalysisResult(QObject):
     def set_predictions(self, predicitons):
         self.counting_total = len(predicitons)
 
-
     def analysis_type_to_string(self, analysis_type: int) -> str:
         if analysis_type == 1:
             self._fast_id = 1
