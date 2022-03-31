@@ -69,7 +69,7 @@ def crop_rgb(rgb, coords: list, x_new=None, y_new=None):
     """
 
     band = rgb
-    print("1 badn", band.shape)
+    print("1 band", band.shape)
     if x_new or y_new is None:
         pts = [[int(coord["x"]), int(coord["y"])] for coord in coords]
     else:

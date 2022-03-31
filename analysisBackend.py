@@ -22,7 +22,7 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 
 '''
 import cv2
-import cv2.cv2.SimpleBlobDetector_Params
+
 import matplotlib.cm
 import numpy as np
 from torch import load
@@ -146,14 +146,16 @@ def mistletone_detector(original_image, coords, cropped_bands):
             bbox_coords = [coord1, coord2, coord3, coord4]
 
             try:
-                # cropped_bands, _ = crop_band_list(cropped_bands, bbox_coords)
+                roi_cropped_bands, crop_params = crop_band_list(cropped_bands, bbox_coords)
 
-                cv2.SimpleBlobDetector_Params
-                image = mistletone_analysis(cropped_rect=cropped_bands, original_image=rgb, coords=bbox_coords)
+                # cv2.SimpleBlobDetector_Params
+                image, int_mask = mistletone_analysis(cropped_rect=roi_cropped_bands, original_image=rgb, coords=bbox_coords)
+
                 # TODO: Zbinaryzować, dylatacja, erozja, zamknięcie, regionproposal, blob
-                sqr = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
-                image = cv.dilate(image, sqr)
-                cv.imwrite(f"kafelki/kafelek{index}.jpg", image)
+                # sqr = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
+                # image = cv.dilate(image, sqr)
+                cv.imwrite(f"kafelki_maski/kafelek_{index}.jpg", int_mask)
+                cv.imwrite(f"kafelki_obrazu/kafelek_{index}.jpg", image)
                 # print("image created")
                 # mask = create_circular_mask(h=16, w=16)
                 # print(f"Mask: {mask}")
@@ -284,20 +286,20 @@ def mistletone_analysis(cropped_rect, original_image, coords):
         ndvi_image = ndvi_map(cropped_rect)
         mis_filtered = mis_filtration(mis_image, ndvi_image)
         int_mis = mis_filtered.astype(int) * 255
-        # if np.any(int_mis > 0):
-        #     cv.imwrite(f"kafelki/kafelek{random.randint(0, 1000)}.jpg", int_mis)
-        image, _ = crop_rgb(original_image[:, :, :3], coords)
+
+        image, crop_param = crop_rgb(original_image[:, :, :3], coords)
+
+        for i in range(image.shape[0]):
+            for j in range(image.shape[1]):
+                if int_mis[i, j] == 255:
+                    image[i, j] = (0, 255, 255)
+
 
     except Exception as e:
         return print(e)
 
 
-    for i in range(image.shape[0]):
-        for j in range(image.shape[1]):
-            if int_mis[i, j] == 255:
-                image[i, j] = (0, 255, 255)
-
-    return image
+    return image, int_mis
 
 
 def vari_analysis(cropped_rect):
@@ -559,7 +561,7 @@ class Worker(QObject):
                 map_value, image = vari_analysis(cropped_rect)
 
             elif self._analysis_number == 10:
-                image = mistletone_analysis(cropped_rect,
+                image, _ = mistletone_analysis(cropped_rect,
                                             original_image=original_image,
                                             coords=coords)
 

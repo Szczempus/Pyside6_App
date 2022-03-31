@@ -1,4 +1,4 @@
-import numpy
+
 from PySide2.QtCore import QObject, Property, Signal, Slot
 
 
