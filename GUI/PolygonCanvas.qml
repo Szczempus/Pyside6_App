@@ -62,24 +62,36 @@ Item {
             property bool finished: polygon.finished
             property bool hovered: polygon.hovered
             property var list: polygon.pointList
-            property var polygonPredictions: polygon.polygonAnalysis
+            property var polygonPredictions: undefined
             onPolygonChanged: requestPaint()
             onFinishedChanged: requestPaint()
             onHoveredChanged: requestPaint()
             onListChanged: requestPaint()
             renderStrategy: Canvas.Threaded
 
-//            Connections{
-//                target: polygon.polygonAnalysis
+            Connections{
+                target: appCore.proces
+
+                 function onIsProcessing(val, status){
+                     if (val === false){
+                         console.log("Processing false")
+                         if (status === "Success"){
+
+                             console.log("Poligonu analiza: ", polygon.polygonAnalysis)
+                             poliDraw.polygonPredictions = polygon.polygonAnalysis.predictionsList
+                             predictionsRepeater.model = poliDraw.polygonPredictions
+                         }
+                      }
 
 //                function onPredictionListSet(pred_list){
 //                    console.log("Sygnał przechwycony")
 //                    poliDraw.polygonPredictions = pred_list
 //                }
-//            }
+                }
+            }
 
             onPaint: {
-                console.log("Poligonu analiza: ", polygon.polygonAnalysis)
+
                 console.log("Polygony predykcji: ", polygonPredictions)
                 var context = getContext("2d");
                 context.reset()
@@ -154,9 +166,9 @@ Item {
 
             Repeater{
                 id: predictionsRepeater
-                model: polygonPredictions
+                model: poliDraw.polygonPredictions
 
-                Component.onCompleted: console.log(predictionsRepeater.count)
+                Component.onCompleted: console.log("Liczba predykcji:", predictionsRepeater.count())
 
                 delegate: Canvas{
                     id: predictions
@@ -165,8 +177,8 @@ Item {
 
                     anchors.fill: parent
 
-                    onPredictionPolygonChanged: console.log("Polygon changed signal")
-//                        predictions.requestPaint()
+
+                    onPredictionPolygonChanged: predictions.requestPaint()
 
                     renderStrategy: Canvas.Threaded
 
