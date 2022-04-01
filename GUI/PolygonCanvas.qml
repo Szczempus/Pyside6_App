@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 
 Item {
     id: control
+
     property var polygonManager: undefined
 
     property var polygon: undefined
@@ -61,6 +62,7 @@ Item {
             property bool finished: polygon.finished
             property bool hovered: polygon.hovered
             property var list: polygon.pointList
+            property var polygonPredictions: polygon.polygonAnalysis
             onPolygonChanged: requestPaint()
             onFinishedChanged: requestPaint()
             onHoveredChanged: requestPaint()
@@ -68,30 +70,23 @@ Item {
             renderStrategy: Canvas.Threaded
 
 //            Connections{
-//                target: polygon
-//                function onFinishedChanged(val){
-//                    poliDraw.finished = val
+//                target: polygon.polygonAnalysis
+
+//                function onPredictionListSet(pred_list){
+//                    console.log("Sygnał przechwycony")
+//                    poliDraw.polygonPredictions = pred_list
 //                }
 //            }
 
             onPaint: {
+                console.log("Poligonu analiza: ", polygon.polygonAnalysis)
+                console.log("Polygony predykcji: ", polygonPredictions)
                 var context = getContext("2d");
                 context.reset()
 
-//                    if(hovered)
-//                        context.fillStyle = "#0000FFFF"
-//                    else
-//                        context.fillStyle = "#000000FF"
-
-//                    for(var i=0; i<polygon.pointList.length; i++)
-//                    {
-//                        context.ellipse(polygon.pointList[i].x-3, polygon.pointList[i].y-3, 6, 6)
-//                    }
-//                    context.fill()
-
                 if(finished === true)
                 {
-//                    console.log("Jestem W ifdie")
+
                     context.lineWidth = 1
                     context.setLineDash([2000,1])
 
@@ -157,6 +152,80 @@ Item {
 
             }
 
+            Repeater{
+                id: predictionsRepeater
+                model: polygonPredictions
+
+                Component.onCompleted: console.log(predictionsRepeater.count)
+
+                delegate: Canvas{
+                    id: predictions
+
+                    property var predictionPolygon: predictionsRepeater.modelData
+
+                    anchors.fill: parent
+
+                    onPredictionPolygonChanged: console.log("Polygon changed signal")
+//                        predictions.requestPaint()
+
+                    renderStrategy: Canvas.Threaded
+
+                    onPaint: {
+                        var context = getContext("2d");
+                        context.reset()
+
+                        if(finished === true)
+                        {
+
+                            context.lineWidth = 1
+                            context.setLineDash([2000,1])
+
+                            if(hovered)
+                                context.strokeStyle = "#FF0000"
+                            else
+                                context.strokeStyle = "#C00000"
+                            context.beginPath()
+                            context.moveTo(predictionPolygon.pointList[0].x, predictionPolygon.pointList[0].y)
+                            for(var j=1; j<predictionPolygon.pointList.length; j++)
+                            {
+                                context.lineTo(predictionPolygon.pointList[j].x, predictionPolygon.pointList[j].y)
+                            }
+                            context.closePath()
+                            context.stroke()
+                            if(hovered)
+                                context.fillStyle = "#3000FFFF"
+                            else
+                                context.fillStyle = "#300000FF"
+                            context.fill();
+                        }
+                        else
+                        {
+                            if(predictionPolygon.pointList.length > 0)
+                            {
+                                context.lineWidth = 1
+                                context.setLineDash([2000,1])
+
+                                if(hovered)
+                                    context.strokeStyle = "#FF0000"
+                                else
+                                    context.strokeStyle = "#C00000"
+                                context.beginPath()
+                                context.moveTo(predictionPolygon.pointList[0].x, predictionPolygon.pointList[0].y)
+                                for(var k=1; k<predictionPolygon.pointList.length; k++)
+                                {
+                                    context.lineTo(predictionPolygon.pointList[k].x, predictionPolygon.pointList[k].y)
+                                }
+                                context.stroke()
+                                context.setLineDash([2,3])
+                                context.closePath()
+                                context.stroke()
+                            }
+                        }
+                    }
+                }
+            }
+
+
             Repeater {
                 model: list
 
@@ -178,7 +247,6 @@ Item {
 
         }
     }
-
 
     MouseArea {
         id: canvasArea

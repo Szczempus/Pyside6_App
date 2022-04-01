@@ -155,6 +155,7 @@ class CustomPolygon(QObject):
         self._analysis = analysis_result
 
     def get_analysis_result(self):
+        print(f"Pobieram wyniki analizy")
         return self._analysis
 
     # isChecked property section

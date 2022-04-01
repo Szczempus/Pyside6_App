@@ -10,6 +10,7 @@ class AnalysisResult(QObject):
     analysisModelChanged = Signal()
     analTypeGet = Signal()
     predListGet = Signal()
+    predictionListSet = Signal(list)
 
     def __init__(self, analysis_type: int, **kwargs):
         super(AnalysisResult, self).__init__()
@@ -51,6 +52,7 @@ class AnalysisResult(QObject):
     def get_anal_type(self):
         return self.analysis_type
 
+    @Slot()
     def get_prediction_list(self):
         return self.pred_lis_model
 
@@ -63,6 +65,9 @@ class AnalysisResult(QObject):
     def set_list_poligons(self, list_of_polygons):
         print(f"List: {list_of_polygons}")
         self.pred_lis_model = list_of_polygons
+        self.predictionListSet.emit(self.pred_lis_model)
+        print(f"sygnał listy wyemitowanty")
+
 
     def analysis_type_to_string(self, analysis_type: int) -> str:
         if analysis_type == 1:

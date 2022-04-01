@@ -254,7 +254,7 @@ Window {
                 console.log("Processing false")
                 if (status === "Success"){
                     imageItem.source = ""
-                    imageItem.source = "image://opencvImage/reload"
+                    imageItem.source = "image://opencvImage/reload" 
                 }
                 else{
                     processing.close()
