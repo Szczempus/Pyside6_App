@@ -113,6 +113,39 @@ def mistletone_detector(original_image, coords, cropped_bands):
 
     print("Pred. conv", numpy_pred)
 
+    # Preparing blob detector and morph analysis
+
+    kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
+    print(f"Morph kernel: {kernel}")
+
+    params = cv.SimpleBlobDetector_Params()
+    params.minThreshold = 0
+    params.maxThreshold = 255
+
+    params.filterByArea = True
+    params.minArea = 0
+    params.maxArea = 10000
+    params.filterByColor = True
+    params.blobColor = 255
+
+    params.filterByConvexity = True
+    params.minConvexity = 0.1
+    params.maxConvexity = 1
+
+    params.filterByCircularity = True
+    params.minCircularity = 0.1
+    params.maxConvexity = 1
+
+    params.filterByInertia = False
+    params.minInertiaRatio = 0
+    params.maxInertiaRatio = 1
+
+    params.minDistBetweenBlobs = 0
+
+    detector = cv2.SimpleBlobDetector_create(params)
+
+    list_of_sick_trees = []
+
     for index, predict in enumerate(numpy_pred):
         pt1 = (int(predict[0]), int(predict[1]))
         pt2 = (int(predict[2]), int(predict[3]))
@@ -149,51 +182,42 @@ def mistletone_detector(original_image, coords, cropped_bands):
                 roi_cropped_bands, crop_params = crop_band_list(cropped_bands, bbox_coords)
 
                 # cv2.SimpleBlobDetector_Params
-                image, int_mask = mistletone_analysis(cropped_rect=roi_cropped_bands, original_image=rgb, coords=bbox_coords)
+                image, int_mask = mistletone_analysis(cropped_rect=roi_cropped_bands, original_image=rgb,
+                                                      coords=bbox_coords)
 
-                # TODO: Zbinaryzować, dylatacja, erozja, zamknięcie, regionproposal, blob
-                # sqr = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
-                # image = cv.dilate(image, sqr)
-                cv.imwrite(f"kafelki_maski/kafelek_{index}.jpg", int_mask)
-                cv.imwrite(f"kafelki_obrazu/kafelek_{index}.jpg", image)
-                # print("image created")
-                # mask = create_circular_mask(h=16, w=16)
-                # print(f"Mask: {mask}")
-                # template = np.dstack((np.zeros((16, 16), dtype=np.uint8),
-                #                       np.ones((16, 16), dtype=np.uint8) * 255,
-                #                       np.ones((16, 16), dtype=np.uint8) * 255))
-                # print(f"Template: {template}")
-                # template[~mask] = 0
-                # print(f"Template after masking: {template}")
-                # print(f"Time for template")
-                # print(f"Is the same shape? {image.shape == template.shape}")
-                # print(f"Image shape: {image.shape}, template shape: {template.shape}")
-                # res = cv.matchTemplate(image, template, cv.TM_CCOEFF_NORMED)
-                # print(f"Result{res}")
-                # threshold = 0.4
-                # print(f"Res > Threshold? : {np.any(res > threshold)}")
-                #
-                if np.any(image == [0, 255, 255]):
-                    # if np.any(res > threshold):
+                int_mask = int_mask.astype('uint8')
+                print(f"conv passed")
 
-                    # print(f"rysuje na czerwowono")
-                    rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=1)
-                else:
-                    # print(f"rysuje na niebiesko")
-                    rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
+                int_mask = cv.morphologyEx(int_mask, cv2.MORPH_CLOSE, kernel, iterations=3)
+                int_mask = cv.morphologyEx(int_mask, cv2.MORPH_OPEN, kernel, iterations=1)
+                int_mask = cv.morphologyEx(int_mask, cv2.MORPH_DILATE, kernel, iterations=1)
 
-                pt3 = (pt1[0], pt2[1] + 10)
 
-                rgb = cv.putText(img=rgb,
-                                 text=f"{predict[5]:.2f}",
-                                 org=pt3,
-                                 fontFace=cv.FONT_HERSHEY_SIMPLEX,
-                                 fontScale=0.3,
-                                 color=(255, 125, 255),
-                                 thickness=1,
-                                 lineType=cv.LINE_AA)
+                keypoint = detector.detect(int_mask)
 
-                print("Drawed")
+                if len(keypoint) > 0:
+                    rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=2)
+
+                # else:
+                #     # todo do wyrzucenia
+                #     # procent
+                #     # pozycja
+                #     # klasa
+                #     # print(f"rysuje na niebiesko")
+                #     rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
+
+                    pt3 = (pt1[0], pt2[1] + 10)
+
+                    rgb = cv.putText(img=rgb,
+                                     text=f"{predict[5]:.2f}",
+                                     org=pt3,
+                                     fontFace=cv.FONT_HERSHEY_SIMPLEX,
+                                     fontScale=0.3,
+                                     color=(255, 125, 255),
+                                     thickness=1,
+                                     lineType=cv.LINE_AA)
+
+                    print("Drawed")
 
             except Exception as e:
                 return print(e)
@@ -297,7 +321,6 @@ def mistletone_analysis(cropped_rect, original_image, coords):
 
     except Exception as e:
         return print(e)
-
 
     return image, int_mis
 
@@ -562,8 +585,8 @@ class Worker(QObject):
 
             elif self._analysis_number == 10:
                 image, _ = mistletone_analysis(cropped_rect,
-                                            original_image=original_image,
-                                            coords=coords)
+                                               original_image=original_image,
+                                               coords=coords)
 
             elif self._analysis_number == 11:
                 pass
@@ -598,8 +621,9 @@ class Worker(QObject):
 
             self._img_manager.write_image(original_image)
 
-            print("Koniec procesu")
-            self.workerFinished.emit("Success")
+
+        print("Koniec procesu")
+        self.workerFinished.emit("Success")
         return
 
 
