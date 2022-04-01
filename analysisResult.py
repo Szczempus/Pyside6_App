@@ -1,4 +1,3 @@
-
 from PySide2.QtCore import QObject, Property, Signal, Slot
 
 
@@ -10,6 +9,7 @@ class AnalysisResult(QObject):
     # analysisDictChanged = Signal()
     analysisModelChanged = Signal()
     analTypeGet = Signal()
+    predListGet = Signal()
 
     def __init__(self, analysis_type: int, **kwargs):
         super(AnalysisResult, self).__init__()
@@ -44,23 +44,25 @@ class AnalysisResult(QObject):
                                f"Wartość wskaźnika: {self.map_calculus:.2f}"]
         else:
             self.list_model = [f"Współrzędne:\n {self.coordinates[0]} S; {self.coordinates[1]} N",
-                               f"Ilość predykcji {self.counting_total}", self.sick, self.health]
+                               f"Ilość predykcji: {self.counting_total}", f"Ilość zainfekowanych drzew: {self.sick}",
+                               f"Ilość zdrowych drzew: {self.counting_total - self.sick}"]
         return self.list_model
 
-    # def create_analysis_model(self):
-    #     print(self.__dict__)
-    #     # In QML this is returned as QVariant
-    #     return self.__dict__
+    def get_anal_type(self):
+        return self.analysis_type
 
-    # dictonary = self.__dict__
-    # model = []
-    # for key, value in dictonary.items():
-    #     if value is not None:
-    #         model.append(value)
-    # print(model)
+    def get_prediction_list(self):
+        return self.pred_lis_model
 
     def set_predictions(self, predicitons):
         self.counting_total = len(predicitons)
+
+    def set_sick(self, num_of_sick):
+        self.sick = num_of_sick
+
+    def set_list_poligons(self, list_of_polygons):
+        print(f"List: {list_of_polygons}")
+        self.pred_lis_model = list_of_polygons
 
     def analysis_type_to_string(self, analysis_type: int) -> str:
         if analysis_type == 1:
@@ -103,13 +105,9 @@ class AnalysisResult(QObject):
             self._fast_id = 2
             return "Detektor jemioły"
 
-    # analysisResultList = Property(dict, create_analysis_model, notify=analysisDictChanged)
-
-    def get_anal_type(self):
-        return self.analysis_type
-
     analysisModel = Property(list, get_model, notify=analysisModelChanged)
     analysisType = Property("QString", get_anal_type, notify=analTypeGet)
+    predictionsList = Property(list, get_prediction_list, notify=predListGet)
 
 
 if __name__ == "__main__":

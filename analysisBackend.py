@@ -144,6 +144,7 @@ def mistletone_detector(original_image, coords, cropped_bands):
 
     detector = cv2.SimpleBlobDetector_create(params)
 
+    number_of_sick_trees = 0
     list_of_sick_trees = []
 
     for index, predict in enumerate(numpy_pred):
@@ -181,17 +182,14 @@ def mistletone_detector(original_image, coords, cropped_bands):
             try:
                 roi_cropped_bands, crop_params = crop_band_list(cropped_bands, bbox_coords)
 
-                # cv2.SimpleBlobDetector_Params
                 image, int_mask = mistletone_analysis(cropped_rect=roi_cropped_bands, original_image=rgb,
                                                       coords=bbox_coords)
 
                 int_mask = int_mask.astype('uint8')
-                print(f"conv passed")
 
                 int_mask = cv.morphologyEx(int_mask, cv2.MORPH_CLOSE, kernel, iterations=3)
                 int_mask = cv.morphologyEx(int_mask, cv2.MORPH_OPEN, kernel, iterations=1)
                 int_mask = cv.morphologyEx(int_mask, cv2.MORPH_DILATE, kernel, iterations=1)
-
 
                 keypoint = detector.detect(int_mask)
 
@@ -219,13 +217,20 @@ def mistletone_detector(original_image, coords, cropped_bands):
 
                     print("Drawed")
 
+                    rect_QML_Polygon = CustomPolygon(f"Detekcja {index}")
+                    rect_QML_Polygon.addPoint(bbox_coords[0]["x"], bbox_coords[0]["y"])
+                    rect_QML_Polygon.addPoint(bbox_coords[1]["x"], bbox_coords[1]["y"])
+                    rect_QML_Polygon.addPoint(bbox_coords[2]["x"], bbox_coords[2]["y"])
+                    rect_QML_Polygon.addPoint(bbox_coords[3]["x"], bbox_coords[3]["y"])
+
+                    list_of_sick_trees.append(rect_QML_Polygon)
             except Exception as e:
                 return print(e)
 
     print("Draw edned")
 
     image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
-    return numpy_pred, image
+    return list_of_sick_trees, numpy_pred, image
 
 
 def tree_crown_detector(original_image, coords):
@@ -523,7 +528,8 @@ class Worker(QObject):
         posX += self._img_manager.get_pixel_size()[0] / 2
         posY += self._img_manager.get_pixel_size()[1] / 2
 
-        print(f"Coordinates: {posX, posY}")
+        print(f"Coordinates: {posX, posY}, \n Pixel size: {self._img_manager.get_pixel_size()},"
+              f" \n Geolocation: {self._img_manager.get_geolocation()}")
 
         return posX, posY
 
@@ -602,12 +608,14 @@ class Worker(QObject):
                 pred, image = tree_crown_detector(original_image, coords)
 
             elif self._analysis_number == 13:
-                pred, image = mistletone_detector(original_image, coords, cropped_rect)
+                list_of_sick, pred, image = mistletone_detector(original_image, coords, cropped_rect)
 
             poly, _, _ = poly_img(image, coords, params[0], params[1],
                                   original_image[params[1]: params[1] + params[3],
                                   params[0]:params[0] + params[2]])
             original_image[params[1]: params[1] + params[3], params[0]:params[0] + params[2]] = poly
+
+            print(f'Params send: {params}')
 
             geolocation = self.calculate_geolocation(params)
             try:
@@ -615,6 +623,8 @@ class Worker(QObject):
                 # TODO Czemu zwraca null ?? Return self?
                 if analysis_result._fast_id == 2:
                     analysis_result.set_predictions(pred)
+                    analysis_result.set_sick(len(list_of_sick))
+                    analysis_result.set_list_poligons(list_of_sick)
                 polygon.set_analysis_result(analysis_result)
             except Exception as e:
                 self.workerException.emit(e)

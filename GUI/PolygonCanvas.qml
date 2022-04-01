@@ -179,6 +179,7 @@ Item {
         }
     }
 
+
     MouseArea {
         id: canvasArea
         anchors.fill: parent

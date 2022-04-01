@@ -323,6 +323,7 @@ Dialog{
                             property string name: modelData.name
                             property bool listOpened: false
                             property var polygon: modelData
+
                             onStateChanged: {
                                 console.log(polygon.isChecked)
                                 if(state == "hovered")
@@ -414,6 +415,9 @@ Dialog{
                                     onCheckedChange: {
                                         polyItem.polygon.isChecked = checkStatus
                                     }
+                                    Component.onCompleted: {
+                                        checkBox.isChecked = polyItem.polygon.isChecked
+                                    }
                                 }
                             }
 
@@ -464,30 +468,6 @@ Dialog{
                                         polyItem.listOpened = true
                                 }
                             }
-
-
-                            // Deleting polygon
-                            //                            Image {
-                            //                                height: Screen.height/60
-                            //                                width: height
-                            //                                anchors.right: parent.right
-                            //                                anchors.verticalCenter: polyName.verticalCenter
-                            //                                fillMode: Image.PreserveAspectFit
-                            //                                source: "qrc:/images/png/delete_cross"
-                            //                                antialiasing: true
-                            //                                mipmap: true
-                            //                                smooth: true
-                            //                                opacity: 1 - image.opacity
-                            //                                rotation: image.rotation
-                            //                                anchors.rightMargin: polyName.padding/2
-                            //                                MouseArea {
-                            //                                    anchors.fill: parent
-                            //                                    onClicked: {rootDialog.polygonManager.deletePolygon(polyItem.polygon)
-                            //                                        //                                appManager.polygonManager.deletePolygon(polyItem.polygon)
-                            //                                    }
-                            //                                }
-                            //                            }
-
 
                             Column {
                                 id: subcolumn
