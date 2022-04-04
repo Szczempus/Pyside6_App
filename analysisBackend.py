@@ -89,7 +89,7 @@ def is_correct(pt1: tuple, pt2: tuple, tan_thresh_val):
 
 def mistletone_detector(original_image, coords, cropped_bands):
     print("Analysis 13 - Mistletone detector")
-    rgb, _ = crop_rgb(original_image[:, :, :3], coords)
+    rgb, org_params = crop_rgb(original_image[:, :, :3], coords)
     try:
         print("Loading model..")
         model = main.deepforest()
@@ -194,7 +194,7 @@ def mistletone_detector(original_image, coords, cropped_bands):
                 keypoint = detector.detect(int_mask)
 
                 if len(keypoint) > 0:
-                    rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=2)
+                    # rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=2)
 
                 # else:
                 #     # todo do wyrzucenia
@@ -204,24 +204,25 @@ def mistletone_detector(original_image, coords, cropped_bands):
                 #     # print(f"rysuje na niebiesko")
                 #     rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
 
-                    pt3 = (pt1[0], pt2[1] + 10)
+                    # pt3 = (pt1[0], pt2[1] + 10)
 
-                    rgb = cv.putText(img=rgb,
-                                     text=f"{predict[5]:.2f}",
-                                     org=pt3,
-                                     fontFace=cv.FONT_HERSHEY_SIMPLEX,
-                                     fontScale=0.3,
-                                     color=(255, 125, 255),
-                                     thickness=1,
-                                     lineType=cv.LINE_AA)
+                    # rgb = cv.putText(img=rgb,
+                    #                  text=f"{predict[5]:.2f}",
+                    #                  org=pt3,
+                    #                  fontFace=cv.FONT_HERSHEY_SIMPLEX,
+                    #                  fontScale=0.3,
+                    #                  color=(255, 125, 255),
+                    #                  thickness=1,
+                    #                  lineType=cv.LINE_AA)
 
                     print("Drawed")
 
                     rect_QML_Polygon = CustomPolygon(f"Detekcja {index}")
-                    rect_QML_Polygon.addPoint(bbox_coords[0]["x"], bbox_coords[0]["y"])
-                    rect_QML_Polygon.addPoint(bbox_coords[1]["x"], bbox_coords[1]["y"])
-                    rect_QML_Polygon.addPoint(bbox_coords[2]["x"], bbox_coords[2]["y"])
-                    rect_QML_Polygon.addPoint(bbox_coords[3]["x"], bbox_coords[3]["y"])
+                    rect_QML_Polygon.addPoint(bbox_coords[0]["x"] + org_params[0], bbox_coords[0]["y"] + org_params[1])
+                    rect_QML_Polygon.addPoint(bbox_coords[1]["x"] + org_params[0], bbox_coords[1]["y"] + org_params[1])
+                    rect_QML_Polygon.addPoint(bbox_coords[2]["x"] + org_params[0], bbox_coords[2]["y"] + org_params[1])
+                    rect_QML_Polygon.addPoint(bbox_coords[3]["x"] + org_params[0], bbox_coords[3]["y"] + org_params[1])
+                    rect_QML_Polygon.set_finished(True)
 
                     list_of_sick_trees.append(rect_QML_Polygon)
             except Exception as e:

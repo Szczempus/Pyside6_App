@@ -68,6 +68,7 @@ Item {
             onHoveredChanged: requestPaint()
             onListChanged: requestPaint()
             renderStrategy: Canvas.Threaded
+            renderTarget: Canvas.FramebufferObject
 
             Connections{
                 target: appCore.proces
@@ -168,46 +169,63 @@ Item {
                 id: predictionsRepeater
                 model: poliDraw.polygonPredictions
 
-                Component.onCompleted: console.log("Liczba predykcji:", predictionsRepeater.count())
+                Component.onCompleted: console.log("predictionsRepeater created")
 
                 delegate: Canvas{
                     id: predictions
 
-                    property var predictionPolygon: predictionsRepeater.modelData
+                    property var predictionPolygon: modelData
 
                     anchors.fill: parent
 
 
-                    onPredictionPolygonChanged: predictions.requestPaint()
+                    onPredictionPolygonChanged: {
+                        console.log("Paint requested")
+                        predictions.requestPaint()
+                    }
 
                     renderStrategy: Canvas.Threaded
+                    renderTarget: Canvas.FramebufferObject
+
 
                     onPaint: {
+//                        console.log("AAA", predictionsRepeater.model)
                         var context = getContext("2d");
                         context.reset()
 
-                        if(finished === true)
+                        if(predictionPolygon.finished === true)
                         {
 
                             context.lineWidth = 1
-                            context.setLineDash([2000,1])
 
                             if(hovered)
-                                context.strokeStyle = "#FF0000"
+                                context.strokeStyle = "#ff7f00"
                             else
-                                context.strokeStyle = "#C00000"
+                                context.strokeStyle = "#bf5f00"
                             context.beginPath()
-                            context.moveTo(predictionPolygon.pointList[0].x, predictionPolygon.pointList[0].y)
-                            for(var j=1; j<predictionPolygon.pointList.length; j++)
-                            {
-                                context.lineTo(predictionPolygon.pointList[j].x, predictionPolygon.pointList[j].y)
-                            }
-                            context.closePath()
-                            context.stroke()
+
+                            console.log("Poligon: ",predictionPolygon)
+                            console.log("Poligon list: ",predictionPolygon.pointList)
+                            console.log("Poligon points: ",predictionPolygon.pointList[0].x,predictionPolygon.pointList[0].y,
+                                        predictionPolygon.pointList[1].x,predictionPolygon.pointList[1].y,
+                                        predictionPolygon.pointList[2].x,predictionPolygon.pointList[2].y,
+                                        predictionPolygon.pointList[3].x,predictionPolygon.pointList[3].y,)
+
+                            context.rect(predictionPolygon.pointList[0].x,predictionPolygon.pointList[0].y, 50, 50)
+
+
+//                            context.moveTo(predictionPolygon.pointList[0].x, predictionPolygon.pointList[0].y)
+//                            for(var j=1; j<predictionPolygon.pointList.length; j++)
+//                            {
+//                                context.lineTo(predictionPolygon.pointList[j].x, predictionPolygon.pointList[j].y)
+//                            }
+//                            context.closePath()
+
+                            context.strokeRect()
                             if(hovered)
-                                context.fillStyle = "#3000FFFF"
+                                context.fillStyle = "#e06b6daa"
                             else
-                                context.fillStyle = "#300000FF"
+                                context.fillStyle = "#ea3c3faa"
                             context.fill();
                         }
                         else
@@ -218,9 +236,9 @@ Item {
                                 context.setLineDash([2000,1])
 
                                 if(hovered)
-                                    context.strokeStyle = "#FF0000"
+                                    context.strokeStyle = "#ff7f00"
                                 else
-                                    context.strokeStyle = "#C00000"
+                                    context.strokeStyle = "#bf5f00"
                                 context.beginPath()
                                 context.moveTo(predictionPolygon.pointList[0].x, predictionPolygon.pointList[0].y)
                                 for(var k=1; k<predictionPolygon.pointList.length; k++)
