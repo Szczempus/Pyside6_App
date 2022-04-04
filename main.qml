@@ -139,8 +139,13 @@ Window {
                     messageManager.getString(true, qsTr("New name"))
             }
             else if(tool == "slider"){
-
                 slidersWindow.slidersVisible = !slidersWindow.slidersVisible
+            }
+            else if(tool == "action_savePolygon")
+            {
+                console.log("Svae polu, clicked")
+//                savePolygons.folder = "file:///"+appCore.prMeg.project_path
+//                saveImage.open()
             }
         }
     }
@@ -208,6 +213,15 @@ Window {
         onAccepted: {
             console.log("Wybrałeś: " + saveImage.file)
             appCore.save_image(saveImage.file)
+        }
+    }
+
+    Dialogs.SavePolygons{
+        id: savePolygons
+        title: "Save polygons"
+        onAccepted: {
+            console.log("Wybrałeś: " + savePolygons.file)
+            appCore.save_polygons(savePolygons.file)
         }
     }
 

@@ -2,6 +2,7 @@
 Polygon Menager
 """
 from math import sqrt
+import pandas as pd
 from PySide2.QtCore import QObject, Property, Signal, Slot, QPointF
 from analysisResult import AnalysisResult
 
@@ -52,6 +53,11 @@ class PolygonCoords(QObject):
     def hovered(self, val):
         self._hovered = val
         self.hover_changed.emit()
+
+    def wrap_to_csv(self):
+        d = {'x': self._x, 'y': self._y}
+        df = pd.DataFrame(data=d)
+        return df
 
     x = Property(float, x_get, x_set, notify=x_changed)
     y = Property(float, y_get, y_set, notify=y_changed)
@@ -108,6 +114,7 @@ class CustomPolygon(QObject):
         self.polygonCenterChanged.emit()
 
     # name property section
+    @Slot()
     def get_name(self):
         return self._name
 
@@ -189,7 +196,7 @@ class PolygonMenager(QObject):
         self._polygonList = []
         self._polygon_counter = 0
         self._last_polygon = None
-
+        self._special_list_of_poligons = pd.DataFrame(columns=["xmin", "ymin", "xmax", "ymax", "label", "score"])
         pass
 
     def get_polygon_list(self):
@@ -209,6 +216,13 @@ class PolygonMenager(QObject):
         self._polygonList.append(self._last_polygon)
         self.newPolygonCreated.emit(self._last_polygon)
         self.polygonListChanged.emit()
+
+    def pass_special_poligon(self, dataframe):
+        print(dataframe)
+        temp_df = pd.DataFrame([dataframe], columns=["xmin", "ymin", "xmax", "ymax", "label", "score"])
+        self._special_list_of_poligons = self._special_list_of_poligons.append(temp_df)
+        print(self._special_list_of_poligons)
+        pass
 
     @Slot(CustomPolygon)
     def deletePolygon(self, polygon):

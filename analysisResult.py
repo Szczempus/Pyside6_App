@@ -12,12 +12,12 @@ class AnalysisResult(QObject):
     predListGet = Signal()
     predictionListSet = Signal(list)
 
-    def __init__(self, analysis_type: int, **kwargs):
+    def __init__(self, analysis_type=None, **kwargs):
         super(AnalysisResult, self).__init__()
 
         self._fast_id = None  # 1 or 2 for index map or counting
         # Typ analizy
-        self.analysis_type: str = self.analysis_type_to_string(analysis_type)
+        self.analysis_type: str = analysis_type
         # Współrzędne poligonu
         self.coordinates: tuple(float) = None
         # Ilość wszystkich próbek
@@ -32,6 +32,7 @@ class AnalysisResult(QObject):
         self.list_model = []
         # Model listy predykcji
         self.pred_lis_model = []
+        self.accuracy: float = None
 
         for key, value in kwargs.items():
             if key in self.__dict__:
@@ -43,10 +44,13 @@ class AnalysisResult(QObject):
         if self._fast_id == 1:
             self.list_model = [f"Współrzędne:\n{self.coordinates[0]} S; {self.coordinates[1]} N",
                                f"Wartość wskaźnika: {self.map_calculus:.2f}"]
-        else:
+        elif self._fast_id == 2:
             self.list_model = [f"Współrzędne:\n {self.coordinates[0]} S; {self.coordinates[1]} N",
-                               f"Ilość predykcji: {self.counting_total}", f"Ilość zainfekowanych drzew: {self.sick}",
-                               f"Ilość zdrowych drzew: {self.counting_total - self.sick}"]
+                               f"Ilość predykcji: {self.counting_total}",
+                               f"Ilość zainfekowanych drzew: {self.sick}",
+                               f"Ilość zdrowych drzew: {self.counting_total - self.sick}"
+                               ]
+
         return self.list_model
 
     def get_anal_type(self):
@@ -68,47 +72,70 @@ class AnalysisResult(QObject):
         self.predictionListSet.emit(self.pred_lis_model)
         print(f"sygnał listy wyemitowanty")
 
+    def set_accuracy(self, val):
+        self.accuracy = val
+
+    def get_accuracy(self):
+        return self.accuracy
+
+    def set_fast_id(self, val):
+        self._fast_id = val
+
+    def get_fast_id(self):
+        return self._fast_id
 
     def analysis_type_to_string(self, analysis_type: int) -> str:
         if analysis_type == 1:
             self._fast_id = 1
-            return "Wskaźnik NDVI"
+            self.analysis_type = "Wskaźnik NDVI"
+
         elif analysis_type == 2:
             self._fast_id = 1
-            return "Wskaźnik BNDVI"
+            self.analysis_type = "Wskaźnik BNDVI"
+
         elif analysis_type == 3:
             self._fast_id = 1
-            return "Wskaźnik GNDVI"
+            self.analysis_type = "Wskaźnik GNDVI"
+
         elif analysis_type == 4:
             self._fast_id = 1
-            return "Wskaźnik LCI"
+            self.analysis_type = "Wskaźnik LCI"
+
         elif analysis_type == 5:
             self._fast_id = 1
-            return "Wskaźnik MCARI"
+            self.analysis_type = "Wskaźnik MCARI"
+
         elif analysis_type == 6 or analysis_type == 14 or analysis_type == 15 or analysis_type == 16 or analysis_type == 17:
             self._fast_id = 1
-            return "Wskaźnik NDRE"
+            self.analysis_type = "Wskaźnik NDRE"
+
         elif analysis_type == 7:
             self._fast_id = 1
-            return "Wskaźnik SIPI2"
+            self.analysis_type = "Wskaźnik SIPI2"
+
         elif analysis_type == 8:
             self._fast_id = 1
-            return "Wskaźnik OSAVI"
+            self.analysis_type = "Wskaźnik OSAVI"
+
         elif analysis_type == 9:
             self._fast_id = 1
-            return "Wskaźnik VARI"
+            self.analysis_type = "Wskaźnik VARI"
+
         elif analysis_type == 10:
             self._fast_id = 1
-            return "Wskaźnik Jemioły "
+            self.analysis_type = "Wskaźnik Jemioły "
+
         elif analysis_type == 11:
             self._fast_id = 2
-            return "Segemntacja"
+            self.analysis_type = "Segemntacja"
+
         elif analysis_type == 12:
             self._fast_id = 2
-            return "Detektor koron drzew"
+            self.analysis_type = "Detektor koron drzew"
+
         elif analysis_type == 13:
             self._fast_id = 2
-            return "Detektor jemioły"
+            self.analysis_type = "Detektor jemioły"
 
     analysisModel = Property(list, get_model, notify=analysisModelChanged)
     analysisType = Property("QString", get_anal_type, notify=analTypeGet)

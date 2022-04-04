@@ -166,6 +166,9 @@ Item {
             visible: visibility
             isAction: true
             onClicked: {
+                console.log("Clicked")
+                savePolygons.folder = "file:///"+appCore.prMeg.project_path
+                savePolygons.open()
                 if(isAction)
                 {
                     control.actionTriggered(tool)

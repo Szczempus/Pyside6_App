@@ -1,4 +1,4 @@
-import QtQuick 2.12
+import QtQuick 2.15
 import QtQuick.Controls 2.12
 
 Item {
@@ -78,16 +78,11 @@ Item {
                          console.log("Processing false")
                          if (status === "Success"){
 
-                             console.log("Poligonu analiza: ", polygon.polygonAnalysis)
-                             poliDraw.polygonPredictions = polygon.polygonAnalysis.predictionsList
-                             predictionsRepeater.model = poliDraw.polygonPredictions
+//                             console.log("Poligonu analiza: ", polygon.polygonAnalysis)
+//                             poliDraw.polygonPredictions = polygon.polygonAnalysis.predictionsList
+//                             predictionsRepeater.model = poliDraw.polygonPredictions
                          }
                       }
-
-//                function onPredictionListSet(pred_list){
-//                    console.log("Sygnał przechwycony")
-//                    poliDraw.polygonPredictions = pred_list
-//                }
                 }
             }
 
@@ -116,9 +111,9 @@ Item {
                     context.closePath()
                     context.stroke()
                     if(hovered)
-                        context.fillStyle = "#3000FFFF"
+                        context.fillStyle = "#3000FF55"
                     else
-                        context.fillStyle = "#300000FF"
+                        context.fillStyle = "#300000DD"
                     context.fill();
                 }
                 else
@@ -165,96 +160,62 @@ Item {
 
             }
 
-            Repeater{
-                id: predictionsRepeater
-                model: poliDraw.polygonPredictions
+                Repeater{
+                    id: predictionsRepeater
+                    model: poliDraw.polygonPredictions
 
-                Component.onCompleted: console.log("predictionsRepeater created")
+                    Component.onCompleted: console.log("predictionsRepeater created")
 
-                delegate: Canvas{
-                    id: predictions
+                    delegate: Canvas{
+                        id: predictions
 
-                    property var predictionPolygon: modelData
+                        property var predictionPolygon: modelData
 
-                    anchors.fill: parent
-
-
-                    onPredictionPolygonChanged: {
-                        console.log("Paint requested")
-                        predictions.requestPaint()
-                    }
-
-                    renderStrategy: Canvas.Threaded
-                    renderTarget: Canvas.FramebufferObject
+                        anchors.fill: parent
 
 
-                    onPaint: {
-//                        console.log("AAA", predictionsRepeater.model)
-                        var context = getContext("2d");
-                        context.reset()
-
-                        if(predictionPolygon.finished === true)
-                        {
-
-                            context.lineWidth = 1
-
-                            if(hovered)
-                                context.strokeStyle = "#ff7f00"
-                            else
-                                context.strokeStyle = "#bf5f00"
-                            context.beginPath()
-
-                            console.log("Poligon: ",predictionPolygon)
-                            console.log("Poligon list: ",predictionPolygon.pointList)
-                            console.log("Poligon points: ",predictionPolygon.pointList[0].x,predictionPolygon.pointList[0].y,
-                                        predictionPolygon.pointList[1].x,predictionPolygon.pointList[1].y,
-                                        predictionPolygon.pointList[2].x,predictionPolygon.pointList[2].y,
-                                        predictionPolygon.pointList[3].x,predictionPolygon.pointList[3].y,)
-
-                            context.rect(predictionPolygon.pointList[0].x,predictionPolygon.pointList[0].y, 50, 50)
-
-
-//                            context.moveTo(predictionPolygon.pointList[0].x, predictionPolygon.pointList[0].y)
-//                            for(var j=1; j<predictionPolygon.pointList.length; j++)
-//                            {
-//                                context.lineTo(predictionPolygon.pointList[j].x, predictionPolygon.pointList[j].y)
-//                            }
-//                            context.closePath()
-
-                            context.strokeRect()
-                            if(hovered)
-                                context.fillStyle = "#e06b6daa"
-                            else
-                                context.fillStyle = "#ea3c3faa"
-                            context.fill();
+                        onPredictionPolygonChanged: {
+                            console.log("Paint requested")
+                            predictions.requestPaint()
                         }
-                        else
-                        {
-                            if(predictionPolygon.pointList.length > 0)
-                            {
-                                context.lineWidth = 1
-                                context.setLineDash([2000,1])
 
-                                if(hovered)
-                                    context.strokeStyle = "#ff7f00"
+                        renderStrategy: Canvas.Threaded
+                        renderTarget: Canvas.FramebufferObject
+
+                        onPaint: {
+                            var context = getContext("2d");
+                            context.reset()
+
+                            if(predictionPolygon.finished === true)
+                            {
+
+                                context.lineWidth = 1
+
+                                if(predictionPolygon.hovered)
+                                    context.strokeStyle = "#ff7373"
                                 else
-                                    context.strokeStyle = "#bf5f00"
-                                context.beginPath()
-                                context.moveTo(predictionPolygon.pointList[0].x, predictionPolygon.pointList[0].y)
-                                for(var k=1; k<predictionPolygon.pointList.length; k++)
-                                {
-                                    context.lineTo(predictionPolygon.pointList[k].x, predictionPolygon.pointList[k].y)
-                                }
-                                context.stroke()
-                                context.setLineDash([2,3])
-                                context.closePath()
-                                context.stroke()
+                                    context.strokeStyle = "#f00"
+            //                    context.beginPath()
+
+                                console.log("Poligon: ",predictionPolygon)
+                                console.log("Poligon list: ",predictionPolygon.pointList)
+                                console.log("Poligon points: ",predictionPolygon.pointList[0].x,predictionPolygon.pointList[0].y,
+                                            predictionPolygon.pointList[1].x,predictionPolygon.pointList[1].y,
+                                            predictionPolygon.pointList[2].x,predictionPolygon.pointList[2].y,
+                                            predictionPolygon.pointList[3].x,predictionPolygon.pointList[3].y,)
+
+                                context.rect(predictionPolygon.pointList[0].x,predictionPolygon.pointList[0].y, 50, 50)
+
+                                context.strokeRect(predictionPolygon.pointList[0].x,predictionPolygon.pointList[0].y, 50, 50)
+                                if(predictionPolygon.hovered)
+                                    context.fillStyle = "#3000FF55"
+                                else
+                                    context.fillStyle = "#300000DD"
+                                context.fill();
                             }
                         }
                     }
                 }
-            }
-
 
             Repeater {
                 model: list

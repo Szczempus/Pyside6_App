@@ -10,17 +10,14 @@ Item {
     property int radius: 6
     property double rightOffset: 10
     property var model: undefined
+    property var analysisData: undefined
 
     function getPolygon(polygon){
-        console.log(polygon)
-        var analysisData = polygon.polygonAnalysis
+        analysisData = polygon.polygonAnalysis
         polygonNameArea.text = polygon.name
         polygonAnalysisName.text = analysisData.analysisType
         analysisResultControl.model = analysisData.analysisModel
-
     }
-
-//    property var model: ["Współrzędne: ", "Liczba detekcji: ", "Obiekty zdrowe: ","Obiekty chore: ", "Wartość wskaźnika: "]
 
     implicitHeight: Screen.height/4
     implicitWidth: Screen.height/3
@@ -33,29 +30,7 @@ Item {
 
     clip:true
 
-//    onWidthChanged: {
-//        if (state == "hidden")
-//        {
-//            x = -width + rightOffset
-//        }
-//        else
-//        {
-//            x = rightOffset
-//        }
-//    }
 
-//    onRightOffsetChanged: {
-//        if (state == "hidden")
-//        {
-//            x = -width + rightOffset
-//        }
-//        else
-//        {
-//            x = rightOffset
-//        }
-//    }
-
-//    visible: x == -analysisResultControl.height + analysisResultControl.rightOffset ? false : true
 
     Component.onCompleted: x = Screen.width - radius
 
@@ -201,7 +176,20 @@ Item {
                 clip: true
 
                 Repeater{
+                    id:analysisReapeater
                     model:analysisResultControl.model
+
+                    onItemAdded: {
+
+                    }
+
+                    onModelChanged: {
+                        if(analysisReapeater.count > 3){
+                            detectionsItem.visible = true
+                            detectionsItem.polygonsListModel = analysisData.predictionsList
+                        }
+                    }
+
                     delegate: Item{
                         id: analysisItem
 
@@ -214,7 +202,6 @@ Item {
                             width: analysisColumn.width
                             height: Screen.height/20
                             color: Colors.main
-
                         }
 
                         Text {
@@ -234,6 +221,77 @@ Item {
                         }
                     }
                 }
+
+//                Item{
+//                    id: detectionsItem
+//                    width: analysisColumn.width
+//                    visible: false
+//                    height: Screen.height/20
+
+//                    property var polygonsListModel: undefined
+
+//                    Flickable{
+//                        width: parent.width
+//                        height: parent.height
+
+//                        clip: true
+
+//                        flickableDirection: Flickable.AutoFlickIfNeeded
+//                        ScrollBar.vertical: ScrollBar{
+//                            policy: "AsNeeded"
+//                        }
+
+//                        contentHeight:polygonPredictions.height
+
+//                        Column{
+//                            id: polygonPredictions
+//                            width: analysisColumn.width
+//                            spacing: 0
+
+//                            Repeater{
+//                                id: polygonPredictionsRepeater
+//                                model: detectionsItem.polygonsListModel
+
+//                                Component.onCompleted: console.log("Liczba poligonów", polygonPredictionsRepeater.count)
+
+//                                delegate: Item{
+//                                    width: analysisColumn.width
+//                                    height: Screen.height/20
+
+//                                    property var polygon: modelData
+
+//                                    onPolygonChanged: {
+//                                        predictectPolygonName.text = qsTr("Kapustka")
+//                                    }
+
+//                                    Rectangle{
+//                                        id:predictedPolygonBg
+//                                        width: analysisColumn.width
+//                                        height: Screen.height/20
+//                                        color: Colors.main
+//                                    }
+
+//                                    Text {
+//                                        id: predictectPolygonName
+//                                        width: analysisColumn.width - height
+//                                        anchors.left: predictedPolygonBg.left
+//                                        height: Screen.height/20
+//                                        padding: analysisResultControl.radius
+//    //                                    text:
+//                                        minimumPixelSize: 8
+//                                        font.pixelSize: 16
+//                                        fontSizeMode: Text.VerticalFit
+//                                        Component.onCompleted: color = Colors.text
+//                                        verticalAlignment: Text.AlignVCenter
+//                                        horizontalAlignment: Text.AlignLeft
+//                                        elide: Text.ElideRight
+//                                    }
+
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
     }

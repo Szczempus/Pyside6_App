@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import cv2
+import pandas as pd
 from PySide2.QtCore import Slot, Property, QObject, Signal
 
 from projectMenager import ProjectMenager
@@ -43,11 +44,27 @@ class Appcore(QObject):
         # TODO Write in correct file format
         cv2.imwrite(path, img)
 
+    @Slot("QString")
+    def save_polygons(self,path_to_save_polygons: str):
+        print("Otrzymana ścieżka", path_to_save_polygons)
+
+        _, path = path_to_save_polygons.split("///")
+
+        dataframe: pd.DataFrame = self.polygonMenager._special_list_of_poligons
+
+        dataframe.to_csv(path, index=False)
+
+
+
+
+
     def save_project(self):
         pass
 
     def create_report(self):
         pass
+
+
 
     @Slot(list)
     def set_image_params(self, params: list):

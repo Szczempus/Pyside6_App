@@ -87,151 +87,157 @@ def is_correct(pt1: tuple, pt2: tuple, tan_thresh_val):
     return True
 
 
-def mistletone_detector(original_image, coords, cropped_bands):
-    print("Analysis 13 - Mistletone detector")
-    rgb, org_params = crop_rgb(original_image[:, :, :3], coords)
-    try:
-        print("Loading model..")
-        model = main.deepforest()
-        print("Model loaded, loading weights...")
-        # model.use_amp = True
-        model.load_state_dict(load("weights/tuszyma19.pth"))
-        print("Weights loaded, prediction...")
-
-        predictions = model.predict_tile(image=rgb,
-                                         return_plot=False,
-                                         patch_size=1000,
-                                         patch_overlap=0.1,
-                                         iou_threshold=0.6,
-                                         thresh=0.6)
-    except Exception as e:
-        return print(e)
-
-    print("Prediction successful")
-
-    numpy_pred = predictions.to_numpy()
-
-    print("Pred. conv", numpy_pred)
-
-    # Preparing blob detector and morph analysis
-
-    kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
-    print(f"Morph kernel: {kernel}")
-
-    params = cv.SimpleBlobDetector_Params()
-    params.minThreshold = 0
-    params.maxThreshold = 255
-
-    params.filterByArea = True
-    params.minArea = 0
-    params.maxArea = 10000
-    params.filterByColor = True
-    params.blobColor = 255
-
-    params.filterByConvexity = True
-    params.minConvexity = 0.1
-    params.maxConvexity = 1
-
-    params.filterByCircularity = True
-    params.minCircularity = 0.1
-    params.maxConvexity = 1
-
-    params.filterByInertia = False
-    params.minInertiaRatio = 0
-    params.maxInertiaRatio = 1
-
-    params.minDistBetweenBlobs = 0
-
-    detector = cv2.SimpleBlobDetector_create(params)
-
-    number_of_sick_trees = 0
-    list_of_sick_trees = []
-
-    for index, predict in enumerate(numpy_pred):
-        pt1 = (int(predict[0]), int(predict[1]))
-        pt2 = (int(predict[2]), int(predict[3]))
-        if predict[5] > 0.2 and is_correct(pt1, pt2, 0.5):
-            # print("Drawing rec")
-            # print(f"Pt1: {pt1}, pt2: {pt2}")
-            # if sprawdzamy czy jest jemioła:
-            #   rusujemy obwolutę na czerwono
-            # else:
-
-            coord1 = {
-                "x": pt1[0],
-                "y": pt1[1]
-            }
-
-            coord2 = {
-                "x": pt2[0],
-                "y": pt1[1]
-            }
-
-            coord3 = {
-                "x": pt2[0],
-                "y": pt2[1]
-            }
-
-            coord4 = {
-                "x": pt1[0],
-                "y": pt2[1]
-            }
-
-            bbox_coords = [coord1, coord2, coord3, coord4]
-
-            try:
-                roi_cropped_bands, crop_params = crop_band_list(cropped_bands, bbox_coords)
-
-                image, int_mask = mistletone_analysis(cropped_rect=roi_cropped_bands, original_image=rgb,
-                                                      coords=bbox_coords)
-
-                int_mask = int_mask.astype('uint8')
-
-                int_mask = cv.morphologyEx(int_mask, cv2.MORPH_CLOSE, kernel, iterations=3)
-                int_mask = cv.morphologyEx(int_mask, cv2.MORPH_OPEN, kernel, iterations=1)
-                int_mask = cv.morphologyEx(int_mask, cv2.MORPH_DILATE, kernel, iterations=1)
-
-                keypoint = detector.detect(int_mask)
-
-                if len(keypoint) > 0:
-                    # rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=2)
-
-                # else:
-                #     # todo do wyrzucenia
-                #     # procent
-                #     # pozycja
-                #     # klasa
-                #     # print(f"rysuje na niebiesko")
-                #     rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
-
-                    # pt3 = (pt1[0], pt2[1] + 10)
-
-                    # rgb = cv.putText(img=rgb,
-                    #                  text=f"{predict[5]:.2f}",
-                    #                  org=pt3,
-                    #                  fontFace=cv.FONT_HERSHEY_SIMPLEX,
-                    #                  fontScale=0.3,
-                    #                  color=(255, 125, 255),
-                    #                  thickness=1,
-                    #                  lineType=cv.LINE_AA)
-
-                    print("Drawed")
-
-                    rect_QML_Polygon = CustomPolygon(f"Detekcja {index}")
-                    rect_QML_Polygon.addPoint(bbox_coords[0]["x"] + org_params[0], bbox_coords[0]["y"] + org_params[1])
-                    rect_QML_Polygon.addPoint(bbox_coords[1]["x"] + org_params[0], bbox_coords[1]["y"] + org_params[1])
-                    rect_QML_Polygon.addPoint(bbox_coords[2]["x"] + org_params[0], bbox_coords[2]["y"] + org_params[1])
-                    rect_QML_Polygon.addPoint(bbox_coords[3]["x"] + org_params[0], bbox_coords[3]["y"] + org_params[1])
-                    rect_QML_Polygon.set_finished(True)
-
-                    list_of_sick_trees.append(rect_QML_Polygon)
-            except Exception as e:
-                return print(e)
-
-    print("Draw edned")
-
-    image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
-    return list_of_sick_trees, numpy_pred, image
+# def mistletone_detector(original_image, coords, cropped_bands):
+#     print("Analysis 13 - Mistletone detector")
+#     rgb, org_params = crop_rgb(original_image[:, :, :3], coords)
+#     try:
+#         print("Loading model..")
+#         model = main.deepforest()
+#         print("Model loaded, loading weights...")
+#         # model.use_amp = True
+#         model.load_state_dict(load("weights/tuszyma19.pth"))
+#         print("Weights loaded, prediction...")
+#
+#         predictions = model.predict_tile(image=rgb,
+#                                          return_plot=False,
+#                                          patch_size=1000,
+#                                          patch_overlap=0.1,
+#                                          iou_threshold=0.6,
+#                                          thresh=0.6)
+#     except Exception as e:
+#         return print(e)
+#
+#     print("Prediction successful")
+#
+#     numpy_pred = predictions.to_numpy()
+#
+#     print("Pred. conv", numpy_pred)
+#
+#     # Preparing blob detector and morph analysis
+#
+#     kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
+#     print(f"Morph kernel: {kernel}")
+#
+#     params = cv.SimpleBlobDetector_Params()
+#     params.minThreshold = 0
+#     params.maxThreshold = 255
+#
+#     params.filterByArea = True
+#     params.minArea = 0
+#     params.maxArea = 10000
+#     params.filterByColor = True
+#     params.blobColor = 255
+#
+#     params.filterByConvexity = True
+#     params.minConvexity = 0.1
+#     params.maxConvexity = 1
+#
+#     params.filterByCircularity = True
+#     params.minCircularity = 0.1
+#     params.maxConvexity = 1
+#
+#     params.filterByInertia = False
+#     params.minInertiaRatio = 0
+#     params.maxInertiaRatio = 1
+#
+#     params.minDistBetweenBlobs = 0
+#
+#     detector = cv2.SimpleBlobDetector_create(params)
+#
+#     number_of_sick_trees = 0
+#     list_of_sick_trees = []
+#
+#     for index, predict in enumerate(numpy_pred):
+#         pt1 = (int(predict[0]), int(predict[1]))
+#         pt2 = (int(predict[2]), int(predict[3]))
+#         if predict[5] > 0.2 and is_correct(pt1, pt2, 0.5):
+#             # print("Drawing rec")
+#             # print(f"Pt1: {pt1}, pt2: {pt2}")
+#             # if sprawdzamy czy jest jemioła:
+#             #   rusujemy obwolutę na czerwono
+#             # else:
+#
+#             coord1 = {
+#                 "x": pt1[0],
+#                 "y": pt1[1]
+#             }
+#
+#             coord2 = {
+#                 "x": pt2[0],
+#                 "y": pt1[1]
+#             }
+#
+#             coord3 = {
+#                 "x": pt2[0],
+#                 "y": pt2[1]
+#             }
+#
+#             coord4 = {
+#                 "x": pt1[0],
+#                 "y": pt2[1]
+#             }
+#
+#             bbox_coords = [coord1, coord2, coord3, coord4]
+#
+#             try:
+#                 roi_cropped_bands, crop_params = crop_band_list(cropped_bands, bbox_coords)
+#
+#                 image, int_mask = mistletone_analysis(cropped_rect=roi_cropped_bands, original_image=rgb,
+#                                                       coords=bbox_coords)
+#
+#                 int_mask = int_mask.astype('uint8')
+#
+#                 int_mask = cv.morphologyEx(int_mask, cv2.MORPH_CLOSE, kernel, iterations=3)
+#                 int_mask = cv.morphologyEx(int_mask, cv2.MORPH_OPEN, kernel, iterations=1)
+#                 int_mask = cv.morphologyEx(int_mask, cv2.MORPH_DILATE, kernel, iterations=1)
+#
+#                 keypoint = detector.detect(int_mask)
+#
+#                 if len(keypoint) > 0:
+#                     # rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=2)
+#
+#                 # else:
+#                 #     # todo do wyrzucenia
+#                 #     # procent
+#                 #     # pozycja
+#                 #     # klasa
+#                 #     # print(f"rysuje na niebiesko")
+#                 #     rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
+#
+#                     # pt3 = (pt1[0], pt2[1] + 10)
+#
+#                     # rgb = cv.putText(img=rgb,
+#                     #                  text=f"{predict[5]:.2f}",
+#                     #                  org=pt3,
+#                     #                  fontFace=cv.FONT_HERSHEY_SIMPLEX,
+#                     #                  fontScale=0.3,
+#                     #                  color=(255, 125, 255),
+#                     #                  thickness=1,
+#                     #                  lineType=cv.LINE_AA)
+#
+#                     print("Drawed")
+#
+#                     rect_QML_Polygon = CustomPolygon(f"Detekcja {index}")
+#                     rect_QML_Polygon.addPoint(bbox_coords[0]["x"] + org_params[0], bbox_coords[0]["y"] + org_params[1])
+#                     rect_QML_Polygon.addPoint(bbox_coords[1]["x"] + org_params[0], bbox_coords[1]["y"] + org_params[1])
+#                     rect_QML_Polygon.addPoint(bbox_coords[2]["x"] + org_params[0], bbox_coords[2]["y"] + org_params[1])
+#                     rect_QML_Polygon.addPoint(bbox_coords[3]["x"] + org_params[0], bbox_coords[3]["y"] + org_params[1])
+#                     rect_QML_Polygon.set_finished(True)
+#                     rect_QML_Polygon.set_hovered(False)
+#
+#                     singel_rect_anal = AnalysisResult()
+#
+#
+#
+#
+#                     list_of_sick_trees.append(rect_QML_Polygon)
+#             except Exception as e:
+#                 return print(e)
+#
+#     print("Draw edned")
+#
+#     image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
+#     return list_of_sick_trees, numpy_pred, image
 
 
 def tree_crown_detector(original_image, coords):
@@ -519,6 +525,172 @@ class Worker(QObject):
         self._polygon_manager: PolygonMenager = polygon_provider
         self._analysis_number = analysis
 
+    def mistletone_detector(self, original_image, coords, cropped_bands):
+        print("Analysis 13 - Mistletone detector")
+        rgb, org_params = crop_rgb(original_image[:, :, :3], coords)
+        try:
+            print("Loading model..")
+            model = main.deepforest()
+            print("Model loaded, loading weights...")
+            # model.use_amp = True
+            model.load_state_dict(load("weights/tuszyma19.pth"))
+            print("Weights loaded, prediction...")
+
+            predictions = model.predict_tile(image=rgb,
+                                             return_plot=False,
+                                             patch_size=1000,
+                                             patch_overlap=0.1,
+                                             iou_threshold=0.6,
+                                             thresh=0.6)
+        except Exception as e:
+            return print(e)
+
+        print("Prediction successful")
+
+        numpy_pred = predictions.to_numpy()
+
+        print("Pred. conv", numpy_pred)
+
+        # Preparing blob detector and morph analysis
+
+        kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, (5, 5))
+        print(f"Morph kernel: {kernel}")
+
+        params = cv.SimpleBlobDetector_Params()
+        params.minThreshold = 0
+        params.maxThreshold = 255
+
+        params.filterByArea = True
+        params.minArea = 0
+        params.maxArea = 10000
+        params.filterByColor = True
+        params.blobColor = 255
+
+        params.filterByConvexity = True
+        params.minConvexity = 0.1
+        params.maxConvexity = 1
+
+        params.filterByCircularity = True
+        params.minCircularity = 0.1
+        params.maxConvexity = 1
+
+        params.filterByInertia = False
+        params.minInertiaRatio = 0
+        params.maxInertiaRatio = 1
+
+        params.minDistBetweenBlobs = 0
+
+        detector = cv2.SimpleBlobDetector_create(params)
+
+        number_of_sick_trees = 0
+        list_of_sick_trees = []
+
+        for index, predict in enumerate(numpy_pred):
+            pt1 = (int(predict[0]), int(predict[1]))
+            pt2 = (int(predict[2]), int(predict[3]))
+            if predict[5] > 0.2 and is_correct(pt1, pt2, 0.5):
+                # print("Drawing rec")
+                # print(f"Pt1: {pt1}, pt2: {pt2}")
+                # if sprawdzamy czy jest jemioła:
+                #   rusujemy obwolutę na czerwono
+                # else:
+
+                coord1 = {
+                    "x": pt1[0],
+                    "y": pt1[1]
+                }
+
+                coord2 = {
+                    "x": pt2[0],
+                    "y": pt1[1]
+                }
+
+                coord3 = {
+                    "x": pt2[0],
+                    "y": pt2[1]
+                }
+
+                coord4 = {
+                    "x": pt1[0],
+                    "y": pt2[1]
+                }
+
+                bbox_coords = [coord1, coord2, coord3, coord4]
+
+                try:
+                    roi_cropped_bands, crop_params = crop_band_list(cropped_bands, bbox_coords)
+
+                    image, int_mask = mistletone_analysis(cropped_rect=roi_cropped_bands, original_image=rgb,
+                                                          coords=bbox_coords)
+
+                    int_mask = int_mask.astype('uint8')
+
+                    int_mask = cv.morphologyEx(int_mask, cv2.MORPH_CLOSE, kernel, iterations=3)
+                    int_mask = cv.morphologyEx(int_mask, cv2.MORPH_OPEN, kernel, iterations=1)
+                    int_mask = cv.morphologyEx(int_mask, cv2.MORPH_DILATE, kernel, iterations=1)
+
+                    keypoint = detector.detect(int_mask)
+
+                    if len(keypoint) > 0:
+                        rgb = cv.rectangle(rgb, pt1, pt2, (0, 0, 255), thickness=2)
+
+                        # else:
+                        #     # todo do wyrzucenia
+                        #     # procent
+                        #     # pozycja
+                        #     # klasa
+                        #     # print(f"rysuje na niebiesko")
+                        #     rgb = cv.rectangle(rgb, pt1, pt2, (255, 0, 0), thickness=1)
+
+                        pt3 = (pt1[0], pt2[1] + 10)
+
+                        rgb = cv.putText(img=rgb,
+                                         text=f"{predict[5]:.2f}",
+                                         org=pt3,
+                                         fontFace=cv.FONT_HERSHEY_SIMPLEX,
+                                         fontScale=0.3,
+                                         color=(255, 125, 255),
+                                         thickness=1,
+                                         lineType=cv.LINE_AA)
+
+                        print("Drawed")
+
+                        rect_QML_Polygon = CustomPolygon(f"Detekcja {index}")
+                        rect_QML_Polygon.addPoint(bbox_coords[0]["x"] + org_params[0],
+                                                  bbox_coords[0]["y"] + org_params[1])
+                        rect_QML_Polygon.addPoint(bbox_coords[1]["x"] + org_params[0],
+                                                  bbox_coords[1]["y"] + org_params[1])
+                        rect_QML_Polygon.addPoint(bbox_coords[2]["x"] + org_params[0],
+                                                  bbox_coords[2]["y"] + org_params[1])
+                        rect_QML_Polygon.addPoint(bbox_coords[3]["x"] + org_params[0],
+                                                  bbox_coords[3]["y"] + org_params[1])
+                        rect_QML_Polygon.set_finished(True)
+                        rect_QML_Polygon.set_hovered(False)
+
+                        geolocation = self.calculate_geolocation(crop_params)
+
+
+
+                        self._polygon_manager.pass_special_poligon(predict)
+
+                        singel_rect_anal = AnalysisResult(coordinates=geolocation, accuracy=round(predict[5], 2))
+
+                        singel_rect_anal.list_model = [f"{rect_QML_Polygon.name}\n",
+                                                       f'Współrzędne:\n{singel_rect_anal.coordinates[0]} S; '
+                                                       f'{singel_rect_anal.coordinates[1]} N',
+                                                       f'Pewność: {singel_rect_anal.accuracy}']
+
+                        rect_QML_Polygon.set_analysis_result(singel_rect_anal)
+
+                        list_of_sick_trees.append(rect_QML_Polygon)
+                except Exception as e:
+                    return print(e)
+
+        print("Draw edned")
+
+        image = cv.cvtColor(rgb, cv.COLOR_BGR2BGRA)
+        return list_of_sick_trees, numpy_pred, image
+
     def calculate_geolocation(self, params: list):
         x = params[0] + params[2] / 2
         y = params[1] + params[3] / 2
@@ -609,7 +781,7 @@ class Worker(QObject):
                 pred, image = tree_crown_detector(original_image, coords)
 
             elif self._analysis_number == 13:
-                list_of_sick, pred, image = mistletone_detector(original_image, coords, cropped_rect)
+                list_of_sick, pred, image = self.mistletone_detector(original_image, coords, cropped_rect)
 
             poly, _, _ = poly_img(image, coords, params[0], params[1],
                                   original_image[params[1]: params[1] + params[3],
@@ -620,8 +792,9 @@ class Worker(QObject):
 
             geolocation = self.calculate_geolocation(params)
             try:
-                analysis_result = AnalysisResult(self._analysis_number, coordinates=geolocation, map_calculus=map_value)
-                # TODO Czemu zwraca null ?? Return self?
+                analysis_result = AnalysisResult(coordinates=geolocation, map_calculus=map_value)
+                analysis_result.analysis_type_to_string(self._analysis_number)
+
                 if analysis_result._fast_id == 2:
                     analysis_result.set_predictions(pred)
                     analysis_result.set_sick(len(list_of_sick))
@@ -631,7 +804,6 @@ class Worker(QObject):
                 self.workerException.emit(e)
 
             self._img_manager.write_image(original_image)
-
 
         print("Koniec procesu")
         self.workerFinished.emit("Success")
