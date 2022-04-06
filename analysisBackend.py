@@ -768,7 +768,9 @@ class Worker(QObject):
                                                coords=coords)
 
             elif self._analysis_number == 11:
-                pass
+                print("Koniec procesu")
+                self.workerFinished.emit("Success")
+                return
                 # Pyinstaller ma problem z detectron2
                 # Nie możliwe jest wykonywanie detekcji bez skompilowanej CUD'Y
 
@@ -795,10 +797,11 @@ class Worker(QObject):
                 analysis_result = AnalysisResult(coordinates=geolocation, map_calculus=map_value)
                 analysis_result.analysis_type_to_string(self._analysis_number)
 
-                if analysis_result._fast_id == 2:
+                if analysis_result._fast_id > 1:
                     analysis_result.set_predictions(pred)
-                    analysis_result.set_sick(len(list_of_sick))
-                    analysis_result.set_list_poligons(list_of_sick)
+                    if analysis_result._fast_id > 2:
+                        analysis_result.set_sick(len(list_of_sick))
+                        analysis_result.set_list_poligons(list_of_sick)
                 polygon.set_analysis_result(analysis_result)
             except Exception as e:
                 self.workerException.emit(e)

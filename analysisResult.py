@@ -46,6 +46,10 @@ class AnalysisResult(QObject):
                                f"Wartość wskaźnika: {self.map_calculus:.2f}"]
         elif self._fast_id == 2:
             self.list_model = [f"Współrzędne:\n {self.coordinates[0]} S; {self.coordinates[1]} N",
+                               f"Ilość predykcji: {self.counting_total}"
+                               ]
+        elif self._fast_id == 3:
+            self.list_model = [f"Współrzędne:\n {self.coordinates[0]} S; {self.coordinates[1]} N",
                                f"Ilość predykcji: {self.counting_total}",
                                f"Ilość zainfekowanych drzew: {self.sick}",
                                f"Ilość zdrowych drzew: {self.counting_total - self.sick}"
@@ -134,7 +138,7 @@ class AnalysisResult(QObject):
             self.analysis_type = "Detektor koron drzew"
 
         elif analysis_type == 13:
-            self._fast_id = 2
+            self._fast_id = 3
             self.analysis_type = "Detektor jemioły"
 
     analysisModel = Property(list, get_model, notify=analysisModelChanged)
