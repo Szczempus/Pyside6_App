@@ -344,7 +344,7 @@ def vari_analysis(cropped_rect):
     :return:
     '''
 
-    print("Analysis 9 - seismic")
+    print("Analysis 9 - VARI")
     index_image = vari_map(cropped_rect)
     map_value = index_calculation(0.4, index_map=index_image)
     my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
