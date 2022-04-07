@@ -13,6 +13,17 @@ channel 5 - NIR
 '''
 
 # W Przyszłości pomyśleć nad normalizacją miedzy wartości 0 a 1 dla wskaźników
+def index_calculation(index_threshold: float, index_map, normalize=False) -> float:
+    # Todo Uwzględnic normalizację
+    index_sum = np.sum(index_map)
+    print(f"WARTOŚC SUMY INDEKSU: {index_sum}")
+    above_thresh_sum = np.sum(index_map >= index_threshold)
+    print(f"WARTOŚC SUMY POWYŻEJ 0.4: {above_thresh_sum}")
+    map_value = above_thresh_sum / index_sum
+    print(f"WARTOŚ WSKAŹNIKA:{map_value}")
+
+    return map_value
+
 
 
 def rgb_image(band_list, max_val:list = None, min_val:list = None):
@@ -244,3 +255,6 @@ def mis_filtration(mis, ndvi, mis_thresh=[1.5, 2.5], ndvi_thresh=[0.75, 0.85]):
     image = np.bitwise_and(statement_1, statement_2)
     print("image passed")
     return image
+
+
+
