@@ -12,7 +12,7 @@ class IndexMap(QObject):
         self._croopped_bands: list = None
         self._index_value: float = None
         self._analysis_name: str = None
-        self._index_image: np.array = None
+        self._index_image: np.ndarray = None
         self._index_value: float = None
         self._color_map = "Spectral"
 
