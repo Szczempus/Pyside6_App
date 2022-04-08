@@ -1,1 +1,1 @@
-from . import  index_map
+from .index_maps import Vari

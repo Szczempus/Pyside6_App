@@ -618,8 +618,8 @@ class Worker(QObject):
                 print("Koniec procesu")
                 self.workerFinished.emit("Success")
                 return
-                # Pyinstaller ma problem z detectron2
-                # Nie możliwe jest wykonywanie detekcji bez skompilowanej CUD'Y
+                # Pyinstaller ma problem z detectron2.
+                # Niemożliwe jest wykonywanie detekcji, bez skompilowanej CUD'Y
 
                 # try:
                 #     image = segmentaion_analysis(cropped_rect, coords)

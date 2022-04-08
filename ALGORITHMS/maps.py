@@ -12,9 +12,11 @@ channel 4 - Red edge
 channel 5 - NIR
 '''
 
-# W Przyszłości pomyśleć nad normalizacją miedzy wartości 0 a 1 dla wskaźników
+
 def index_calculation(index_threshold: float, index_map, normalize=False) -> float:
-    # Todo Uwzględnic normalizację
+    # Todo dockstring
+    if normalize:
+        index_map[index_map < 0] = 0
     index_sum = np.sum(index_map)
     print(f"WARTOŚC SUMY INDEKSU: {index_sum}")
     above_thresh_sum = np.sum(index_map >= index_threshold)
@@ -25,14 +27,12 @@ def index_calculation(index_threshold: float, index_map, normalize=False) -> flo
     return map_value
 
 
-
-def rgb_image(band_list, max_val:list = None, min_val:list = None):
+def rgb_image(band_list, max_val: list = None, min_val: list = None):
     r = band_list[2]
     g = band_list[1]
     b = band_list[0]
 
     if max_val and min_val is not None:
-
         print("Typy danych: ", type(max_val[1]))
         print("Zawarte dane: ", max_val)
 
@@ -162,7 +162,6 @@ def ndre_map(band_list):
     image[image == inf] = 1
     image[image == -inf] = -1
 
-
     return image
 
 
@@ -255,6 +254,3 @@ def mis_filtration(mis, ndvi, mis_thresh=[1.5, 2.5], ndvi_thresh=[0.75, 0.85]):
     image = np.bitwise_and(statement_1, statement_2)
     print("image passed")
     return image
-
-
-
