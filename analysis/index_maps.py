@@ -10,7 +10,7 @@ class Vari(IndexMap):
         self.result_image = None
         self.analysis_name = "Vari"
 
-    def analysis(self, cropped_rect_band_list: list = None):
+    def analysis(self, cropped_rect_band_list: list = None, thre,normalize_index_value: bool = False):
         if cropped_rect_band_list is not None:
             self.croopped_bands = cropped_rect_band_list
         if self.croopped_bands is None:
@@ -20,11 +20,10 @@ class Vari(IndexMap):
         try:
             self.index_image = vari_map(self.croopped_bands)
             self.result_image = self.create_cmapped_image()
-            self.index_value = self.calculate_index()
+            self.index_value = self.calculate_index(normalize_index_value,)
 
             return self.result_image
 
         except Exception as e:
             print(f"Error: {e}")
             return None
-
