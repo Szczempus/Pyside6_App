@@ -10,6 +10,7 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 """
 
 # This Python file uses the following encoding: utf-8
+import platform
 import time
 
 from PySide2.QtCore import QSize, QByteArray, QObject
@@ -17,7 +18,12 @@ from PySide2.QtGui import QImage
 from PySide2.QtQuick import QQuickImageProvider
 import cv2 as cv
 import numpy as np
-from osgeo import gdal
+
+if platform.system() == 'Windows':
+    from osgeo import gdal
+else:
+    import gdal
+
 from tifffile import TiffFile
 
 from ALGORITHMS import rgb_image, simplest_cb
