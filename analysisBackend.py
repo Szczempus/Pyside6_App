@@ -22,19 +22,16 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 
 '''
 import cv2
-
 import matplotlib.cm
-import numpy as np
 from torch import load
-import random
 from PySide2.QtCore import Slot, Signal, QObject, QThread
 from deepforest import main
-
 from analysisResult import AnalysisResult
 from polygonMenager import PolygonMenager, CustomPolygon, PolygonCoords
 from opencvImageProvider import OpencvImageProvider
 from crop_img import *
 from ALGORITHMS import *
+from analysis import Vari
 
 COLOR_MAP = "Spectral"
 
@@ -192,12 +189,15 @@ def vari_analysis(cropped_rect):
     '''
 
     print("Analysis 9 - VARI")
-    index_image = vari_map(cropped_rect)
-    map_value = index_calculation(0.4, index_map=index_image)
-    my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
-    color_array = my_cmap(index_image)
-    image = np.asarray(color_array)
-    image = image * 255
+    vari = Vari(threshold_of_index=0.6)
+    image =vari.analysis(cropped_rect_band_list=cropped_rect)
+    map_value = vari.index_value
+    # index_image = vari_map(cropped_rect)
+    # map_value = index_calculation(0.4, index_map=index_image)
+    # my_cmap = matplotlib.cm.get_cmap(COLOR_MAP)
+    # color_array = my_cmap(index_image)
+    # image = np.asarray(color_array)
+    # image = image * 255
 
     return map_value, image
 
