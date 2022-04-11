@@ -189,8 +189,8 @@ def vari_analysis(cropped_rect):
     '''
 
     print("Analysis 9 - VARI")
-    vari = Vari(threshold_of_index=0.6)
-    image =vari.analysis(cropped_rect_band_list=cropped_rect)
+    vari = Vari()
+    image =vari.analysis(cropped_rect_band_list=cropped_rect, normalize_index_value=True)
     map_value = vari.index_value
     # index_image = vari_map(cropped_rect)
     # map_value = index_calculation(0.4, index_map=index_image)

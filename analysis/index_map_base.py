@@ -34,6 +34,7 @@ class IndexMap(QObject):
             if threshold_value is None:
                 index_value = index_calculation(self.threshold_of_index, self.index_image, normalize)
             else:
+                self.threshold_of_index = threshold_value
                 index_value = index_calculation(threshold_value, self.index_image, normalize)
             return index_value
 
