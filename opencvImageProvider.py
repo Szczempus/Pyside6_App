@@ -13,7 +13,7 @@ channel 6 - LWIR(thermal) wymagane jest jeszcze przekształcenie danych z kelwin
 import platform
 import time
 
-from PySide2.QtCore import QSize, QByteArray, QObject
+from PySide2.QtCore import QSize, QByteArray, QObject, Slot
 from PySide2.QtGui import QImage
 from PySide2.QtQuick import QQuickImageProvider
 import cv2 as cv
@@ -63,6 +63,7 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
         self._dataset = None
         self._geolocation = None
         self._pixel_size = None
+        self._dem_model = None
 
     def get_geolocation(self):
         return self._geolocation
@@ -231,3 +232,12 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
                 qimage = convert_from_cv_to_qimage(image=img)
 
         return qimage
+
+    @Slot(str)
+    def read_dem(self, path: str):
+
+        _, parsed_path = path.split("///", 1)
+
+
+
+
