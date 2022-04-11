@@ -30,3 +30,11 @@ class Vari(IndexMap):
         except Exception as e:
             print(f"Error: {e}")
             return None
+
+class Osavi(IndexMap):
+
+    def __init__(self, **kwargs):
+        super(Osavi, self).__init__(**kwargs)
+
+        self.result_image = None
+        self.analysis_name = "Osavi"
