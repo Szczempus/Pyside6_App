@@ -238,6 +238,8 @@ class OpencvImageProvider(QQuickImageProvider, QObject):
 
         _, parsed_path = path.split("///", 1)
 
+        gdal.Open(parsed_path)
+
 
 
 
