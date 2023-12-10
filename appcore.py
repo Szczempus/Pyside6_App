@@ -45,7 +45,7 @@ class Appcore(QObject):
         cv2.imwrite(path, img)
 
     @Slot("QString")
-    def save_polygons(self,path_to_save_polygons: str):
+    def save_polygons(self, path_to_save_polygons: str):
         print("Otrzymana ścieżka", path_to_save_polygons)
 
         _, path = path_to_save_polygons.split("///")
@@ -54,17 +54,11 @@ class Appcore(QObject):
 
         dataframe.to_csv(path, index=False)
 
-
-
-
-
     def save_project(self):
         pass
 
     def create_report(self):
         pass
-
-
 
     @Slot(list)
     def set_image_params(self, params: list):

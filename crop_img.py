@@ -91,7 +91,7 @@ def crop_rgb(rgb, coords: list, x_new=None, y_new=None):
 def poly_img(fgimage: np.ndarray, coords: list, x_new, y_new, bgimage: np.ndarray):
     """
     This function crops and overlays forground polygonal image above background cropped
-    fragemnet od orygnal image
+    fragemnet od orygnal image.
 
     :param fgimage: RGB foreground image as numpy array
     :param coords: dictionary of coordinates {x: float, y: float}
